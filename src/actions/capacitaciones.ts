@@ -42,7 +42,7 @@ export async function createCourseSession(formData: FormData) {
     return { success: true, session };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message };
+      return { success: false, error: (error as any).errors[0].message };
     }
     return { success: false, error: 'Error al crear la sesión' };
   }
