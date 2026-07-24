@@ -1,0 +1,164 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Lead {
+  id            String      @id @default(cuid())
+  name          String
+  company       String?
+  email         String
+  phone         String
+  interestType  InterestType
+  interestSlug  String?     // slug del servicio o curso de interés (ej: "analisis-vibraciones")
+  message       String
+  status        LeadStatus  @default(NUEVO)
+  source        String?     // utm_source / utm_campaign capturado del formulario, clave para medir Google Ads
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([status])
+  @@index([interestSlug])
+}
+
+enum InterestType {
+  SERVICIO
+  CAPACITACION
+  GENERAL
+}
+
+enum LeadStatus {
+  NUEVO
+  CONTACTADO
+  COTIZADO
+  GANADO
+  PERDIDO
+}
+
+model Holder {
+  id            String        @id @default(cuid())
+  rut           String        @unique
+  fullName      String
+  company       String?
+  email         String
+  phone         String?
+  credentials   Credential[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Credential {
+  id                String            @id @default(cuid())
+  holder            Holder            @relation(fields: [holderId], references: [id])
+  holderId          String
+  type              CredentialType
+
+  // --- Campos exclusivos de CALIFICACION_SOLDADOR (null si type = DIPLOMA_CAPACITACION) ---
+  weldingProcess    WeldingProcess?   // SMAW, GTAW, FCAW, etc. [VALIDAR CON CLIENTE]
+  weldingStandard   String?           // ej: "AWS D1.1", "ASME IX", "API 1104"
+  weldingPosition   String?           // posición calificada, ej. "3G", "6G"
+
+  // --- Campos exclusivos de DIPLOMA_CAPACITACION (null si type = CALIFICACION_SOLDADOR) ---
+  courseSlug        String?           // ej: "analisis-de-vibraciones"
+  courseSession     CourseSession?    @relation(fields: [courseSessionId], references: [id])
+  courseSessionId   String?           // sesión/fecha específica que cursó el participante
+  approvalType      ApprovalType?     // PARTICIPACION o APROBACION (ver agents.md / architecture.md sección 3)
+  scorePercent      Int?              // nota o % de aprobación, si aplica
+
+  // --- Campos comunes a ambos tipos ---
+  issueDate         DateTime          @default(now())
+  expiryDate        DateTime?         // obligatorio y = issueDate + 1 año para soldadores; NULL (no expira) para diplomas, salvo [VALIDAR CON CLIENTE]
+  validationCode    String            @unique  // hash único, ver permissions.md sección 3
+  status            CredentialStatus  @default(VIGENTE)
+  pdfUrl            String?           // referencia al último PDF generado/reenviado
+  recoveryPayments  CredentialRecoveryPayment[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@index([validationCode])
+  @@index([type, status])
+}
+
+enum CredentialType {
+  CALIFICACION_SOLDADOR
+  DIPLOMA_CAPACITACION
+}
+
+enum ApprovalType {
+  PARTICIPACION
+  APROBACION
+}
+
+enum WeldingProcess {
+  SMAW
+  GTAW
+  GMAW
+  FCAW
+  SAW
+  OTRO
+}
+
+enum CredentialStatus {
+  VIGENTE
+  EXPIRADO
+  REVOCADO
+}
+
+model CredentialRecoveryPayment {
+  id              String    @id @default(cuid())
+  credential      Credential @relation(fields: [credentialId], references: [id])
+  credentialId    String
+  amount          Int         // CLP, ej. 12000 [VALIDAR CON CLIENTE]
+  webpayToken     String?
+  status          PaymentStatus @default(INICIADA)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+enum PaymentStatus {
+  INICIADA
+  APROBADA
+  RECHAZADA
+}
+
+model CourseSession {
+  id             String    @id @default(cuid())
+  courseSlug     String    // referencia al curso estático, ej: "analisis-de-vibraciones"
+  startDate      DateTime
+  endDate        DateTime?
+  modality       Modality
+  location       String?   // ej: "Rancagua - Sala FYD" o "In-Company"
+  seatsTotal     Int
+  seatsTaken     Int       @default(0)
+  status         SessionStatus @default(ABIERTA)
+  credentials    Credential[]  // diplomas emitidos a los participantes de esta sesión
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([courseSlug, status])
+}
+
+enum Modality {
+  PRESENCIAL
+  ONLINE_VIVO
+  IN_COMPANY
+}
+
+enum SessionStatus {
+  ABIERTA
+  CUPOS_LIMITADOS  // <= 20% de cupos disponibles, calculado en frontend, no almacenado
+  CERRADA
+  FINALIZADA
+}
+
+model Settings {
+  id                  String   @id @default("singleton")
+  contactEmail        String   @default("contacto@fydingenieros.cl")
+  whatsappNumber      String   @default("+56990153483")
+  businessHoursOpen   String   @default("09:00")
+  businessHoursClose  String   @default("18:30")
+  updatedAt           DateTime @updatedAt
+}
