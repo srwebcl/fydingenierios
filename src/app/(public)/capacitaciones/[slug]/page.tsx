@@ -7,6 +7,14 @@ import { EmbeddedLeadForm } from '@/components/forms/EmbeddedLeadForm';
 import { FAQAccordion } from '@/components/capacitaciones/FAQAccordion';
 import { Calendar, MapPin, Clock, Award, BookOpen, QrCode } from 'lucide-react';
 
+import { courses } from '@/content/courses';
+
+export async function generateStaticParams() {
+  return courses.map((course) => ({
+    slug: course.slug,
+  }));
+}
+
 export default async function CapacitacionIndividual({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const course = getCourseBySlug(slug);
@@ -16,13 +24,19 @@ export default async function CapacitacionIndividual({ params }: { params: Promi
   }
 
   // Obtener sesiones abiertas
-  const sessions = await prisma.courseSession.findMany({
-    where: { 
-      courseSlug: slug,
-      status: { in: ['ABIERTA', 'CUPOS_LIMITADOS'] }
-    },
-    orderBy: { startDate: 'asc' }
-  });
+  let sessions: any[] = [];
+  try {
+    sessions = await prisma.courseSession.findMany({
+      where: { 
+        courseSlug: slug,
+        status: { in: ['ABIERTA', 'CUPOS_LIMITADOS'] }
+      },
+      orderBy: { startDate: 'asc' }
+    });
+  } catch (error) {
+    console.error("Error fetching course sessions:", error);
+    // Silent fail for static generation or missing DB
+  }
 
   return (
     <main>

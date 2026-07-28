@@ -34,7 +34,7 @@ export default function Home() {
       {/* Industrias (Nuevo) */}
       <section className="py-12 bg-white border-b border-brand-light">
         <div className="container mx-auto px-4 text-center">
-          <h3 className="text-brand-grey font-bold tracking-widest uppercase text-sm mb-8">Industrias que se benefician con FYD Ingenieros</h3>
+          <h3 className="text-brand-grey font-bold tracking-widest uppercase text-sm mb-8">Industrias que se benefician con F&D Ingeniería</h3>
           <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-70">
             <div className="flex items-center gap-2 text-brand-dark font-bold text-lg"><HardHat size={28} className="text-brand-teal" /> Minería</div>
             <div className="flex items-center gap-2 text-brand-dark font-bold text-lg"><Zap size={28} className="text-brand-teal" /> Energía</div>
@@ -74,12 +74,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Por qué Elegir FYD (Propuesta de Valor) */}
+      {/* Por qué Elegir F&D (Propuesta de Valor) */}
       <section className="py-20 bg-brand-dark text-white">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="font-heading text-4xl font-bold mb-6">Por qué confiar en <span className="text-brand-teal">FYD Ingenieros</span></h2>
+              <h2 className="font-heading text-4xl font-bold mb-6">Por qué confiar en <span className="text-brand-teal">F&D Ingeniería</span></h2>
               <p className="text-brand-light/80 text-lg leading-relaxed mb-8">
                 Nuestra experiencia en terreno nos permite entregar diagnósticos precisos y soluciones efectivas. No solo detectamos el problema, sino que acompañamos a su equipo en la mitigación de fallas.
               </p>

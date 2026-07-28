@@ -5,6 +5,14 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { EmbeddedLeadForm } from '@/components/forms/EmbeddedLeadForm';
 import { CheckCircle2 } from 'lucide-react';
 
+import { services } from '@/content/services';
+
+export async function generateStaticParams() {
+  return services.map((service) => ({
+    slug: service.slug,
+  }));
+}
+
 export default async function ServicioIndividual({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const service = getServiceBySlug(slug);
