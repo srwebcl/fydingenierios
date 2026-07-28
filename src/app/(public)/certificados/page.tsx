@@ -17,6 +17,17 @@ function StatusBadge({ status }: { status: CredentialStatus }) {
   return <span className="inline-flex items-center gap-1 px-3 py-1 bg-red-100 text-red-800 rounded-full font-bold text-sm border border-red-300">✕ REVOCADO</span>;
 }
 
+const serviceNameMap: Record<string, string> = {
+  'analisis-vibraciones': 'Análisis de Vibraciones',
+  'termografia-infrarroja': 'Termografía Infrarroja',
+  'alineamiento-laser': 'Alineamiento Láser',
+  'balanceo-dinamico': 'Balanceo Dinámico',
+  'ingenieria-confiabilidad': 'Ingeniería de Confiabilidad y Gestión de Activos',
+  'auditorias-tecnicas': 'Auditorías Técnicas de Mantenimiento Predictivo',
+  'implementacion-programas': 'Implementación de Programas de Mantenimiento Predictivo',
+  'asesorias-ingenieria': 'Asesorías e Ingeniería Especializada'
+};
+
 export default async function CertificadosPage({ searchParams }: PageProps) {
   const { code, rut } = await searchParams;
 
@@ -56,10 +67,10 @@ export default async function CertificadosPage({ searchParams }: PageProps) {
           <div className="bg-brand-dark p-6 flex justify-between items-center text-brand-white border-b-4 border-brand-teal">
             <div>
               <p className="text-sm uppercase tracking-widest text-brand-lime font-bold mb-1">
-                {isDiploma ? 'Diploma Oficial' : 'Calificación Oficial'}
+                {isDiploma ? 'Diploma Oficial' : 'Validación de Informe'}
               </p>
               <h2 className="text-2xl font-bold">{cred.holder.fullName}</h2>
-              <p className="text-brand-light/80">{cred.holder.company}</p>
+              <p className="text-brand-light/80">{isDiploma ? cred.holder.company : cred.clientCompany}</p>
             </div>
             <div className="text-right">
               <StatusBadge status={displayStatus} />
@@ -70,7 +81,7 @@ export default async function CertificadosPage({ searchParams }: PageProps) {
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <p className="text-brand-grey font-bold">Tipo de Credencial</p>
-                <p>{isDiploma ? 'Diploma de Capacitación' : 'Calificación de Soldador/Operador'}</p>
+                <p>{isDiploma ? 'Diploma de Capacitación' : 'Certificado de Informe Técnico'}</p>
               </div>
               <div>
                 <p className="text-brand-grey font-bold">Código de Validación</p>
@@ -94,26 +105,28 @@ export default async function CertificadosPage({ searchParams }: PageProps) {
                 </>
               ) : (
                 <>
-                  <div>
-                    <p className="text-brand-grey font-bold">Proceso</p>
-                    <p>{cred.weldingProcess}</p>
+                  <div className="col-span-2">
+                    <p className="text-brand-grey font-bold">Servicio Prestado</p>
+                    <p className="text-lg font-medium">{serviceNameMap[cred.serviceSlug as string] || cred.serviceSlug}</p>
+                  </div>
+                  <div className="col-span-2">
+                    <p className="text-brand-grey font-bold">Título del Informe</p>
+                    <p>{cred.reportTitle}</p>
                   </div>
                   <div>
-                    <p className="text-brand-grey font-bold">Norma</p>
-                    <p>{cred.weldingStandard}</p>
-                  </div>
-                  <div>
-                    <p className="text-brand-grey font-bold">Posición</p>
-                    <p>{cred.weldingPosition}</p>
+                    <p className="text-brand-grey font-bold">Equipo / Activo</p>
+                    <p>{cred.equipmentTag || 'N/A'}</p>
                   </div>
                   <div>
                     <p className="text-brand-grey font-bold">Emisión</p>
                     <p>{cred.issueDate.toLocaleDateString('es-CL')}</p>
                   </div>
-                  <div>
-                    <p className="text-brand-grey font-bold">Válido Hasta</p>
-                    <p>{cred.expiryDate ? cred.expiryDate.toLocaleDateString('es-CL') : 'Indefinido'}</p>
-                  </div>
+                  {cred.findingsSummary && (
+                    <div className="col-span-2">
+                      <p className="text-brand-grey font-bold">Resumen de Hallazgos</p>
+                      <p className="italic">{cred.findingsSummary}</p>
+                    </div>
+                  )}
                 </>
               )}
             </div>
@@ -149,7 +162,7 @@ export default async function CertificadosPage({ searchParams }: PageProps) {
               <div key={c.id} className="border border-brand-light bg-brand-white p-4 rounded-lg flex justify-between items-center shadow-sm">
                 <div>
                   <p className="font-bold text-brand-dark">
-                    {c.type === 'CALIFICACION_SOLDADOR' ? `Calificación: ${c.weldingProcess}` : `Diploma: ${c.courseSlug?.replace(/-/g, ' ')}`}
+                    {c.type === 'INFORME_SERVICIO' ? `Informe: ${serviceNameMap[c.serviceSlug as string] || c.serviceSlug}` : `Diploma: ${c.courseSlug?.replace(/-/g, ' ')}`}
                   </p>
                   <p className="text-sm text-brand-grey">Emitido: {c.issueDate.toLocaleDateString('es-CL')} | Código: <span className="font-mono">{c.validationCode}</span></p>
                 </div>
@@ -180,7 +193,7 @@ export default async function CertificadosPage({ searchParams }: PageProps) {
     <main className="container mx-auto py-10 px-4 max-w-2xl">
       <div className="text-center mb-10">
         <h1 className="font-heading text-3xl font-bold mb-4 text-brand-teal">Portal de Credenciales</h1>
-        <p className="text-brand-grey">Valide la autenticidad de calificaciones de soldadores o diplomas de capacitación, o recupere una credencial perdida.</p>
+        <p className="text-brand-grey">Valide la autenticidad de informes técnicos de servicio o diplomas de capacitación, o recupere una credencial perdida.</p>
       </div>
 
       <div className="bg-brand-white p-8 rounded-xl shadow-lg border border-brand-light mb-8">

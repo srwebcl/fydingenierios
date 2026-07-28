@@ -52,7 +52,7 @@ export default function Contacto() {
                 <option value="">Seleccione una opción</option>
                 <option value="Servicio de Mantenimiento">Servicio de Mantenimiento / Predictivo</option>
                 <option value="Capacitacion">Capacitación Industrial</option>
-                <option value="Calificacion Soldadores">Calificación de Soldadores</option>
+                <option value="Ingeniería de Confiabilidad">Ingeniería de Confiabilidad</option>
                 <option value="Otro">Otra consulta</option>
               </select>
             </div>

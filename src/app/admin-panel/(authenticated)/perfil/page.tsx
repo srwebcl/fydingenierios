@@ -4,7 +4,7 @@ import SettingsManager from '@/components/admin/SettingsManager';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Configuración | FYD Admin',
+  title: 'Configuración | F&D Admin',
 };
 
 export const dynamic = 'force-dynamic';

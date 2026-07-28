@@ -11,8 +11,8 @@ export default function Footer() {
           <div className="col-span-1 md:col-span-1">
             <Link href="/" className="inline-block mb-6 bg-white p-2 rounded-lg">
               <Image 
-                src="/logo.webp" 
-                alt="FYD Ingenieros" 
+                src="/logo.jpeg" 
+                alt="F&D Ingenieros" 
                 width={120} 
                 height={120} 
                 className="h-12 w-auto object-contain"
@@ -26,10 +26,10 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-brand-lime mb-4 text-sm tracking-widest uppercase">Servicios</h4>
             <ul className="space-y-3 text-sm text-brand-light/80">
-              <li><Link href="/servicios/analisis-de-vibraciones" className="hover:text-brand-teal transition">Análisis de Vibraciones</Link></li>
+              <li><Link href="/servicios/analisis-vibraciones" className="hover:text-brand-teal transition">Análisis de Vibraciones</Link></li>
               <li><Link href="/servicios/termografia-infrarroja" className="hover:text-brand-teal transition">Termografía Infrarroja</Link></li>
-              <li><Link href="/servicios/alineamiento-de-ejes" className="hover:text-brand-teal transition">Alineamiento de Ejes</Link></li>
-              <li><Link href="/servicios/calificacion-de-soldadores" className="hover:text-brand-teal transition">Calificación de Soldadores</Link></li>
+              <li><Link href="/servicios/alineamiento-laser" className="hover:text-brand-teal transition">Alineamiento Láser</Link></li>
+              <li><Link href="/servicios/ingenieria-confiabilidad" className="hover:text-brand-teal transition">Ingeniería de Confiabilidad</Link></li>
             </ul>
           </div>
 
@@ -37,7 +37,7 @@ export default function Footer() {
             <h4 className="font-bold text-brand-lime mb-4 text-sm tracking-widest uppercase">Empresa</h4>
             <ul className="space-y-3 text-sm text-brand-light/80">
               <li><Link href="/quienes-somos" className="hover:text-brand-teal transition">Quiénes Somos</Link></li>
-              <li><Link href="/capacitaciones" className="hover:text-brand-teal transition">Capacitaciones</Link></li>
+              <li><Link href="/capacitaciones" className="hover:text-brand-teal transition">Academia F&D</Link></li>
               <li><Link href="/certificados" className="hover:text-brand-teal transition">Validar Credencial</Link></li>
               <li><Link href="/contacto" className="hover:text-brand-teal transition">Contacto</Link></li>
             </ul>

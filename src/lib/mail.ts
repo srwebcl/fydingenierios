@@ -6,17 +6,17 @@ export async function sendCredentialEmail(
   email: string, 
   holderName: string, 
   pdfBuffer: Buffer, 
-  credentialType: 'CALIFICACION_SOLDADOR' | 'DIPLOMA_CAPACITACION',
+  credentialType: 'INFORME_SERVICIO' | 'DIPLOMA_CAPACITACION',
   logoBuffer?: Buffer
 ) {
   try {
     const isDiploma = credentialType === 'DIPLOMA_CAPACITACION';
-    const title = isDiploma ? 'Diploma de Capacitación Oficial' : 'Certificado de Calificación Oficial';
+    const title = isDiploma ? 'Diploma de Capacitación Oficial' : 'Certificado de Validación de Informe Técnico';
     const sender = process.env.EMAIL_NOTIFICACIONES || 'contacto@fydingenieros.cl';
 
     const attachments: any[] = [
       {
-        filename: isDiploma ? 'Diploma_FYD.pdf' : 'Calificacion_FYD.pdf',
+        filename: isDiploma ? 'Diploma_F&D.pdf' : 'Informe_F&D.pdf',
         content: pdfBuffer,
       }
     ];
@@ -28,16 +28,16 @@ export async function sendCredentialEmail(
         content: logoBuffer,
         contentId: 'logo'
       });
-      headerHtml = `<img src="cid:logo" alt="FYD Ingenieros" />`;
+      headerHtml = `<img src="cid:logo" alt="F&D Ingenieros" />`;
     } else {
-      headerHtml = `<h2 style="color: #00A6A6; margin: 0;">FYD INGENIEROS</h2>`;
+      headerHtml = `<h2 style="color: #00A6A6; margin: 0;">F&D INGENIEROS</h2>`;
     }
 
     const { data, error } = await resend.emails.send({
-      from: `FYD Ingenieros <${sender}>`,
+      from: `F&D Ingenieros <${sender}>`,
       to: [email],
-      subject: `${title} - FYD Ingenieros`,
-      text: `Hola ${holderName},\n\nAdjunto enviamos su ${title} emitido por FYD Ingenieros. Puede validarlo en cualquier momento escaneando el código QR adjunto.\n\nAtentamente,\nFYD Ingenieros`,
+      subject: `${title} - F&D Ingenieros`,
+      text: `Hola ${holderName},\n\nAdjunto enviamos su ${title} emitido por F&D Ingenieros. Puede validarlo en cualquier momento escaneando el código QR adjunto.\n\nAtentamente,\nF&D Ingenieros`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -72,11 +72,11 @@ export async function sendCredentialEmail(
               </div>
 
               <p class="text">Agradecemos su confianza en nuestros servicios.</p>
-              <p class="text" style="margin-bottom: 0;">Atentamente,<br/><strong>FYD Ingenieros</strong></p>
+              <p class="text" style="margin-bottom: 0;">Atentamente,<br/><strong>F&D Ingenieros</strong></p>
             </div>
             <div class="footer">
               <p>Este es un correo generado automáticamente, por favor no responda directamente a esta dirección.</p>
-              <p class="social">FYD INGENIEROS PLATFORM</p>
+              <p class="social">F&D INGENIEROS PLATFORM</p>
             </div>
           </div>
         </body>

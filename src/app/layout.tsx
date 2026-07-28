@@ -13,14 +13,14 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
-  title: "FYD Ingenieros | Mantenimiento Predictivo, Confiabilidad y Capacitación Industrial",
+  title: "F&D Ingenieros | Mantenimiento Predictivo, Confiabilidad y Capacitación Industrial",
   description: "Ingeniería en mantenimiento predictivo, confiabilidad y gestión de activos en Rancagua y todo Chile. Análisis de vibraciones, RCM, termografía y capacitaciones técnicas certificables.",
 };
 
 const schemaJSON = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
-  "name": "FYD Ingenieros — Ingeniería en Mantenimiento F&D SpA",
+  "name": "F&D Ingenieros — Ingeniería en Mantenimiento F&D SpA",
   "url": "https://fydingenieros.cl/",
   "telephone": "+56990153483",
   "email": "contacto@fydingenieros.cl",

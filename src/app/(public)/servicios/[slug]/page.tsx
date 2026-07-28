@@ -70,7 +70,15 @@ export default async function ServicioIndividual({ params }: { params: Promise<{
             <div className="bg-brand-dark text-white p-8 rounded-xl mt-12 flex flex-col md:flex-row items-center justify-between">
               <div>
                 <h3 className="text-2xl font-bold mb-2">Compromiso Normativo</h3>
-                <p className="text-brand-light/80 m-0">Trabajamos bajo estándares ISO, AWS, ASME y API.</p>
+                {service.normatives && service.normatives.length > 0 ? (
+                  <ul className="text-brand-light/80 m-0 space-y-1 list-disc list-inside">
+                    {service.normatives.map((norma, i) => (
+                      <li key={i}>{norma}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-brand-light/80 m-0">Trabajamos bajo los más altos estándares internacionales.</p>
+                )}
               </div>
               <div className="mt-6 md:mt-0">
                 <svg className="w-16 h-16 text-brand-teal" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>

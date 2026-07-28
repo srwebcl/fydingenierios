@@ -33,8 +33,8 @@ export default function Login() {
           <div className="flex justify-center mb-6">
             <div className="bg-white p-3 rounded-xl shadow-sm inline-block">
               <Image 
-                src="/logo.webp" 
-                alt="FYD Ingenieros" 
+                src="/logo.jpeg" 
+                alt="F&D Ingenieros" 
                 width={180} 
                 height={180} 
                 className="h-16 w-auto object-contain mx-auto"

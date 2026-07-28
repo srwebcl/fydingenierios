@@ -21,8 +21,8 @@ export default function AdminSidebar() {
     <aside className="w-full md:w-64 bg-brand-dark text-brand-light flex flex-col md:h-screen sticky bottom-0 md:top-0 z-50 order-2 md:order-1 border-t md:border-t-0 md:border-r border-brand-teal/20">
       <div className="hidden md:flex p-6 items-center justify-center border-b border-brand-light/10 bg-brand-white">
         <Image 
-          src="/logo.webp" 
-          alt="FYD Ingenieros" 
+          src="/logo.jpeg" 
+          alt="F&D Ingenieros" 
           width={120} 
           height={60} 
           className="h-10 w-auto object-contain"

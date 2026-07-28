@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import React from 'react';
 import { generateQR } from '@/lib/qr';
 import { sendCredentialEmail } from '@/lib/mail';
-import { ApprovalType, CredentialType, WeldingProcess } from '@prisma/client';
+import { ApprovalType, CredentialType } from '@prisma/client';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -25,45 +25,47 @@ function generateValidationCode() {
   return crypto.randomBytes(8).toString('hex').toUpperCase();
 }
 
-export type WeldingQualificationData = {
+export type ServiceReportCredentialData = {
   rut: string;
   fullName: string;
-  company: string;
   email: string;
-  weldingProcess: WeldingProcess;
-  weldingStandard: string;
-  weldingPosition: string;
+  company: string;
+  phone?: string;
+  serviceSlug: string;
+  clientCompany: string;
+  equipmentTag?: string;
+  reportTitle: string;
+  findingsSummary?: string;
   issueDate: string;
 };
 
-export async function issueWeldingQualification(data: WeldingQualificationData) {
-  if (!data.rut || !data.fullName || !data.email || !data.weldingProcess || !data.issueDate) {
+export async function issueServiceReportCredential(data: ServiceReportCredentialData) {
+  if (!data.rut || !data.fullName || !data.email || !data.serviceSlug || !data.clientCompany || !data.reportTitle || !data.issueDate) {
     return { success: false, error: 'Faltan datos requeridos' };
   }
 
   try {
     const issueDate = new Date(data.issueDate);
-    const expiryDate = new Date(issueDate);
-    expiryDate.setFullYear(expiryDate.getFullYear() + 1);
-
     const validationCode = generateValidationCode();
 
     // Transacción Prisma
     const [holder, credential] = await prisma.$transaction([
       prisma.holder.upsert({
         where: { rut: data.rut },
-        update: { fullName: data.fullName, company: data.company || 'Independiente', email: data.email },
-        create: { rut: data.rut, fullName: data.fullName, company: data.company || 'Independiente', email: data.email }
+        update: { fullName: data.fullName, company: data.company || 'Independiente', email: data.email, phone: data.phone },
+        create: { rut: data.rut, fullName: data.fullName, company: data.company || 'Independiente', email: data.email, phone: data.phone }
       }),
       prisma.credential.create({
         data: {
           holder: { connect: { rut: data.rut } },
-          type: CredentialType.CALIFICACION_SOLDADOR,
-          weldingProcess: data.weldingProcess,
-          weldingStandard: data.weldingStandard,
-          weldingPosition: data.weldingPosition,
+          type: CredentialType.INFORME_SERVICIO,
+          serviceSlug: data.serviceSlug,
+          clientCompany: data.clientCompany,
+          equipmentTag: data.equipmentTag,
+          reportTitle: data.reportTitle,
+          findingsSummary: data.findingsSummary,
           issueDate,
-          expiryDate,
+          expiryDate: null, // Informes no expiran
           validationCode,
           status: 'VIGENTE'
         }
@@ -76,17 +78,31 @@ export async function issueWeldingQualification(data: WeldingQualificationData) 
     const qrBase64 = await generateQR(credential.validationCode);
 
     const { renderToBuffer } = await import('@react-pdf/renderer');
-    const { WeldingQualificationPDF } = await import('@/components/pdf/WeldingQualificationPDF');
+    const { ServiceReportPDF } = await import('@/components/pdf/ServiceReportPDF');
     
-    const pdfElement = React.createElement(WeldingQualificationPDF, {
+    // Mapeo simple de nombres de servicio
+    const serviceNameMap: Record<string, string> = {
+      'analisis-vibraciones': 'Análisis de Vibraciones',
+      'termografia-infrarroja': 'Termografía Infrarroja',
+      'alineamiento-laser': 'Alineamiento Láser',
+      'balanceo-dinamico': 'Balanceo Dinámico',
+      'ingenieria-confiabilidad': 'Ingeniería de Confiabilidad y Gestión de Activos',
+      'auditorias-tecnicas': 'Auditorías Técnicas de Mantenimiento Predictivo',
+      'implementacion-programas': 'Implementación de Programas de Mantenimiento Predictivo',
+      'asesorias-ingenieria': 'Asesorías e Ingeniería Especializada'
+    };
+    const serviceName = serviceNameMap[data.serviceSlug] || data.serviceSlug;
+
+    const pdfElement = React.createElement(ServiceReportPDF, {
       data: {
-        welderName: holder.fullName,
-        welderRut: holder.rut,
-        process: credential.weldingProcess!,
-        standard: credential.weldingStandard || '',
-        position: credential.weldingPosition || '',
+        evaluatorName: holder.fullName,
+        evaluatorRut: holder.rut,
+        serviceName,
+        clientCompany: credential.clientCompany || '',
+        equipmentTag: credential.equipmentTag || 'N/A',
+        reportTitle: credential.reportTitle || '',
+        findingsSummary: credential.findingsSummary || '',
         issueDate: credential.issueDate.toLocaleDateString('es-CL'),
-        expiryDate: credential.expiryDate!.toLocaleDateString('es-CL'),
         validationCode: credential.validationCode,
         qrBase64,
         logoBase64
@@ -95,12 +111,12 @@ export async function issueWeldingQualification(data: WeldingQualificationData) 
 
     const pdfBuffer = await renderToBuffer(pdfElement as any);
     
-    await sendCredentialEmail(holder.email, holder.fullName, pdfBuffer, 'CALIFICACION_SOLDADOR', logoBuffer);
+    await sendCredentialEmail(holder.email, holder.fullName, pdfBuffer, 'INFORME_SERVICIO', logoBuffer);
 
     return { success: true, validationCode: credential.validationCode };
   } catch (error) {
-    console.error('Error issuing welding qualification:', error);
-    return { success: false, error: 'Error interno al generar calificación' };
+    console.error('Error issuing service report credential:', error);
+    return { success: false, error: 'Error interno al generar informe' };
   }
 }
 

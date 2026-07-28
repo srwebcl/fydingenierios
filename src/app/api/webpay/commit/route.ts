@@ -60,17 +60,31 @@ export async function POST(req: Request) {
       const { renderToBuffer } = await import('@react-pdf/renderer');
       let pdfElement;
 
-      if (cred.type === CredentialType.CALIFICACION_SOLDADOR) {
-        const { WeldingQualificationPDF } = await import('@/components/pdf/WeldingQualificationPDF');
-        pdfElement = React.createElement(WeldingQualificationPDF, {
+      if (cred.type === CredentialType.INFORME_SERVICIO) {
+        const { ServiceReportPDF } = await import('@/components/pdf/ServiceReportPDF');
+        
+        // Mapeo simple de nombres de servicio
+        const serviceNameMap: Record<string, string> = {
+          'analisis-vibraciones': 'Análisis de Vibraciones',
+          'termografia-infrarroja': 'Termografía Infrarroja',
+          'alineamiento-laser': 'Alineamiento Láser',
+          'balanceo-dinamico': 'Balanceo Dinámico',
+          'ingenieria-confiabilidad': 'Ingeniería de Confiabilidad y Gestión de Activos',
+          'auditorias-tecnicas': 'Auditorías Técnicas de Mantenimiento Predictivo',
+          'implementacion-programas': 'Implementación de Programas de Mantenimiento Predictivo',
+          'asesorias-ingenieria': 'Asesorías e Ingeniería Especializada'
+        };
+        
+        pdfElement = React.createElement(ServiceReportPDF, {
           data: {
-            welderName: holder.fullName,
-            welderRut: holder.rut,
-            process: cred.weldingProcess!,
-            standard: cred.weldingStandard || '',
-            position: cred.weldingPosition || '',
+            evaluatorName: holder.fullName,
+            evaluatorRut: holder.rut,
+            serviceName: serviceNameMap[cred.serviceSlug as string] || cred.serviceSlug as string,
+            clientCompany: cred.clientCompany || '',
+            equipmentTag: cred.equipmentTag || 'N/A',
+            reportTitle: cred.reportTitle || '',
+            findingsSummary: cred.findingsSummary || '',
             issueDate: cred.issueDate.toLocaleDateString('es-CL'),
-            expiryDate: cred.expiryDate!.toLocaleDateString('es-CL'),
             validationCode: cred.validationCode,
             qrBase64,
             logoBase64

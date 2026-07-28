@@ -4,7 +4,7 @@ import CertificadosManager from '@/components/admin/CertificadosManager';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Gestor de Credenciales | FYD Admin',
+  title: 'Gestor de Credenciales | F&D Admin',
 };
 
 export const dynamic = 'force-dynamic';

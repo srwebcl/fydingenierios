@@ -4,7 +4,7 @@ import CapacitacionesManager from '@/components/admin/CapacitacionesManager';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Gestor de Capacitaciones | FYD Admin',
+  title: 'Gestor de Capacitaciones | F&D Admin',
 };
 
 export const dynamic = 'force-dynamic';

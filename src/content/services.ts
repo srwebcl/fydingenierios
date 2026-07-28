@@ -5,75 +5,213 @@ export type Service = {
   fullDescription: string;
   benefits: string[];
   deliverables: string[];
+  normatives?: string[];
 };
 
 export const services: Service[] = [
   {
-    slug: 'analisis-de-vibraciones',
+    slug: 'analisis-vibraciones',
     title: 'Análisis de Vibraciones',
-    shortDescription: 'Detección temprana de fallas mecánicas en equipos rotativos mediante análisis espectral.',
-    fullDescription: 'El Análisis de Vibraciones permite monitorear el estado de los componentes mecánicos de sus equipos rotativos, detectando desbalanceos, desalineamientos, holguras, fallas en rodamientos y engranajes antes de que ocurra una avería funcional. Nuestro servicio incluye reportes detallados bajo normativas internacionales aplicables.',
+    shortDescription: 'Diagnóstico y evaluación del estado mecánico de maquinaria rotativa mediante análisis espectral.',
+    fullDescription: 'Servicio de monitoreo de condición orientado al diagnóstico y evaluación del estado mecánico de maquinaria rotativa mediante el análisis de vibraciones. Permite identificar fallas incipientes antes de que evolucionen a una falla funcional, optimizando la planificación del mantenimiento y aumentando la confiabilidad operacional.',
     benefits: [
-      'Detección de fallas incipientes meses antes del fallo catastrófico.',
-      'Reducción drástica del lucro cesante por paradas no programadas.',
-      'Optimización del inventario de repuestos al conocer el desgaste real.',
-      'Aumento directo en la Confiabilidad y Disponibilidad de la planta.'
+      'Detección temprana de fallas.',
+      'Reducción de detenciones no programadas.',
+      'Incremento de la disponibilidad operacional.',
+      'Optimización de costos de mantenimiento.',
+      'Extensión de la vida útil de los activos.',
+      'Priorización técnica de intervenciones.'
     ],
     deliverables: [
-      'Informe técnico con diagnóstico espectral y formas de onda.',
-      'Análisis de tendencias de severidad vibratoria (Norma ISO 20816).',
-      'Recomendaciones correctivas priorizadas (cambio de rodamientos, alineación, etc.).'
+      'Informe técnico de diagnóstico.',
+      'Espectros y tendencias de vibración.',
+      'Evaluación de severidad.',
+      'Identificación de modos de falla.',
+      'Recomendaciones técnicas.',
+      'Clasificación de criticidad.'
+    ],
+    normatives: [
+      'ISO 18436-2',
+      'ISO 17359',
+      'ISO 20816',
+      'ISO 13373'
     ]
   },
   {
     slug: 'termografia-infrarroja',
     title: 'Termografía Infrarroja',
     shortDescription: 'Inspección no destructiva de temperatura superficial en equipos eléctricos y mecánicos.',
-    fullDescription: 'Mediante el uso de cámaras termográficas de alta resolución, identificamos puntos calientes, falsos contactos, sobrecargas en tableros eléctricos y problemas de fricción o lubricación en sistemas mecánicos sin interrumpir la operación.',
+    fullDescription: 'Inspección mediante cámaras termográficas para identificar anomalías térmicas en equipos eléctricos y mecánicos sin necesidad de detener la operación.',
     benefits: [
-      'Prevención de incendios y cortocircuitos en tableros eléctricos.',
-      'Inspección segura sin necesidad de detener los equipos ni contacto físico.',
-      'Identificación rápida de problemas de lubricación y fricción mecánica.',
-      'Inspección de refractarios, aislaciones térmicas y trampas de vapor.'
+      'Prevención de fallas.',
+      'Mayor seguridad operacional.',
+      'Reducción de riesgos eléctricos.',
+      'Optimización del mantenimiento.',
+      'Detección de pérdidas energéticas.'
     ],
     deliverables: [
-      'Reporte fotográfico dual (térmico + visual).',
-      'Clasificación de criticidad de hallazgos (Norma ASNT / NETA).',
-      'Sugerencias de mantenimiento preventivo y acciones correctivas inmediatas.'
+      'Informe termográfico.',
+      'Imágenes IR y visibles.',
+      'Clasificación de anomalías.',
+      'Recomendaciones.',
+      'Registro fotográfico.'
+    ],
+    normatives: [
+      'ISO 18436-7',
+      'NFPA 70B',
+      'ISO 6781 (cuando corresponda)'
     ]
   },
   {
-    slug: 'alineamiento-de-ejes',
-    title: 'Alineamiento de Ejes',
+    slug: 'alineamiento-laser',
+    title: 'Alineamiento Láser',
     shortDescription: 'Alineación de precisión láser para extender la vida útil de acoplamientos y rodamientos.',
-    fullDescription: 'Un porcentaje significativo de las fallas prematuras en máquinas rotativas se debe a la desalineación. Utilizamos equipos láser de última generación para corregir la alineación entre motor y máquina conducida, reduciendo el consumo energético y el desgaste.',
+    fullDescription: 'Corrección de la alineación entre ejes mediante sistemas láser de alta precisión para minimizar esfuerzos mecánicos y maximizar la confiabilidad.',
     benefits: [
-      'Disminución del consumo de energía eléctrica hasta en un 10%.',
-      'Extensión de vida útil de descansos, sellos mecánicos y acoplamientos.',
-      'Reducción de niveles globales de vibración de la máquina.',
-      'Prevención de fracturas de ejes por fatiga cíclica.'
+      'Disminución de vibraciones.',
+      'Mayor vida útil de rodamientos.',
+      'Menor consumo energético.',
+      'Reducción de fallas.',
+      'Mayor disponibilidad.'
     ],
     deliverables: [
-      'Certificado de alineamiento digital generado por el equipo láser.',
-      'Gráficos de tolerancias de acoplamiento finales alcanzadas.',
-      'Verificación y corrección de "Pie Cojo" (Soft Foot) antes de alinear.'
+      'Informe antes y después.',
+      'Valores de desalineamiento.',
+      'Correcciones aplicadas.',
+      'Registro fotográfico.',
+      'Certificado de alineación.'
+    ],
+    normatives: [
+      'ANSI/ASA S2.75',
+      'ISO 20816 (como referencia de evaluación)'
     ]
   },
   {
-    slug: 'calificacion-de-soldadores',
-    title: 'Calificación de Soldadores',
-    shortDescription: 'Certificación oficial de soldadores bajo normativas internacionales.',
-    fullDescription: 'Calificación de operadores y procedimientos de soldadura de acuerdo a normas internacionales como AWS D1.1, ASME IX y API 1104. Incluye la emisión de certificado digital con validación por código QR.',
+    slug: 'balanceo-dinamico',
+    title: 'Balanceo Dinámico',
+    shortDescription: 'Balanceo in-situ de equipos rotativos para eliminar excesos de vibración.',
+    fullDescription: 'Corrección del desbalance residual en componentes rotativos mediante técnicas de balanceo dinámico en terreno o taller.',
     benefits: [
-      'Cumplimiento de estándares de calidad exigidos por mineras y mandantes.',
-      'Trazabilidad digital inmediata de la vigencia del soldador vía portal web.',
-      'Respaldo de inspectores calificados en ensayos no destructivos.',
-      'Validación transparente a través de credenciales con código QR.'
+      'Reducción de vibraciones.',
+      'Mayor vida útil.',
+      'Menor desgaste.',
+      'Disminución del consumo energético.',
+      'Mayor confiabilidad.'
     ],
     deliverables: [
-      'Certificado de Calificación Oficial digital (PDF + QR).',
-      'Registro en el Portal Público de Validación de FYD Ingenieros.',
-      'Informes de inspección visual y ensayos (según aplique a la probeta).'
+      'Informe de balanceo.',
+      'Registro de correcciones.',
+      'Valores antes y después.',
+      'Certificado de balanceo.'
+    ],
+    normatives: [
+      'ISO 21940',
+      'ISO 20816'
+    ]
+  },
+  {
+    slug: 'ingenieria-confiabilidad',
+    title: 'Ingeniería de Confiabilidad y Gestión de Activos',
+    shortDescription: 'Estrategias para optimizar la confiabilidad y mantenibilidad de activos industriales.',
+    fullDescription: 'Desarrollo de estrategias para optimizar la confiabilidad, mantenibilidad y disponibilidad de los activos industriales mediante metodologías reconocidas internacionalmente.',
+    benefits: [
+      'Mayor disponibilidad.',
+      'Reducción del costo del ciclo de vida.',
+      'Optimización de planes de mantenimiento.',
+      'Priorización de recursos.',
+      'Mejora continua.'
+    ],
+    deliverables: [
+      'Estudios de criticidad.',
+      'Estrategias de mantenimiento.',
+      'Matrices de riesgo.',
+      'Informes técnicos.',
+      'Planes de mejora.'
+    ],
+    normatives: [
+      'ISO 55000',
+      'ISO 55001',
+      'ISO 55002',
+      'SAE JA1011 (RCM)'
+    ]
+  },
+  {
+    slug: 'auditorias-tecnicas',
+    title: 'Auditorías Técnicas de Mantenimiento Predictivo',
+    shortDescription: 'Evaluación independiente del desempeño de programas de mantenimiento predictivo.',
+    fullDescription: 'Evaluación independiente del desempeño de programas de mantenimiento predictivo, verificando cumplimiento técnico, metodológico y normativo.',
+    benefits: [
+      'Identificación de oportunidades de mejora.',
+      'Estandarización.',
+      'Mayor confiabilidad del programa.',
+      'Mejora del desempeño del personal.',
+      'Optimización de recursos.'
+    ],
+    deliverables: [
+      'Informe de auditoría.',
+      'Hallazgos.',
+      'No conformidades.',
+      'Plan de mejoras.',
+      'Recomendaciones.'
+    ],
+    normatives: [
+      'ISO 17359',
+      'ISO 18436',
+      'ISO 55001',
+      'Buenas prácticas de mantenimiento predictivo.'
+    ]
+  },
+  {
+    slug: 'implementacion-programas',
+    title: 'Implementación de Programas de Mantenimiento Predictivo',
+    shortDescription: 'Diseño e implementación de programas de monitoreo de condición.',
+    fullDescription: 'Diseño e implementación de programas de monitoreo de condición adaptados a la criticidad y necesidades operacionales de cada organización.',
+    benefits: [
+      'Implementación estructurada.',
+      'Optimización de frecuencias.',
+      'Integración de tecnologías.',
+      'Mayor confiabilidad.',
+      'Reducción de fallas.'
+    ],
+    deliverables: [
+      'Plan maestro.',
+      'Rutas de inspección.',
+      'Matriz de activos.',
+      'Procedimientos.',
+      'Indicadores.',
+      'Capacitación inicial.'
+    ],
+    normatives: [
+      'ISO 17359',
+      'ISO 55001',
+      'ISO 18436'
+    ]
+  },
+  {
+    slug: 'asesorias-ingenieria',
+    title: 'Asesorías e Ingeniería Especializada',
+    shortDescription: 'Consultoría técnica para la toma de decisiones e investigación de fallas.',
+    fullDescription: 'Servicio de consultoría técnica para apoyar la toma de decisiones en mantenimiento, confiabilidad, monitoreo de condición e investigación de fallas.',
+    benefits: [
+      'Soporte especializado.',
+      'Soluciones basadas en evidencia.',
+      'Optimización de recursos.',
+      'Reducción de riesgos.',
+      'Mayor confiabilidad operacional.'
+    ],
+    deliverables: [
+      'Informes técnicos.',
+      'Estudios de ingeniería.',
+      'Análisis de causa raíz (RCA).',
+      'Especificaciones técnicas.',
+      'Planes de acción.',
+      'Recomendaciones.'
+    ],
+    normatives: [
+      'ISO 55001',
+      'ISO 17359',
+      'IEC 60300 (Gestión de la Confiabilidad)',
+      'Metodologías RCA (RCA, FMEA, según el alcance del proyecto)'
     ]
   }
 ];

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, CheckCircle2, Wrench, GraduationCap, FileCheck } from 'lucide-react';
 
-type Area = 'Mantenimiento Predictivo' | 'Capacitación Industrial' | 'Calificación de Soldadores';
+type Area = 'Mantenimiento Predictivo' | 'Capacitación Industrial' | 'Ingeniería de Confiabilidad';
 
 export function StepByStepContactForm() {
   const [step, setStep] = useState(1);
@@ -20,11 +20,11 @@ export function StepByStepContactForm() {
   const getServicesForArea = (selectedArea: Area | null): string[] => {
     switch (selectedArea) {
       case 'Mantenimiento Predictivo':
-        return ['Análisis de Vibraciones', 'Termografía Infrarroja', 'Alineamiento de Ejes', 'Otro Servicio de Mantenimiento'];
+        return ['Análisis de Vibraciones', 'Termografía Infrarroja', 'Alineamiento Láser', 'Balanceo Dinámico', 'Otro Servicio'];
       case 'Capacitación Industrial':
         return ['Curso Abierto (Cupos)', 'Curso Cerrado In-Company', 'Desarrollo de Programa Específico'];
-      case 'Calificación de Soldadores':
-        return ['Calificación AWS D1.1', 'Calificación ASME IX', 'Calificación API 1104', 'Renovación / Mantención'];
+      case 'Ingeniería de Confiabilidad':
+        return ['Estudio RCM', 'Análisis de Criticidad', 'Implementación de Planes', 'Otro'];
       default:
         return [];
     }
@@ -115,13 +115,14 @@ export function StepByStepContactForm() {
               <GraduationCap size={40} className="text-brand-grey group-hover:text-brand-teal mb-4 transition-colors" />
               <span className="font-bold text-brand-dark">Capacitación Industrial</span>
             </button>
-            <button 
-              onClick={() => handleSelectArea('Calificación de Soldadores')}
-              className="flex flex-col items-center justify-center p-6 border-2 border-brand-light rounded-xl hover:border-brand-teal hover:bg-brand-light/30 transition-all text-center group"
-            >
-              <FileCheck size={40} className="text-brand-grey group-hover:text-brand-teal mb-4 transition-colors" />
-              <span className="font-bold text-brand-dark">Calificación de Soldadores</span>
-            </button>
+            <div 
+            onClick={() => handleSelectArea('Ingeniería de Confiabilidad')}
+            className={`p-6 border-2 rounded-xl cursor-pointer transition flex flex-col items-center text-center gap-3 ${area === 'Ingeniería de Confiabilidad' ? 'border-brand-teal bg-brand-teal/5' : 'border-brand-light hover:border-brand-teal/50'}`}
+          >
+            <div className="bg-brand-light p-4 rounded-full text-brand-dark"><FileCheck size={32} /></div>
+            <span className="font-bold text-brand-dark">Ingeniería de Confiabilidad</span>
+            <p className="text-xs text-brand-grey">Informes, RCM, Auditorías</p>
+          </div>
           </div>
         </div>
       )}

@@ -8,6 +8,12 @@ export type CourseFAQ = {
   answer: string;
 };
 
+export type CourseInstructor = {
+  name: string;
+  title: string;
+  description: string;
+};
+
 export type Course = {
   slug: string;
   title: string;
@@ -19,35 +25,71 @@ export type Course = {
   level: 'Introductorio' | 'Intermedio' | 'Avanzado';
   syllabus: CourseModule[];
   faqs: CourseFAQ[];
+  whatYouWillLearn?: string[];
+  modality?: string;
+  evaluation?: string;
+  material?: string;
+  certificationText?: string;
+  audience?: string;
+  whyChooseUs?: string[];
+  instructor?: CourseInstructor;
 };
 
 export const courses: Course[] = [
   {
-    slug: 'analisis-de-vibraciones-cat-1',
-    title: 'Análisis de Vibraciones CAT I',
-    shortDescription: 'Introducción al análisis de vibraciones mecánicas y monitoreo de condición según ISO 18436-2.',
-    fullDescription: 'Este curso preparatorio entrega los fundamentos de la vibración, adquisición de datos y procesamiento de señales, basado en la normativa ISO 18436-2. Orientado a técnicos, mecánicos e ingenieros que se inician en el mantenimiento predictivo. Los participantes aprenderán a operar colectores de datos y a reconocer los patrones vibratorios de desbalanceo, desalineación y holguras.',
-    durationHours: 32,
+    slug: 'analisis-vibraciones-nivel-i',
+    title: 'Análisis de Vibraciones Nivel I',
+    shortDescription: 'Fundamentos para implementar y desarrollar actividades de monitoreo de condición en maquinaria rotativa.',
+    fullDescription: 'El curso Análisis de Vibraciones Nivel I entrega los conocimientos fundamentales para implementar y desarrollar actividades de monitoreo de condición en maquinaria rotativa. Los participantes aprenderán los principios del análisis de vibraciones, el uso de instrumentación especializada, la interpretación básica de espectros y la identificación de los modos de falla más comunes, mediante una metodología que combina teoría, práctica y casos reales de la industria.',
+    durationHours: 24,
     includesDiploma: true,
     category: 'Confiabilidad',
     level: 'Introductorio',
+    modality: 'Presencial / Online en vivo',
+    evaluation: 'Teórica y práctica',
+    material: 'Manual digital y material complementario',
+    certificationText: 'Certificado de Aprobación emitido por F&D Ingeniería',
+    audience: 'Este programa está dirigido a técnicos, mecánicos, ingenieros, supervisores, planificadores, profesionales de confiabilidad y personal de mantenimiento que deseen adquirir conocimientos en monitoreo de condición mediante análisis de vibraciones. No se requieren conocimientos previos.',
+    whatYouWillLearn: [
+      'Fundamentos del análisis de vibraciones.',
+      'Principios físicos de la vibración mecánica.',
+      'Uso correcto de sensores e instrumentación.',
+      'Configuración de rutas de inspección.',
+      'Interpretación básica de espectros FFT.',
+      'Identificación de los principales modos de falla.',
+      'Evaluación de la condición de maquinaria rotativa.',
+      'Elaboración de recomendaciones técnicas.'
+    ],
+    whyChooseUs: [
+      'Formación basada en casos reales.',
+      'Enfoque práctico orientado a la industria.',
+      'Uso de instrumentación profesional.',
+      'Material técnico actualizado.',
+      'Instructor con amplia experiencia en mantenimiento predictivo.',
+      'Certificado verificable mediante código QR y código único.'
+    ],
+    instructor: {
+      name: 'Alamiro Andrés Fernández Huenuqueo',
+      title: 'Ingeniero Civil Industrial, Magíster en Gestión de Organizaciones',
+      description: 'Especialista en mantenimiento predictivo con más de 15 años de experiencia en la industria minera y de procesos. Analista de Vibraciones Categoría IV conforme a ISO 18436-2 y Director Académico de F&D Ingeniería, con experiencia en diagnóstico de maquinaria crítica, implementación de programas de monitoreo de condición y formación técnica de profesionales.'
+    },
     syllabus: [
       {
-        title: 'Módulo 1: Principios de Vibración',
-        topics: ['Concepto de vibración y movimiento armónico', 'Amplitud, frecuencia y fase', 'Unidades de medición (Desplazamiento, Velocidad, Aceleración)', 'Conversión de unidades y dominio del tiempo vs dominio de frecuencia']
-      },
-      {
-        title: 'Módulo 2: Adquisición de Datos',
-        topics: ['Tipos de transductores (Acelerómetros, Proximímetros)', 'Montaje de sensores e impacto en la medición', 'Rutas de recolección y configuración de equipos', 'Reconocimiento de mala toma de datos (Ski-slope)']
-      },
-      {
-        title: 'Módulo 3: Análisis de Fallas Comunes',
-        topics: ['Diagnóstico de Desbalanceo de Masas', 'Tipos de Desalineamiento (Angular, Paralelo)', 'Identificación de Holguras Mecánicas', 'Introducción a fallas de rodamientos de elemento rodante']
+        title: 'Programa del Curso',
+        topics: [
+          'Estrategias de mantenimiento y monitoreo de condición.',
+          'Fundamentos del análisis de vibraciones.',
+          'Instrumentación y sensores.',
+          'Recolección y adquisición de datos.',
+          'Normativa internacional aplicable.',
+          'Introducción al diagnóstico de fallas.',
+          'Taller práctico y análisis de casos.'
+        ]
       }
     ],
     faqs: [
       { question: '¿Necesito conocimientos previos en vibraciones?', answer: 'No, este curso inicia desde cero y cubre todos los fundamentos físicos requeridos.' },
-      { question: '¿El certificado está validado bajo norma ISO?', answer: 'El temario cumple con ISO 18436-2. El diploma entregado por FYD certifica la aprobación de la capacitación y es verificable mediante QR público.' },
+      { question: '¿El certificado está validado bajo norma ISO?', answer: 'El temario cumple con ISO 18436-2. El diploma entregado por F&D certifica la aprobación de la capacitación y es verificable mediante QR público.' },
       { question: '¿Se entrega material de estudio?', answer: 'Sí, entregamos un manual técnico impreso y acceso a plataforma digital con casos de estudio y señales de ejemplo.' }
     ]
   },

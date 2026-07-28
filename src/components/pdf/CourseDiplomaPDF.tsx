@@ -108,7 +108,7 @@ export const CourseDiplomaPDF = ({ data }: { data: DiplomaData }) => (
         {data.logoBase64 ? (
           <Image src={data.logoBase64} style={{ width: 160, height: 43 }} />
         ) : (
-          <Text style={styles.logoPlaceholder}>FYD INGENIEROS</Text>
+          <Text style={styles.logoPlaceholder}>F&D INGENIEROS</Text>
         )}
         <Text style={{ fontSize: 12, color: '#5B6B6C' }}>División de Capacitación Industrial</Text>
       </View>
@@ -138,7 +138,7 @@ export const CourseDiplomaPDF = ({ data }: { data: DiplomaData }) => (
           <Text style={styles.codeText}>Código: {data.validationCode}</Text>
         </View>
         <Text style={styles.disclaimer}>
-          Este diploma es oficial y auditable. Puede verificar su autenticidad escaneando el código QR o ingresando el código de validación en el portal de certificados de FYD Ingenieros.
+          Este diploma es oficial y auditable. Puede verificar su autenticidad escaneando el código QR o ingresando el código de validación en el portal de certificados de F&D Ingenieros.
         </Text>
       </View>
     </Page>

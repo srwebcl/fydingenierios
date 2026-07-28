@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Credential, CredentialRecoveryPayment, CourseSession, WeldingProcess, CredentialType, ApprovalType } from '@prisma/client';
-import { issueWeldingQualification, issueCourseDiploma, WeldingQualificationData, CourseDiplomaBulkData } from '@/actions/credentials';
+import { Credential, CredentialRecoveryPayment, CourseSession, CredentialType, ApprovalType } from '@prisma/client';
+import { issueServiceReportCredential, issueCourseDiploma, ServiceReportCredentialData, CourseDiplomaBulkData } from '@/actions/credentials';
 import { courses } from '@/content/courses';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -13,41 +13,55 @@ interface Props {
   sessions: CourseSession[];
 }
 
+const serviceNameMap: Record<string, string> = {
+  'analisis-vibraciones': 'Análisis de Vibraciones',
+  'termografia-infrarroja': 'Termografía Infrarroja',
+  'alineamiento-laser': 'Alineamiento Láser',
+  'balanceo-dinamico': 'Balanceo Dinámico',
+  'ingenieria-confiabilidad': 'Ingeniería de Confiabilidad y Gestión de Activos',
+  'auditorias-tecnicas': 'Auditorías Técnicas de Mantenimiento Predictivo',
+  'implementacion-programas': 'Implementación de Programas de Mantenimiento Predictivo',
+  'asesorias-ingenieria': 'Asesorías e Ingeniería Especializada'
+};
+
 export default function CertificadosManager({ initialCredentials, initialPayments, sessions }: Props) {
-  const [tab, setTab] = useState<'SOLDADORES' | 'DIPLOMAS' | 'PAGOS'>('SOLDADORES');
+  const [tab, setTab] = useState<'INFORMES' | 'DIPLOMAS' | 'PAGOS'>('INFORMES');
   const [credentials, setCredentials] = useState(initialCredentials);
   
   // Modals
-  const [isWelderModalOpen, setIsWelderModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isDiplomaModalOpen, setIsDiplomaModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const soldadores = credentials.filter(c => c.type === 'CALIFICACION_SOLDADOR');
+  const informes = credentials.filter(c => c.type === 'INFORME_SERVICIO');
   const diplomas = credentials.filter(c => c.type === 'DIPLOMA_CAPACITACION');
 
-  const handleIssueWelder = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleIssueReport = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     
     const formData = new FormData(e.currentTarget);
-    const data: WeldingQualificationData = {
+    const data: ServiceReportCredentialData = {
       rut: formData.get('rut') as string,
       fullName: formData.get('fullName') as string,
       company: formData.get('company') as string,
       email: formData.get('email') as string,
-      weldingProcess: formData.get('weldingProcess') as WeldingProcess,
-      weldingStandard: formData.get('weldingStandard') as string,
-      weldingPosition: formData.get('weldingPosition') as string,
+      phone: formData.get('phone') as string,
+      serviceSlug: formData.get('serviceSlug') as string,
+      clientCompany: formData.get('clientCompany') as string,
+      equipmentTag: formData.get('equipmentTag') as string,
+      reportTitle: formData.get('reportTitle') as string,
+      findingsSummary: formData.get('findingsSummary') as string,
       issueDate: formData.get('issueDate') as string,
     };
 
-    const res = await issueWeldingQualification(data);
+    const res = await issueServiceReportCredential(data);
     if (res.success) {
-      alert(`Calificación emitida exitosamente. Código: ${res.validationCode}`);
-      setIsWelderModalOpen(false);
-      window.location.reload(); // Quick refresh for now
+      alert(`Informe emitido exitosamente. Código: ${res.validationCode}`);
+      setIsReportModalOpen(false);
+      window.location.reload(); 
     } else {
       setError(res.error || 'Error al emitir');
     }
@@ -101,10 +115,10 @@ export default function CertificadosManager({ initialCredentials, initialPayment
         
         <div className="flex gap-2 w-full md:w-auto overflow-x-auto no-scrollbar pb-2">
           <button 
-            onClick={() => setTab('SOLDADORES')}
-            className={`px-4 py-2 rounded-lg whitespace-nowrap font-bold transition ${tab === 'SOLDADORES' ? 'bg-brand-teal text-white shadow' : 'bg-brand-light text-brand-grey hover:bg-brand-teal/10'}`}
+            onClick={() => setTab('INFORMES')}
+            className={`px-4 py-2 rounded-lg whitespace-nowrap font-bold transition ${tab === 'INFORMES' ? 'bg-brand-teal text-white shadow' : 'bg-brand-light text-brand-grey hover:bg-brand-teal/10'}`}
           >
-            Soldadores
+            Informes
           </button>
           <button 
             onClick={() => setTab('DIPLOMAS')}
@@ -121,11 +135,11 @@ export default function CertificadosManager({ initialCredentials, initialPayment
         </div>
       </div>
 
-      {tab === 'SOLDADORES' && (
+      {tab === 'INFORMES' && (
         <>
           <div className="mb-4">
-            <button onClick={() => setIsWelderModalOpen(true)} className="w-full md:w-auto bg-brand-teal text-white px-4 py-2 rounded shadow hover:bg-brand-dark transition">
-              + Emitir Calificación
+            <button onClick={() => setIsReportModalOpen(true)} className="w-full md:w-auto bg-brand-teal text-white px-4 py-2 rounded shadow hover:bg-brand-dark transition">
+              + Emitir Certificado de Informe
             </button>
           </div>
           <div className="bg-white shadow rounded-lg overflow-hidden overflow-x-auto">
@@ -133,18 +147,21 @@ export default function CertificadosManager({ initialCredentials, initialPayment
               <thead className="bg-brand-light text-brand-grey font-bold uppercase text-xs">
                 <tr>
                   <th className="px-6 py-3">Código</th>
-                  <th className="px-6 py-3">Titular</th>
-                  <th className="px-6 py-3">Proceso</th>
+                  <th className="px-6 py-3">Mandante</th>
+                  <th className="px-6 py-3">Servicio / Título</th>
                   <th className="px-6 py-3">Emisión</th>
                   <th className="px-6 py-3">Estado</th>
                 </tr>
               </thead>
               <tbody>
-                {soldadores.map(c => (
+                {informes.map(c => (
                   <tr key={c.id} className="border-b border-brand-light/50">
                     <td className="px-6 py-4 font-mono font-bold">{c.validationCode}</td>
-                    <td className="px-6 py-4">{c.holder.fullName} <br/><span className="text-xs text-brand-grey">{c.holder.rut}</span></td>
-                    <td className="px-6 py-4">{c.weldingProcess} ({c.weldingPosition})</td>
+                    <td className="px-6 py-4">{c.clientCompany}</td>
+                    <td className="px-6 py-4">
+                      <span className="font-bold">{serviceNameMap[c.serviceSlug as string] || c.serviceSlug}</span><br/>
+                      <span className="text-xs text-brand-grey">{c.reportTitle}</span>
+                    </td>
                     <td className="px-6 py-4">{format(new Date(c.issueDate), 'dd MMM yyyy', {locale: es})}</td>
                     <td className="px-6 py-4">
                       <span className={`px-2 py-1 rounded text-xs font-bold ${c.status === 'VIGENTE' ? 'bg-brand-lime text-brand-dark' : 'bg-red-100 text-red-700'}`}>
@@ -153,7 +170,7 @@ export default function CertificadosManager({ initialCredentials, initialPayment
                     </td>
                   </tr>
                 ))}
-                {soldadores.length === 0 && <tr><td colSpan={5} className="px-6 py-8 text-center text-brand-grey">No hay calificaciones registradas.</td></tr>}
+                {informes.length === 0 && <tr><td colSpan={5} className="px-6 py-8 text-center text-brand-grey">No hay informes registrados.</td></tr>}
               </tbody>
             </table>
           </div>
@@ -232,27 +249,27 @@ export default function CertificadosManager({ initialCredentials, initialPayment
       )}
 
       {/* Modals */}
-      {isWelderModalOpen && (
+      {isReportModalOpen && (
         <div className="fixed inset-0 bg-brand-dark/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 overflow-y-auto max-h-[90vh]">
-            <h3 className="text-xl font-bold font-heading mb-4 text-brand-dark">Emitir Calificación de Soldador</h3>
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 overflow-y-auto max-h-[90vh]">
+            <h3 className="text-xl font-bold font-heading mb-4 text-brand-dark">Emitir Certificado de Informe Técnico</h3>
             {error && <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm">{error}</div>}
             
-            <form onSubmit={handleIssueWelder} className="space-y-4">
+            <form onSubmit={handleIssueReport} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-brand-dark mb-1">RUT</label>
+                  <label className="block text-xs font-bold text-brand-dark mb-1">RUT Evaluador</label>
                   <input type="text" name="rut" required className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm" placeholder="12.345.678-9" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-brand-dark mb-1">Nombre Completo</label>
+                  <label className="block text-xs font-bold text-brand-dark mb-1">Nombre Evaluador</label>
                   <input type="text" name="fullName" required className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-brand-dark mb-1">Empresa</label>
-                  <input type="text" name="company" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm" defaultValue="Independiente" />
+                  <label className="block text-xs font-bold text-brand-dark mb-1">Empresa (Opcional)</label>
+                  <input type="text" name="company" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm" defaultValue="F&D Ingenieros" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-brand-dark mb-1">Email (Envío PDF)</label>
@@ -260,20 +277,38 @@ export default function CertificadosManager({ initialCredentials, initialPayment
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-brand-dark mb-1">Proceso</label>
-                  <select name="weldingProcess" required className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm">
-                    {Object.values(WeldingProcess).map(p => <option key={p} value={p}>{p}</option>)}
+              <div className="pt-2 border-t border-brand-light">
+                <h4 className="text-sm font-bold text-brand-dark mb-3">Datos del Servicio</h4>
+                
+                <div className="mb-3">
+                  <label className="block text-xs font-bold text-brand-dark mb-1">Servicio Prestado</label>
+                  <select name="serviceSlug" required className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm">
+                    <option value="">Selecciona servicio...</option>
+                    {Object.entries(serviceNameMap).map(([slug, name]) => (
+                      <option key={slug} value={slug}>{name}</option>
+                    ))}
                   </select>
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-brand-dark mb-1">Norma</label>
-                  <input type="text" name="weldingStandard" required className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm" placeholder="AWS D1.1" />
+                
+                <div className="grid grid-cols-2 gap-4 mb-3">
+                  <div>
+                    <label className="block text-xs font-bold text-brand-dark mb-1">Empresa Mandante</label>
+                    <input type="text" name="clientCompany" required className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm" placeholder="Ej: Minera XYZ" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-brand-dark mb-1">Equipo / Activo (Opcional)</label>
+                    <input type="text" name="equipmentTag" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm" placeholder="Ej: Molino SAG 1" />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-brand-dark mb-1">Posición</label>
-                  <input type="text" name="weldingPosition" required className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm" placeholder="3G" />
+
+                <div className="mb-3">
+                  <label className="block text-xs font-bold text-brand-dark mb-1">Título del Informe</label>
+                  <input type="text" name="reportTitle" required className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm" placeholder="Ej: Análisis Vibracional Motor Bomba 3" />
+                </div>
+                
+                <div className="mb-3">
+                  <label className="block text-xs font-bold text-brand-dark mb-1">Resumen de Hallazgos (Opcional)</label>
+                  <textarea name="findingsSummary" rows={2} className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm" placeholder="Breve resumen de los resultados..." />
                 </div>
               </div>
 
@@ -283,7 +318,7 @@ export default function CertificadosManager({ initialCredentials, initialPayment
               </div>
 
               <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-brand-light">
-                <button type="button" onClick={() => setIsWelderModalOpen(false)} className="px-4 py-2 text-sm text-brand-grey hover:bg-brand-light rounded transition">Cancelar</button>
+                <button type="button" onClick={() => setIsReportModalOpen(false)} className="px-4 py-2 text-sm text-brand-grey hover:bg-brand-light rounded transition">Cancelar</button>
                 <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-brand-teal text-white rounded hover:bg-brand-dark transition disabled:opacity-50">
                   {loading ? 'Generando PDF...' : 'Emitir'}
                 </button>

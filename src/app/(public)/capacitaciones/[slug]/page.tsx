@@ -93,11 +93,55 @@ export default async function CapacitacionIndividual({ params }: { params: Promi
               <h2 className="text-3xl font-bold text-brand-dark border-b border-brand-light pb-4">Acerca de este curso</h2>
               <p className="leading-relaxed">{course.fullDescription}</p>
             </section>
+
+            {course.whatYouWillLearn && course.whatYouWillLearn.length > 0 && (
+              <section>
+                <h2 className="text-3xl font-bold text-brand-dark mb-6 border-b border-brand-light pb-4">¿Qué aprenderás?</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {course.whatYouWillLearn.map((item, i) => (
+                    <div key={i} className="flex items-start bg-brand-light p-4 rounded-lg shadow-sm border border-brand-teal/10">
+                      <span className="w-2 h-2 bg-brand-teal rounded-full mt-2.5 mr-3 shrink-0"></span>
+                      <span className="text-brand-dark font-medium leading-snug">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            <section>
+              <h2 className="text-3xl font-bold text-brand-dark mb-6 border-b border-brand-light pb-4">Información General</h2>
+              <div className="bg-brand-white border border-brand-light rounded-xl p-6 grid grid-cols-1 sm:grid-cols-2 gap-6 shadow-sm">
+                <div>
+                  <h4 className="font-bold text-brand-dark mb-1">Duración</h4>
+                  <p className="text-brand-grey m-0">{course.durationHours} horas</p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-brand-dark mb-1">Modalidad</h4>
+                  <p className="text-brand-grey m-0">{course.modality || 'Presencial / Online'}</p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-brand-dark mb-1">Nivel</h4>
+                  <p className="text-brand-grey m-0">{course.level}</p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-brand-dark mb-1">Evaluación</h4>
+                  <p className="text-brand-grey m-0">{course.evaluation || 'Teórica y práctica'}</p>
+                </div>
+                <div className="sm:col-span-2">
+                  <h4 className="font-bold text-brand-dark mb-1">Material</h4>
+                  <p className="text-brand-grey m-0">{course.material || 'Manual y material complementario'}</p>
+                </div>
+                <div className="sm:col-span-2">
+                  <h4 className="font-bold text-brand-dark mb-1">Certificación</h4>
+                  <p className="text-brand-grey m-0">{course.certificationText || 'Certificado Oficial'}</p>
+                </div>
+              </div>
+            </section>
             
             <section>
               <h2 className="text-3xl font-bold text-brand-dark mb-6 border-b border-brand-light pb-4">Dirigido a</h2>
               <div className="bg-brand-white border border-brand-light p-6 rounded-lg shadow-sm">
-                <p className="text-brand-grey leading-relaxed m-0">Ingenieros de planta, técnicos de mantenimiento, supervisores y personal encargado de la confiabilidad de los equipos mecánicos o eléctricos de la empresa. Ideal para quienes buscan formalizar conocimientos y obtener certificación oficial.</p>
+                <p className="text-brand-grey leading-relaxed m-0">{course.audience || 'Ingenieros de planta, técnicos de mantenimiento, supervisores y personal encargado de la confiabilidad de los equipos mecánicos o eléctricos de la empresa. Ideal para quienes buscan formalizar conocimientos y obtener certificación oficial.'}</p>
               </div>
             </section>
 
@@ -125,18 +169,42 @@ export default async function CapacitacionIndividual({ params }: { params: Promi
               </section>
             )}
 
+            {course.whyChooseUs && course.whyChooseUs.length > 0 && (
+              <section>
+                <h2 className="text-3xl font-bold text-brand-dark mb-6 border-b border-brand-light pb-4">¿Por qué elegir este curso?</h2>
+                <ul className="space-y-4 bg-brand-white border border-brand-light rounded-xl p-6 shadow-sm">
+                  {course.whyChooseUs.map((item, i) => (
+                    <li key={i} className="flex items-center text-brand-grey text-lg">
+                      <span className="text-brand-teal font-bold mr-3 shrink-0 text-xl">✓</span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {course.instructor && (
+              <section className="bg-brand-light rounded-xl p-8 border-l-4 border-brand-teal shadow-sm">
+                <h2 className="text-2xl font-bold text-brand-dark mb-4">Instructor Principal</h2>
+                <h3 className="text-xl font-bold text-brand-teal mb-1">{course.instructor.name}</h3>
+                <p className="text-brand-grey font-medium mb-4">{course.instructor.title}</p>
+                <p className="text-brand-dark/80 leading-relaxed m-0 text-sm">{course.instructor.description}</p>
+              </section>
+            )}
+
             {/* Certificación Oficial */}
             {course.includesDiploma && (
-              <section className="bg-brand-dark text-white p-8 rounded-xl flex flex-col md:flex-row items-center gap-8 shadow-xl">
-                <div className="bg-white p-4 rounded-lg shrink-0 flex items-center justify-center">
-                  <QrCode size={80} className="text-brand-dark" />
+              <section className="bg-brand-dark text-white p-8 rounded-xl flex flex-col md:flex-row items-start gap-8 shadow-xl">
+                <div className="bg-white p-4 rounded-lg shrink-0 flex items-center justify-center mt-2">
+                  <QrCode size={60} className="text-brand-dark" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-3 text-brand-lime">Certificación Oficial Vía QR</h3>
-                  <p className="text-brand-light/80 leading-relaxed m-0">
-                    Al aprobar esta capacitación, recibirás un diploma digital emitido bajo el Motor de Credenciales FYD. 
-                    Este diploma incluye un código QR único que permite a empleadores, mandantes o jefes de turno validar tu competencia 
-                    instantáneamente en nuestro portal público.
+                  <h3 className="text-2xl font-bold mb-3 text-brand-lime">Certificación</h3>
+                  <p className="text-brand-light/90 leading-relaxed m-0 mb-4">
+                    Al aprobar el curso, los participantes recibirán un Certificado de Aprobación emitido por F&D Ingeniería, el cual incorpora un código único y un código QR para su verificación en línea.
+                  </p>
+                  <p className="text-brand-light/60 text-xs leading-relaxed m-0 italic border-l-2 border-brand-light/30 pl-3">
+                    Importante: Este programa ha sido desarrollado considerando los lineamientos y competencias establecidos en normas internacionales aplicables y las mejores prácticas de la industria. El certificado emitido por F&D Ingeniería acredita la aprobación del curso impartido por nuestra institución y no constituye una certificación internacional de competencias otorgada por un organismo acreditado.
                   </p>
                 </div>
               </section>
@@ -154,12 +222,21 @@ export default async function CapacitacionIndividual({ params }: { params: Promi
           
           {/* Columna Lateral - Conversión Directa */}
           <div className="lg:col-span-1">
-            <div className="sticky top-28">
+            <div className="sticky top-28 space-y-6">
+              
+              <div className="bg-brand-teal text-white p-6 rounded-xl shadow-lg text-center">
+                <h3 className="text-xl font-bold mb-2">Próximas Fechas</h3>
+                <p className="text-sm text-brand-light/90 mb-4">Consulta nuestras próximas convocatorias o solicita una capacitación exclusiva para tu empresa.</p>
+                <a href="#fechas" className="block w-full bg-white text-brand-teal font-bold py-3 rounded-lg text-sm hover:bg-brand-light transition">
+                  Ver Calendario
+                </a>
+              </div>
+
               <EmbeddedLeadForm 
                 interestType="CAPACITACION"
                 interestSlug={course.slug}
                 title={sessions.length > 0 ? "Inscribirse / Cotizar Curso" : "Cotizar Curso Cerrado"}
-                subtitle={sessions.length > 0 ? "Asegure su cupo completando el formulario. Le enviaremos el programa detallado y medios de pago." : "Actualmente no hay fechas abiertas. Cotice este programa en modalidad In-Company para su empresa."}
+                subtitle={sessions.length > 0 ? "Asegure su cupo completando el formulario. Le enviaremos el programa detallado y medios de pago." : "Desarrollamos programas In Company, adaptando los contenidos, horarios y actividades prácticas a las necesidades específicas de cada organización."}
               />
             </div>
           </div>

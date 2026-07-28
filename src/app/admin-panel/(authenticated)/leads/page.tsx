@@ -4,7 +4,7 @@ import LeadsManager from '@/components/admin/LeadsManager';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Bandeja de Leads | FYD Admin',
+  title: 'Bandeja de Leads | F&D Admin',
 };
 
 export const dynamic = 'force-dynamic';

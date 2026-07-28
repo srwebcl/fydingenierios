@@ -56,16 +56,18 @@ model Credential {
   holderId          String
   type              CredentialType
 
-  // --- Campos exclusivos de CALIFICACION_SOLDADOR (null si type = DIPLOMA_CAPACITACION) ---
-  weldingProcess    WeldingProcess?   // SMAW, GTAW, FCAW, etc. [VALIDAR CON CLIENTE]
-  weldingStandard   String?           // ej: "AWS D1.1", "ASME IX", "API 1104"
-  weldingPosition   String?           // posición calificada, ej. "3G", "6G"
+  // --- Campos exclusivos de INFORME_SERVICIO (null si type = DIPLOMA_CAPACITACION) ---
+  serviceSlug       String?           // ej: "analisis-de-vibraciones"
+  clientCompany     String?           // Empresa Mandante
+  equipmentTag      String?           // Equipo / Activo analizado
+  reportTitle       String?           // Título oficial del informe técnico
+  findingsSummary   String?           // Resumen breve de hallazgos
 
-  // --- Campos exclusivos de DIPLOMA_CAPACITACION (null si type = CALIFICACION_SOLDADOR) ---
+  // --- Campos exclusivos de DIPLOMA_CAPACITACION (null si type = INFORME_SERVICIO) ---
   courseSlug        String?           // ej: "analisis-de-vibraciones"
   courseSession     CourseSession?    @relation(fields: [courseSessionId], references: [id])
   courseSessionId   String?           // sesión/fecha específica que cursó el participante
-  approvalType      ApprovalType?     // PARTICIPACION o APROBACION (ver agents.md / architecture.md sección 3)
+  approvalType      ApprovalType?     // PARTICIPACION o APROBACION
   scorePercent      Int?              // nota o % de aprobación, si aplica
 
   // --- Campos comunes a ambos tipos ---
@@ -83,22 +85,13 @@ model Credential {
 }
 
 enum CredentialType {
-  CALIFICACION_SOLDADOR
+  INFORME_SERVICIO
   DIPLOMA_CAPACITACION
 }
 
 enum ApprovalType {
   PARTICIPACION
   APROBACION
-}
-
-enum WeldingProcess {
-  SMAW
-  GTAW
-  GMAW
-  FCAW
-  SAW
-  OTRO
 }
 
 enum CredentialStatus {

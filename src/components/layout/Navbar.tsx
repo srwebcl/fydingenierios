@@ -12,7 +12,7 @@ export default function Navbar() {
     { href: '/', label: 'Inicio' },
     { href: '/quienes-somos', label: 'Quiénes Somos' },
     { href: '/servicios', label: 'Servicios' },
-    { href: '/capacitaciones', label: 'Capacitaciones' },
+    { href: '/capacitaciones', label: 'Academia F&D' },
     { href: '/contacto', label: 'Contacto' },
   ];
 
@@ -23,16 +23,13 @@ export default function Navbar() {
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="flex items-center gap-3 group">
               <Image 
-                src="/logo.webp" 
-                alt="Logo FYD" 
-                width={160} 
-                height={160} 
-                className="h-16 w-auto object-contain group-hover:scale-105 transition-transform"
+                src="/logo.jpeg" 
+                alt="Logo F&D" 
+                width={240} 
+                height={80} 
+                className="h-[76px] w-auto object-contain group-hover:scale-105 transition-transform py-1"
                 priority
               />
-              <span className="font-heading font-bold text-xl md:text-2xl tracking-tighter text-brand-dark leading-none hidden sm:block">
-                FYD <span className="text-brand-teal">INGENIEROS</span>
-              </span>
             </Link>
           </div>
           

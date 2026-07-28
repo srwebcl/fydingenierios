@@ -3,7 +3,7 @@ import { prisma as db } from '@/lib/db';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Dashboard | FYD Admin',
+  title: 'Dashboard | F&D Admin',
 };
 
 export const dynamic = 'force-dynamic';
