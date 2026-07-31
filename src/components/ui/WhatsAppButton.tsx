@@ -4,11 +4,11 @@ import React from 'react';
 import { usePathname } from 'next/navigation';
 import { MessageCircle } from 'lucide-react';
 
-export function WhatsAppButton() {
+export function WhatsAppButton({ phoneNumber }: { phoneNumber?: string }) {
   const pathname = usePathname();
   
-  // Phone number from environment or fallback
-  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+56990153483';
+  // Phone number from prop, environment, or fallback
+  const phone = phoneNumber || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+56983894138';
   
   // Contextual message
   let message = 'Hola, quisiera hacer una consulta comercial.';

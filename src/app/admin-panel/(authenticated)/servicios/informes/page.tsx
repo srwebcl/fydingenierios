@@ -1,16 +1,17 @@
 import React from 'react';
 import { prisma as db } from '@/lib/db';
-import CertificadosManager from '@/components/admin/CertificadosManager';
+import InformesManager from '@/components/admin/InformesManager';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Gestor de Credenciales | F&D Admin',
+  title: 'Informes Técnicos | F&D Admin',
 };
 
 export const dynamic = 'force-dynamic';
 
-export default async function CertificadosAdmin() {
+export default async function InformesAdminPage() {
   const credentials = await db.credential.findMany({
+    where: { type: 'INFORME_SERVICIO' },
     include: { holder: true },
     orderBy: { createdAt: 'desc' }
   });
@@ -19,16 +20,11 @@ export default async function CertificadosAdmin() {
     orderBy: { createdAt: 'desc' }
   });
 
-  const sessions = await db.courseSession.findMany({
-    orderBy: { startDate: 'desc' }
-  });
-
   return (
     <div className="w-full">
-      <CertificadosManager 
+      <InformesManager 
         initialCredentials={credentials} 
         initialPayments={payments} 
-        sessions={sessions} 
       />
     </div>
   );

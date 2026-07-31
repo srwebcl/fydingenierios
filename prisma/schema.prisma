@@ -69,8 +69,11 @@ model Credential {
   courseSessionId   String?           // sesión/fecha específica que cursó el participante
   approvalType      ApprovalType?     // PARTICIPACION o APROBACION
   scorePercent      Int?              // nota o % de aprobación, si aplica
+  courseDates       String?           // ej: "03 al 05 de febrero del 2026"
+  courseHours       Int?              // ej: 24
 
   // --- Campos comunes a ambos tipos ---
+  certificateNumber String?           @unique  // Folio visual, ej: F&D-VA-2026-001
   issueDate         DateTime          @default(now())
   expiryDate        DateTime?         // obligatorio y = issueDate + 1 año para soldadores; NULL (no expira) para diplomas, salvo [VALIDAR CON CLIENTE]
   validationCode    String            @unique  // hash único, ver permissions.md sección 3
@@ -153,5 +156,89 @@ model Settings {
   whatsappNumber      String   @default("+56990153483")
   businessHoursOpen   String   @default("09:00")
   businessHoursClose  String   @default("18:30")
+  tickerText          String   @default("Especialistas en Confiabilidad de Activos y Mantenimiento Predictivo • Certificación Oficial de Informes Técnicos • Programas de Capacitación Técnica con Validación • ")
   updatedAt           DateTime @updatedAt
+}
+
+model Service {
+  id               String   @id @default(cuid())
+  slug             String   @unique
+  title            String
+  shortDescription String
+  fullDescription  String
+  imageUrl         String?
+  benefits         String[]
+  deliverables     String[]
+  normatives       String[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Course {
+  id                String   @id @default(cuid())
+  slug              String   @unique
+  title             String
+  shortDescription  String
+  fullDescription   String
+  durationHours     Int
+  includesDiploma   Boolean  @default(true)
+  category          String
+  level             String
+  modality          String?
+  evaluation        String?
+  material          String?
+  certificationText String?
+  audience          String?
+  whatYouWillLearn  String[]
+  whyChooseUs       String[]
+  instructorName    String?
+  instructorTitle   String?
+  instructorDesc    String?
+  syllabus          Json     // Guardará [{ title: string, topics: string[] }]
+  faqs              Json     // Guardará [{ question: string, answer: string }]
+  pdfUrl            String?  // Link externo al PDF del programa
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model CourseOption {
+  id           String   @id @default(cuid())
+  type         String   // "CATEGORY", "LEVEL", "MODALITY"
+  name         String
+  abbreviation String?  // Principalmente para CATEGORY
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([type, name])
+}
+
+model Quotation {
+  id              String   @id @default(cuid())
+  quoteNumber     String   @unique
+  date            DateTime @default(now())
+  clientType      String   // "EMPRESA" | "PERSONA"
+  clientName      String
+  clientPhone     String
+  clientCompany   String?
+  clientEmail     String
+  
+  senderName      String   @default("Beatriz Venegas Rain")
+  senderEmail     String   @default("contacto@fydingenieros.cl")
+  senderCompany   String   @default("F&D Ingeniería en Mantenimiento")
+  senderRut       String   @default("78.243.503-5")
+  senderAddress   String   @default("Dr. Antonio Donghi Paladinos 2156, Rancagua")
+  
+  serviceName     String
+  requirements    String
+  validityDays    Int      @default(30)
+  paymentTerms    String   @default("50% para aceptar oferta, 50% inicio del servicio")
+  
+  items           Json     // [{ detail, unit, quantity, unitPrice, total }]
+  
+  subtotal        Float
+  iva             Float
+  total           Float
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

@@ -22,7 +22,7 @@ const schemaJSON = {
   "@type": "ProfessionalService",
   "name": "F&D Ingenieros — Ingeniería en Mantenimiento F&D SpA",
   "url": "https://fydingenieros.cl/",
-  "telephone": "+56990153483",
+  "telephone": "+56983894138",
   "email": "contacto@fydingenieros.cl",
   "address": {
     "@type": "PostalAddress",

@@ -1,13 +1,17 @@
 import React from 'react';
-import { getServiceBySlug } from '@/content/services';
+import Image from 'next/image';
+import { prisma as db } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { EmbeddedLeadForm } from '@/components/forms/EmbeddedLeadForm';
 import { CheckCircle2 } from 'lucide-react';
+import fs from 'fs';
+import path from 'path';
 
-import { services } from '@/content/services';
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
+  const services = await db.service.findMany({ select: { slug: true } });
   return services.map((service) => ({
     slug: service.slug,
   }));
@@ -15,17 +19,31 @@ export async function generateStaticParams() {
 
 export default async function ServicioIndividual({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const service = getServiceBySlug(slug);
+  const service = await db.service.findUnique({ where: { slug } });
 
   if (!service) {
     notFound();
   }
 
+  const localImagePath = path.join(process.cwd(), 'public', 'images', 'services', `${service.slug}.jpg`);
+  const hasLocalImage = fs.existsSync(localImagePath);
+  const displayImage = service.imageUrl || (hasLocalImage ? `/images/services/${service.slug}.jpg` : null);
+
   return (
     <main>
       {/* Hero Section */}
       <div className="bg-brand-dark text-white py-12 md:py-16 border-b-4 border-brand-teal relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-brand-teal/20 to-transparent pointer-events-none"></div>
+        {displayImage && (
+          <Image 
+            src={displayImage}
+            alt={service.title}
+            fill
+            className="object-cover opacity-60"
+            priority
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-dark via-brand-dark/90 to-transparent"></div>
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-brand-teal/30 to-transparent pointer-events-none"></div>
         <div className="container mx-auto px-4 max-w-6xl relative z-10">
           <Breadcrumbs items={[
             { label: 'Servicios', href: '/servicios' },
@@ -48,7 +66,7 @@ export default async function ServicioIndividual({ params }: { params: Promise<{
           <div className="lg:col-span-2 space-y-12">
             <section className="prose prose-lg max-w-none text-brand-grey">
               <h2 className="text-3xl font-bold text-brand-dark border-b border-brand-light pb-4">Descripción General</h2>
-              <p className="leading-relaxed">{service.fullDescription}</p>
+              <p className="leading-relaxed whitespace-pre-line">{service.fullDescription}</p>
             </section>
             
             <section>

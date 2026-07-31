@@ -96,3 +96,98 @@ export async function sendCredentialEmail(
     return { success: false, error };
   }
 }
+
+export async function sendQuotationEmail(
+  email: string, 
+  clientName: string,
+  quoteNumber: string,
+  serviceName: string,
+  pdfBuffer: Buffer, 
+  logoBuffer?: Buffer
+) {
+  try {
+    const sender = process.env.EMAIL_NOTIFICACIONES || 'contacto@fydingenieros.cl';
+
+    const attachments: any[] = [
+      {
+        filename: `Cotizacion_${quoteNumber}_F&D.pdf`,
+        content: pdfBuffer,
+      }
+    ];
+
+    let headerHtml = ``;
+    if (logoBuffer) {
+      attachments.push({
+        filename: 'logo-fyd.png',
+        content: logoBuffer,
+        contentId: 'logo'
+      });
+      headerHtml = `<img src="cid:logo" alt="F&D Ingenieros" />`;
+    } else {
+      headerHtml = `<h2 style="color: #00A6A6; margin: 0;">F&D INGENIEROS</h2>`;
+    }
+
+    const { data, error } = await resend.emails.send({
+      from: `F&D Ingenieros <${sender}>`,
+      to: [email],
+      subject: `Cotización ${quoteNumber}: ${serviceName} - F&D Ingenieros`,
+      text: `Hola ${clientName},\n\nAdjunto enviamos nuestra cotización comercial para los servicios solicitados.\n\nAtentamente,\nF&D Ingenieros`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #F4FAF9; color: #0B3B3F; margin: 0; padding: 40px 20px; }
+            .container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+            .header { background-color: #0B3B3F; padding: 30px 40px; text-align: center; border-bottom: 4px solid #00A6A6; }
+            .header img { max-width: 180px; height: auto; }
+            .content { padding: 40px; }
+            .title { font-size: 24px; font-weight: bold; color: #00A6A6; margin-top: 0; margin-bottom: 24px; letter-spacing: -0.5px; }
+            .text { font-size: 16px; line-height: 1.6; color: #5B6B6C; margin-bottom: 24px; }
+            .highlight { background-color: #F4FAF9; border-left: 4px solid #6EFA3C; padding: 16px 20px; border-radius: 0 8px 8px 0; margin-bottom: 30px; }
+            .highlight p { margin: 0; font-size: 15px; color: #0B3B3F; }
+            .footer { background-color: #F4FAF9; padding: 30px 40px; text-align: center; border-top: 1px solid #e4e4e7; }
+            .footer p { margin: 0; font-size: 12px; color: #5B6B6C; line-height: 1.5; }
+            .social { margin-top: 15px; font-weight: bold; color: #0B3B3F; font-size: 12px; letter-spacing: 1px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              ${headerHtml}
+            </div>
+            <div class="content">
+              <h1 class="title">Propuesta Comercial</h1>
+              <p class="text">Estimado/a <strong>${clientName}</strong>,</p>
+              <p class="text">Junto con saludar, hacemos entrega formal de nuestra cotización adjunta en formato PDF para el servicio de <strong>${serviceName}</strong>.</p>
+              
+              <div class="highlight">
+                <p><strong>Vigencia</strong><br/>Recuerde que esta cotización tiene una vigencia de 30 días desde su emisión. Si tiene cualquier duda técnica o comercial, puede responder directamente a este correo.</p>
+              </div>
+
+              <p class="text">Agradecemos su interés en nuestros servicios.</p>
+              <p class="text" style="margin-bottom: 0;">Atentamente,<br/><strong>F&D Ingenieros</strong></p>
+            </div>
+            <div class="footer">
+              <p>Este es un correo oficial, puede responder directamente a esta dirección para comunicarse con el ejecutivo asignado.</p>
+              <p class="social">F&D INGENIEROS PLATFORM</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      attachments
+    });
+
+    if (error) {
+      console.error('Resend error:', error);
+      return { success: false, error };
+    }
+
+    return { success: true, data };
+  } catch (error) {
+    console.error('Failed to send email:', error);
+    return { success: false, error };
+  }
+}
+

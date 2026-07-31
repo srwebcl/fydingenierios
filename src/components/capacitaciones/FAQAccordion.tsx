@@ -2,9 +2,8 @@
 
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { CourseFAQ } from '@/content/courses';
 
-export function FAQAccordion({ faqs }: { faqs: CourseFAQ[] }) {
+export function FAQAccordion({ faqs }: { faqs: {question: string, answer: string}[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(0); // First open by default
 
   const toggle = (index: number) => {

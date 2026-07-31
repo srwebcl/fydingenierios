@@ -52,10 +52,10 @@ export async function POST(req: Request) {
       const qrBase64 = await generateQR(cred.validationCode);
       let logoBuffer: Buffer | undefined;
       try {
-        logoBuffer = await fs.readFile(path.join(process.cwd(), 'public', 'logo-fyd.png'));
+        logoBuffer = await fs.readFile(path.join(process.cwd(), 'public', 'logo.jpeg'));
       } catch(e) {}
       
-      const logoBase64 = logoBuffer ? `data:image/png;base64,${logoBuffer.toString('base64')}` : undefined;
+      const logoBase64 = logoBuffer ? `data:image/jpeg;base64,${logoBuffer.toString('base64')}` : undefined;
       
       const { renderToBuffer } = await import('@react-pdf/renderer');
       let pdfElement;
@@ -92,13 +92,35 @@ export async function POST(req: Request) {
         });
       } else {
         const { CourseDiplomaPDF } = await import('@/components/pdf/CourseDiplomaPDF');
-        const courseNameMap: Record<string, string> = {
-          'analisis-de-vibraciones': 'Análisis de Vibraciones',
-          'alineamiento-de-ejes': 'Alineamiento de Ejes',
-          'balanceo-de-equipos-rotativos': 'Balanceo de Equipos Rotativos',
-          'termografia-infrarroja': 'Termografía Infrarroja',
-        };
-        const courseName = courseNameMap[cred.courseSlug!] || cred.courseSlug!;
+        let courseName = cred.courseSlug!;
+        try {
+          const course = await prisma.course.findUnique({ where: { slug: cred.courseSlug! } });
+          if (course) {
+            courseName = course.title;
+          } else {
+            const courseNameMap: Record<string, string> = {
+              'analisis-de-vibraciones': 'Análisis Avanzado de Vibraciones e Interpretación de Espectros',
+              'alineamiento-de-ejes': 'Alineamiento Láser',
+              'balanceo-de-equipos-rotativos': 'Balanceo Dinámico',
+              'termografia-infrarroja': 'Termografía Infrarroja',
+            };
+            courseName = courseNameMap[cred.courseSlug!] || cred.courseSlug!;
+          }
+        } catch (err) {}
+
+        let signatureDanielBase64, signatureAlamiroBase64;
+        try {
+          const fs = await import('fs');
+          const path = await import('path');
+          const danielPath = path.join(process.cwd(), 'public', 'firma-daniel.png');
+          const alamiroPath = path.join(process.cwd(), 'public', 'firma-alamiro.png');
+          if (fs.existsSync(danielPath)) {
+            signatureDanielBase64 = `data:image/png;base64,${fs.readFileSync(danielPath).toString('base64')}`;
+          }
+          if (fs.existsSync(alamiroPath)) {
+            signatureAlamiroBase64 = `data:image/png;base64,${fs.readFileSync(alamiroPath).toString('base64')}`;
+          }
+        } catch (err) {}
 
         pdfElement = React.createElement(CourseDiplomaPDF, {
           data: {
@@ -107,10 +129,15 @@ export async function POST(req: Request) {
             courseName,
             approvalType: cred.approvalType!,
             scorePercent: cred.scorePercent,
+            courseDates: cred.courseDates || '',
+            courseHours: cred.courseHours || 0,
+            certificateNumber: cred.certificateNumber || '',
             issueDate: cred.issueDate.toLocaleDateString('es-CL'),
             validationCode: cred.validationCode,
             qrBase64,
-            logoBase64
+            logoBase64,
+            signatureDanielBase64,
+            signatureAlamiroBase64
           }
         });
       }

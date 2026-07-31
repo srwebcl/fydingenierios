@@ -3,9 +3,14 @@
 import React, { useState } from 'react';
 import { ArrowLeft, CheckCircle2, Wrench, GraduationCap, FileCheck } from 'lucide-react';
 
-type Area = 'Mantenimiento Predictivo' | 'Capacitación Industrial' | 'Ingeniería de Confiabilidad';
+type Area = 'Servicios' | 'Capacitaciones';
 
-export function StepByStepContactForm() {
+type Props = {
+  servicesList?: string[];
+  coursesList?: string[];
+};
+
+export function StepByStepContactForm({ servicesList = [], coursesList = [] }: Props) {
   const [step, setStep] = useState(1);
   const [area, setArea] = useState<Area | null>(null);
   const [service, setService] = useState<string>('');
@@ -19,12 +24,10 @@ export function StepByStepContactForm() {
 
   const getServicesForArea = (selectedArea: Area | null): string[] => {
     switch (selectedArea) {
-      case 'Mantenimiento Predictivo':
-        return ['Análisis de Vibraciones', 'Termografía Infrarroja', 'Alineamiento Láser', 'Balanceo Dinámico', 'Otro Servicio'];
-      case 'Capacitación Industrial':
-        return ['Curso Abierto (Cupos)', 'Curso Cerrado In-Company', 'Desarrollo de Programa Específico'];
-      case 'Ingeniería de Confiabilidad':
-        return ['Estudio RCM', 'Análisis de Criticidad', 'Implementación de Planes', 'Otro'];
+      case 'Servicios':
+        return servicesList.length > 0 ? servicesList : ['Análisis de Vibraciones', 'Termografía Infrarroja', 'Alineamiento Láser', 'Balanceo Dinámico'];
+      case 'Capacitaciones':
+        return coursesList.length > 0 ? coursesList : ['Curso de Termografía Nivel 1', 'Curso de Análisis de Vibraciones'];
       default:
         return [];
     }
@@ -98,31 +101,24 @@ export function StepByStepContactForm() {
       {step === 1 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h3 className="text-2xl font-bold text-brand-dark mb-2 text-center">¿En qué área requiere apoyo técnico?</h3>
-          <p className="text-brand-grey text-center mb-8">Seleccione una de nuestras divisiones de ingeniería.</p>
+          <p className="text-brand-grey mb-8 text-center">Seleccione la división correspondiente a su necesidad.</p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <button 
-              onClick={() => handleSelectArea('Mantenimiento Predictivo')}
-              className="flex flex-col items-center justify-center p-6 border-2 border-brand-light rounded-xl hover:border-brand-teal hover:bg-brand-light/30 transition-all text-center group"
+              onClick={() => handleSelectArea('Servicios')}
+              className="flex flex-col items-center justify-center p-8 bg-brand-light border-2 border-brand-light rounded-xl hover:border-brand-teal hover:bg-brand-white transition-all group"
             >
               <Wrench size={40} className="text-brand-grey group-hover:text-brand-teal mb-4 transition-colors" />
-              <span className="font-bold text-brand-dark">Mantenimiento Predictivo</span>
+              <span className="font-bold text-brand-dark text-lg group-hover:text-brand-teal transition-colors">Servicios Industriales</span>
             </button>
+
             <button 
-              onClick={() => handleSelectArea('Capacitación Industrial')}
-              className="flex flex-col items-center justify-center p-6 border-2 border-brand-light rounded-xl hover:border-brand-teal hover:bg-brand-light/30 transition-all text-center group"
+              onClick={() => handleSelectArea('Capacitaciones')}
+              className="flex flex-col items-center justify-center p-8 bg-brand-light border-2 border-brand-light rounded-xl hover:border-brand-teal hover:bg-brand-white transition-all group"
             >
               <GraduationCap size={40} className="text-brand-grey group-hover:text-brand-teal mb-4 transition-colors" />
-              <span className="font-bold text-brand-dark">Capacitación Industrial</span>
+              <span className="font-bold text-brand-dark text-lg group-hover:text-brand-teal transition-colors">Capacitaciones</span>
             </button>
-            <div 
-            onClick={() => handleSelectArea('Ingeniería de Confiabilidad')}
-            className={`p-6 border-2 rounded-xl cursor-pointer transition flex flex-col items-center text-center gap-3 ${area === 'Ingeniería de Confiabilidad' ? 'border-brand-teal bg-brand-teal/5' : 'border-brand-light hover:border-brand-teal/50'}`}
-          >
-            <div className="bg-brand-light p-4 rounded-full text-brand-dark"><FileCheck size={32} /></div>
-            <span className="font-bold text-brand-dark">Ingeniería de Confiabilidad</span>
-            <p className="text-xs text-brand-grey">Informes, RCM, Auditorías</p>
-          </div>
           </div>
         </div>
       )}

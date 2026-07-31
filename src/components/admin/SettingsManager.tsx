@@ -59,7 +59,7 @@ export default function SettingsManager({ initialSettings }: Props) {
                   type="text" 
                   name="whatsappNumber" 
                   required 
-                  defaultValue={initialSettings?.whatsappNumber || '+56990153483'} 
+                  defaultValue={initialSettings?.whatsappNumber || '+56983894138'} 
                   className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm" 
                   placeholder="+56912345678"
                 />
@@ -90,6 +90,21 @@ export default function SettingsManager({ initialSettings }: Props) {
                   className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm" 
                 />
               </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold text-brand-dark border-b border-brand-light pb-2 mb-4">Banner Principal (Ticker)</h3>
+            <div>
+              <label className="block text-sm font-bold text-brand-dark mb-1">Texto de Respaldo</label>
+              <p className="text-xs text-brand-grey mb-2">Este texto se mostrará moviéndose en la barra superior cuando NO existan fechas de cursos abiertas.</p>
+              <textarea 
+                name="tickerText" 
+                required 
+                rows={3}
+                defaultValue={initialSettings?.tickerText || 'Especialistas en Confiabilidad de Activos y Mantenimiento Predictivo • Certificación Oficial de Informes Técnicos • Programas de Capacitación Técnica con Validación • '} 
+                className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm" 
+              />
             </div>
           </div>
 

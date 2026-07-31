@@ -9,6 +9,11 @@ const globalForPrisma = globalThis as unknown as {
   pool: Pool | undefined;
 };
 
+// Force recreate PrismaClient in development to pick up schema changes
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = undefined;
+}
+
 const pool = globalForPrisma.pool ?? new Pool({ connectionString });
 if (process.env.NODE_ENV !== 'production') globalForPrisma.pool = pool;
 

@@ -11,14 +11,20 @@ export default function AdminSidebar() {
 
   const menu = [
     { href: '/admin-panel', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/admin-panel/certificados', label: 'Credenciales', icon: Award },
-    { href: '/admin-panel/capacitaciones', label: 'Capacitaciones', icon: Users },
+    { type: 'divider', label: 'Servicios' },
+    { href: '/admin-panel/servicios', label: 'Servicios Web', icon: Settings },
+    { href: '/admin-panel/servicios/informes', label: 'Informes Técnicos', icon: FileText },
+    { type: 'divider', label: 'Capacitaciones' },
+    { href: '/admin-panel/capacitaciones', label: 'Cursos', icon: Users },
+    { href: '/admin-panel/capacitaciones/diplomas', label: 'Diplomas', icon: Award },
+    { type: 'divider', label: 'Comercial' },
+    { href: '/admin-panel/cotizaciones', label: 'Cotizaciones PDF', icon: FileText },
     { href: '/admin-panel/leads', label: 'Bandeja Leads', icon: FileText },
     { href: '/admin-panel/perfil', label: 'Configuración', icon: Settings },
   ];
 
   return (
-    <aside className="w-full md:w-64 bg-brand-dark text-brand-light flex flex-col md:h-screen sticky bottom-0 md:top-0 z-50 order-2 md:order-1 border-t md:border-t-0 md:border-r border-brand-teal/20">
+    <aside className="w-full md:w-64 bg-brand-dark text-brand-light flex flex-col md:h-screen sticky bottom-0 md:top-0 z-50 order-2 md:order-1 border-t md:border-t-0 md:border-r border-brand-teal/20 print:hidden">
       <div className="hidden md:flex p-6 items-center justify-center border-b border-brand-light/10 bg-brand-white">
         <Image 
           src="/logo.jpeg" 
@@ -31,13 +37,21 @@ export default function AdminSidebar() {
       
       {/* Mobile nav: scrollable horizontal row. Desktop: vertical stack */}
       <nav className="flex-1 overflow-x-auto md:overflow-y-auto flex flex-row md:flex-col gap-1 p-2 md:p-4 no-scrollbar">
-        {menu.map(item => {
+        {menu.map((item, i) => {
+          if (item.type === 'divider') {
+            return (
+              <div key={`div-${i}`} className="hidden md:block px-4 py-2 mt-2">
+                <span className="text-xs font-bold text-brand-light/50 uppercase tracking-wider">{item.label}</span>
+              </div>
+            );
+          }
+
           const isActive = pathname === item.href;
-          const Icon = item.icon;
+          const Icon = item.icon as React.ElementType;
           return (
             <Link 
               key={item.href} 
-              href={item.href}
+              href={item.href as string}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg whitespace-nowrap transition-colors ${isActive ? 'bg-brand-teal text-white font-bold' : 'hover:bg-brand-light/10 text-brand-light/80'}`}
             >
               <Icon size={20} />

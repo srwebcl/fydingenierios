@@ -1,21 +1,30 @@
 import React from 'react';
 import Link from 'next/link';
+import { prisma as db } from '@/lib/db';
 import { HeroVideoBackground } from '@/components/home/HeroVideoBackground';
 import { StepByStepContactForm } from '@/components/forms/StepByStepContactForm';
 import { Factory, Zap, Droplets, HardHat, CheckCircle2, QrCode, TrendingUp, FileCheck } from 'lucide-react';
 
-export default function Home() {
+export default async function Home() {
+  const [servicesData, coursesData] = await Promise.all([
+    db.service.findMany({ select: { title: true } }),
+    db.course.findMany({ select: { title: true } })
+  ]);
+  
+  const servicesList = servicesData.map(s => s.title);
+  const coursesList = coursesData.map(c => c.title);
+
   return (
     <main>
       {/* Hero Section */}
       <section className="relative py-24 md:py-32 border-b border-brand-grey/20 overflow-hidden">
         <HeroVideoBackground />
         <div className="container mx-auto px-4 text-center max-w-4xl relative z-10">
-          <h1 className="font-heading text-5xl md:text-6xl font-bold text-white mb-6">
-            Confiabilidad Industrial y <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-lime to-brand-teal">
+          <h1 className="font-heading text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-lime to-brand-teal pb-2 inline-block">
               Mantenimiento Predictivo
-            </span>
+            </span> <br />
+            y Confiabilidad Industrial
           </h1>
           <p className="text-xl text-brand-light/90 mb-10 leading-relaxed font-sans">
             Garantizamos la disponibilidad de sus activos críticos mediante tecnología de diagnóstico avanzado, servicios de certificación y capacitación especializada.
@@ -48,8 +57,8 @@ export default function Home() {
       <section className="py-20 bg-brand-light">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="font-heading text-3xl font-bold text-brand-dark mb-4">Nuestras Divisiones</h2>
-            <div className="h-1 w-20 bg-gradient-to-r from-brand-lime to-brand-teal mx-auto rounded"></div>
+            <h2 className="font-heading text-4xl font-bold text-brand-dark mb-4">Soluciones Integrales</h2>
+            <p className="text-lg text-brand-grey max-w-2xl mx-auto">Un ecosistema de servicios diseñado para maximizar el ciclo de vida de sus activos industriales.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
@@ -67,7 +76,7 @@ export default function Home() {
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
               </div>
               <h3 className="font-bold text-xl mb-3 text-brand-dark">Academia F&D</h3>
-              <p className="text-brand-grey mb-6">Programas de formación en confiabilidad, alineamiento y termografía con diplomas oficiales y validación internacional.</p>
+              <p className="text-brand-grey mb-6">Capacitación técnica especializada en mantenimiento predictivo, con certificados verificables en línea, programas actualizados y enfoque práctico para la industria.</p>
               <Link href="/capacitaciones" className="text-brand-teal font-bold hover:underline">Ver cursos impartidos &rarr;</Link>
             </div>
           </div>
@@ -99,8 +108,8 @@ export default function Home() {
                     <QrCode className="text-brand-teal" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-xl mb-1">Tecnología de Trazabilidad</h4>
-                    <p className="text-brand-light/70 text-sm">Validación pública QR para todos nuestros diplomas e informes técnicos.</p>
+                    <h4 className="font-bold text-xl mb-1">Trazabilidad Total</h4>
+                    <p className="text-brand-light/70 text-sm">Informes y certificados verificables mediante código QR en nuestra plataforma.</p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -108,25 +117,25 @@ export default function Home() {
                     <TrendingUp className="text-brand-teal" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-xl mb-1">Impacto en Resultados</h4>
-                    <p className="text-brand-light/70 text-sm">Reducción drástica del lucro cesante mediante estrategias predictivas oportunas.</p>
+                    <h4 className="font-bold text-xl mb-1">Enfoque en Resultados</h4>
+                    <p className="text-brand-light/70 text-sm">Reducción comprobable de paradas no programadas y costos de mantenimiento.</p>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Validar Credencial (Call to Action integrado) */}
-            <div className="bg-white text-brand-dark p-8 md:p-12 rounded-2xl shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-lime/20 rounded-bl-full -z-0"></div>
+            <div className="relative bg-white p-10 sm:p-12 rounded-3xl shadow-2xl overflow-hidden">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-brand-lime/20 rounded-bl-full z-0"></div>
               <div className="relative z-10">
                 <div className="w-16 h-16 bg-brand-teal text-white rounded-xl flex items-center justify-center mb-6 shadow-lg">
                   <QrCode size={32} />
                 </div>
-                <h3 className="font-heading text-3xl font-bold mb-4">Plataforma de Validaciones</h3>
-                <p className="text-brand-grey mb-8">
+                <h3 className="font-heading text-3xl font-bold mb-4 text-brand-dark">Plataforma de Validaciones</h3>
+                <p className="text-brand-grey mb-8 text-lg">
                   Como Mandante o Jefe de Planta, usted puede verificar instantáneamente la autenticidad de los informes técnicos emitidos o las certificaciones de capacitación de su personal.
                 </p>
-                <Link href="/certificados" className="inline-flex items-center text-brand-teal font-bold hover:text-brand-dark transition-colors border-b-2 border-brand-teal pb-1">
+                <Link href="/certificados" className="inline-flex items-center text-brand-teal font-bold hover:text-brand-dark transition-colors border-b-2 border-brand-teal pb-1 text-lg">
                   Acceder al Motor de Validaciones &rarr;
                 </Link>
               </div>
@@ -143,7 +152,7 @@ export default function Home() {
             <p className="text-lg text-brand-grey">Complete el asistente para derivar su requerimiento al área correcta.</p>
           </div>
 
-          <StepByStepContactForm />
+          <StepByStepContactForm servicesList={servicesList} coursesList={coursesList} />
 
           {/* Info de Apoyo */}
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto text-center border-t border-brand-light pt-12">
@@ -152,7 +161,7 @@ export default function Home() {
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
               </div>
               <h4 className="font-bold text-brand-dark mb-1">Teléfono Directo</h4>
-              <p className="text-brand-grey">+56 9 9015 3483</p>
+              <p className="text-brand-grey">+56 9 8389 4138</p>
             </div>
             <div>
               <div className="w-12 h-12 bg-brand-light text-brand-teal rounded-full flex items-center justify-center mx-auto mb-4">
