@@ -152,7 +152,7 @@ enum SessionStatus {
 
 model Settings {
   id                  String   @id @default("singleton")
-  contactEmail        String   @default("contacto@fydingenieros.cl")
+  contactEmail        String   @default("contacto@fydingenieria.cl")
   whatsappNumber      String   @default("+56990153483")
   businessHoursOpen   String   @default("09:00")
   businessHoursClose  String   @default("18:30")
@@ -223,7 +223,7 @@ model Quotation {
   clientEmail     String
   
   senderName      String   @default("Beatriz Venegas Rain")
-  senderEmail     String   @default("contacto@fydingenieros.cl")
+  senderEmail     String   @default("contacto@fydingenieria.cl")
   senderCompany   String   @default("F&D Ingeniería en Mantenimiento")
   senderRut       String   @default("78.243.503-5")
   senderAddress   String   @default("Dr. Antonio Donghi Paladinos 2156, Rancagua")

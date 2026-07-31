@@ -213,7 +213,7 @@ export const ServiceReportPDF = ({ data }: { data: ServiceReportData }) => (
           <Text style={styles.validationText}>
             Este documento certifica la emisión oficial del informe técnico descrito por parte de F&D Ingenieros. {'\n'}
             Para verificar su autenticidad y vigencia, escanee el código QR o ingrese el código de validación en: {'\n'}
-            <Text style={{ fontWeight: 'bold', color: '#0B3B3F' }}>www.fydingenieros.cl/certificados</Text>
+            <Text style={{ fontWeight: 'bold', color: '#0B3B3F' }}>www.fydingenieria.cl/certificados</Text>
           </Text>
         </View>
         <View style={styles.footerBottom}>

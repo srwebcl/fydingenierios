@@ -12,7 +12,7 @@ export async function sendCredentialEmail(
   try {
     const isDiploma = credentialType === 'DIPLOMA_CAPACITACION';
     const title = isDiploma ? 'Diploma de Capacitación Oficial' : 'Certificado de Validación de Informe Técnico';
-    const sender = process.env.EMAIL_NOTIFICACIONES || 'contacto@fydingenieros.cl';
+    const sender = process.env.EMAIL_NOTIFICACIONES || 'contacto@fydingenieria.cl';
 
     const attachments: any[] = [
       {
@@ -106,7 +106,7 @@ export async function sendQuotationEmail(
   logoBuffer?: Buffer
 ) {
   try {
-    const sender = process.env.EMAIL_NOTIFICACIONES || 'contacto@fydingenieros.cl';
+    const sender = process.env.EMAIL_NOTIFICACIONES || 'contacto@fydingenieria.cl';
 
     const attachments: any[] = [
       {

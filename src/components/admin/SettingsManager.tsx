@@ -49,7 +49,7 @@ export default function SettingsManager({ initialSettings }: Props) {
                   type="email" 
                   name="contactEmail" 
                   required 
-                  defaultValue={initialSettings?.contactEmail || 'contacto@fydingenieros.cl'} 
+                  defaultValue={initialSettings?.contactEmail || 'contacto@fydingenieria.cl'} 
                   className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm" 
                 />
               </div>

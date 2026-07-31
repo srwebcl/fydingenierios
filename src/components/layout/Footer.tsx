@@ -47,7 +47,7 @@ export default function Footer() {
             <h4 className="font-bold text-brand-lime mb-4 text-sm tracking-widest uppercase">Contacto</h4>
             <ul className="space-y-3 text-sm text-brand-light/80">
               <li>📍 Rancagua, Región de O'Higgins, Chile.</li>
-              <li>📧 contacto@fydingenieros.cl</li>
+              <li>📧 contacto@fydingenieria.cl</li>
               <li>📞 +56 9 8389 4138</li>
             </ul>
           </div>

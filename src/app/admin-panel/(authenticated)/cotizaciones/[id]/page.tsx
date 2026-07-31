@@ -154,7 +154,7 @@ export default async function PrintableQuotationPage({ params }: { params: Promi
                     <span className="font-medium">Banco:</span> <span>Banco de Chile</span>
                     <span className="font-medium">Tipo:</span> <span>Cuenta Vista</span>
                     <span className="font-medium">N° Cuenta:</span> <span>00-004-37252-65</span>
-                    <span className="font-medium">Correo:</span> <span>contacto@fydingenieros.cl</span>
+                    <span className="font-medium">Correo:</span> <span>contacto@fydingenieria.cl</span>
                   </div>
                 </div>
               )}

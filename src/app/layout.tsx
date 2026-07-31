@@ -21,9 +21,9 @@ const schemaJSON = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
   "name": "F&D Ingenieros — Ingeniería en Mantenimiento F&D SpA",
-  "url": "https://fydingenieros.cl/",
+  "url": "https://fydingenieria.cl/",
   "telephone": "+56983894138",
-  "email": "contacto@fydingenieros.cl",
+  "email": "contacto@fydingenieria.cl",
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "Rancagua",

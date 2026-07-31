@@ -281,7 +281,7 @@ export const QuotationPDF = ({ data, logoBase64 }: QuotationPDFProps) => {
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>F&D INGENIEROS - WWW.FYDINGENIEROS.CL</Text>
+          <Text style={styles.footerText}>F&D INGENIEROS - WWW.FYDINGENIERIA.CL</Text>
         </View>
       </Page>
     </Document>

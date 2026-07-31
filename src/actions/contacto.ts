@@ -13,9 +13,9 @@ export async function sendContactFormEmail(data: {
   message: string;
 }) {
   try {
-    const receiver = process.env.EMAIL_NOTIFICACIONES || 'contacto@fydingenieros.cl';
+    const receiver = process.env.EMAIL_NOTIFICACIONES || 'contacto@fydingenieria.cl';
     // Siempre intentamos enviar desde el correo oficial corporativo
-    const sender = 'contacto@fydingenieros.cl';
+    const sender = 'contacto@fydingenieria.cl';
 
     const { data: resendData, error } = await resend.emails.send({
       from: `Formulario Web F&D <${sender}>`,
