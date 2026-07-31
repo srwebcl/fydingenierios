@@ -1,10 +1,36 @@
 'use client';
 
 import React, { useState } from 'react';
-// import removed because it will be implemented in sprint 4
+import { sendContactFormEmail } from '@/actions/contacto';
+import toast from 'react-hot-toast';
 
 export default function Contacto() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus('loading');
+    
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      fullName: formData.get('fullName') as string,
+      company: formData.get('company') as string,
+      email: formData.get('email') as string,
+      phone: formData.get('phone') as string,
+      reason: formData.get('reason') as string,
+      message: formData.get('message') as string,
+    };
+
+    const result = await sendContactFormEmail(data);
+    
+    if (result.success) {
+      setStatus('success');
+      toast.success('Mensaje enviado exitosamente');
+    } else {
+      setStatus('error');
+      toast.error('Error: ' + (result.error || 'No se pudo enviar'));
+    }
+  };
 
   return (
     <main className="container mx-auto px-4 py-16 max-w-2xl">
@@ -21,34 +47,40 @@ export default function Contacto() {
             </div>
             <h2 className="text-2xl font-bold text-brand-dark mb-2">Mensaje Enviado</h2>
             <p className="text-brand-grey">Gracias por contactarnos. Le responderemos pronto.</p>
+            <button 
+              onClick={() => setStatus('idle')}
+              className="mt-6 text-brand-teal font-bold hover:underline"
+            >
+              Enviar otro mensaje
+            </button>
           </div>
         ) : (
-          <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); setStatus('loading'); setTimeout(() => setStatus('success'), 1000); }}>
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-bold text-brand-dark mb-2">Nombre Completo *</label>
-                <input required type="text" className="w-full border border-brand-grey/30 rounded px-4 py-3 focus:outline-none focus:border-brand-teal" />
+                <input required type="text" name="fullName" className="w-full border border-brand-grey/30 rounded px-4 py-3 focus:outline-none focus:border-brand-teal" />
               </div>
               <div>
                 <label className="block text-sm font-bold text-brand-dark mb-2">Empresa</label>
-                <input type="text" className="w-full border border-brand-grey/30 rounded px-4 py-3 focus:outline-none focus:border-brand-teal" />
+                <input type="text" name="company" className="w-full border border-brand-grey/30 rounded px-4 py-3 focus:outline-none focus:border-brand-teal" />
               </div>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-bold text-brand-dark mb-2">Correo Electrónico *</label>
-                <input required type="email" className="w-full border border-brand-grey/30 rounded px-4 py-3 focus:outline-none focus:border-brand-teal" />
+                <input required type="email" name="email" className="w-full border border-brand-grey/30 rounded px-4 py-3 focus:outline-none focus:border-brand-teal" />
               </div>
               <div>
                 <label className="block text-sm font-bold text-brand-dark mb-2">Teléfono *</label>
-                <input required type="tel" className="w-full border border-brand-grey/30 rounded px-4 py-3 focus:outline-none focus:border-brand-teal" />
+                <input required type="tel" name="phone" className="w-full border border-brand-grey/30 rounded px-4 py-3 focus:outline-none focus:border-brand-teal" />
               </div>
             </div>
 
             <div>
               <label className="block text-sm font-bold text-brand-dark mb-2">Motivo de Consulta *</label>
-              <select required className="w-full border border-brand-grey/30 rounded px-4 py-3 focus:outline-none focus:border-brand-teal bg-white">
+              <select required name="reason" className="w-full border border-brand-grey/30 rounded px-4 py-3 focus:outline-none focus:border-brand-teal bg-white">
                 <option value="">Seleccione una opción</option>
                 <option value="Servicio de Mantenimiento">Servicio de Mantenimiento / Predictivo</option>
                 <option value="Capacitacion">Capacitación Industrial</option>
@@ -58,8 +90,8 @@ export default function Contacto() {
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-brand-dark mb-2">Mensaje / Detalle *</label>
-              <textarea required rows={4} className="w-full border border-brand-grey/30 rounded px-4 py-3 focus:outline-none focus:border-brand-teal"></textarea>
+              <label className="block text-sm font-bold text-brand-dark mb-2">Mensaje *</label>
+              <textarea required name="message" rows={4} className="w-full border border-brand-grey/30 rounded px-4 py-3 focus:outline-none focus:border-brand-teal resize-none"></textarea>
             </div>
 
             <div className="flex items-start mb-6">
