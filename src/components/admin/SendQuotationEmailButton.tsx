@@ -21,7 +21,7 @@ export function SendQuotationEmailButton({ id }: { id: string }) {
         setTimeout(() => setStatus('idle'), 3000);
       } else {
         setStatus('error');
-        toast.error(result.error || 'Error al enviar el correo', { id: toastId });
+        toast.error(result.error ? String(result.error) : 'Error al enviar el correo', { id: toastId });
         setTimeout(() => setStatus('idle'), 3000);
       }
     } catch (err) {
