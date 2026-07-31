@@ -14,7 +14,7 @@ export default async function PrintableQuotationPage({ params }: { params: Promi
   const items: any[] = typeof quote.items === 'string' ? JSON.parse(quote.items as string) : quote.items;
 
   return (
-    <div className="bg-gray-100 min-h-screen py-8 print:bg-white print:py-0 font-sans text-brand-dark">
+    <div className="bg-gray-100 min-h-screen py-8 print:bg-white print:py-0 print:min-h-0 font-sans text-brand-dark">
       {/* Floating Action Bar (Hidden when printing) */}
       <div className="max-w-[21cm] mx-auto mb-6 flex justify-between items-center print:hidden">
         <a href="/admin-panel/cotizaciones" className="text-brand-grey hover:text-brand-teal transition font-medium">
@@ -24,7 +24,7 @@ export default async function PrintableQuotationPage({ params }: { params: Promi
       </div>
 
       {/* A4 Document Container */}
-      <div className="max-w-[21cm] min-h-[29.7cm] mx-auto bg-white shadow-xl print:shadow-none relative box-border overflow-hidden">
+      <div className="max-w-[21cm] min-h-[29.7cm] mx-auto bg-white shadow-xl print:shadow-none print:min-h-0 print:max-w-none relative box-border overflow-visible">
         
         {/* Top Decorative Bar */}
         <div className="h-3 w-full bg-gradient-to-r from-brand-lime to-brand-teal"></div>

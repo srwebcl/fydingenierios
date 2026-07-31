@@ -5,10 +5,11 @@ import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/
 
 const styles = StyleSheet.create({
   page: {
-    padding: 40,
+    padding: 50,
     fontFamily: 'Helvetica',
     fontSize: 10,
     color: '#0B3B3F',
+    lineHeight: 1.5,
   },
   topBar: {
     position: 'absolute',
@@ -21,7 +22,7 @@ const styles = StyleSheet.create({
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 40,
+    marginBottom: 50,
     marginTop: 20,
   },
   logo: {
@@ -37,21 +38,21 @@ const styles = StyleSheet.create({
   },
   infoRow: {
     flexDirection: 'row',
-    marginBottom: 4,
+    marginBottom: 6,
   },
   infoLabel: {
     fontWeight: 'bold',
-    marginRight: 4,
+    marginRight: 6,
   },
   contactGrid: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 30,
+    marginBottom: 40,
   },
   contactBox: {
     width: '48%',
     backgroundColor: '#F4FAF9',
-    padding: 12,
+    padding: 16,
     borderRadius: 6,
     border: '1px solid #E5E7EB',
   },
@@ -59,23 +60,23 @@ const styles = StyleSheet.create({
     fontSize: 9,
     color: '#00A6A6',
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 10,
     textTransform: 'uppercase',
   },
   contactName: {
     fontSize: 12,
     fontWeight: 'bold',
-    marginBottom: 4,
+    marginBottom: 6,
   },
   contactText: {
     color: '#5B6B6C',
-    marginBottom: 2,
+    marginBottom: 4,
   },
   serviceHighlight: {
     backgroundColor: '#0B3B3F',
-    padding: 12,
+    padding: 16,
     borderRadius: 6,
-    marginBottom: 20,
+    marginBottom: 30,
   },
   serviceHighlightText: {
     color: '#FFFFFF',
@@ -86,22 +87,22 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     borderBottom: '1px solid #E5E7EB',
-    paddingBottom: 4,
-    marginBottom: 8,
+    paddingBottom: 6,
+    marginBottom: 12,
   },
   paragraph: {
     color: '#5B6B6C',
-    marginBottom: 20,
-    lineHeight: 1.4,
+    marginBottom: 24,
+    lineHeight: 1.5,
   },
   table: {
     width: '100%',
-    marginBottom: 30,
+    marginBottom: 40,
   },
   tableHeader: {
     flexDirection: 'row',
     backgroundColor: '#F4FAF9',
-    padding: 8,
+    padding: 10,
     borderBottom: '1px solid #00A6A6',
   },
   tableHeaderCell: {
@@ -111,11 +112,12 @@ const styles = StyleSheet.create({
   },
   tableRow: {
     flexDirection: 'row',
-    padding: 8,
+    padding: 10,
     borderBottom: '1px solid #E5E7EB',
   },
   tableCell: {
     color: '#5B6B6C',
+    paddingVertical: 2,
   },
   col1: { width: '50%' },
   col2: { width: '10%', textAlign: 'center' },
