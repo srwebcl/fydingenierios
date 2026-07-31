@@ -3,7 +3,7 @@ import { CredentialStatus, CredentialType } from '@prisma/client';
 import { redirect } from 'next/navigation';
 
 type PageProps = {
-  searchParams: Promise<{ code?: string }>;
+  searchParams: Promise<{ code?: string, rut?: string }>;
 };
 
 function StatusBadge({ status }: { status: CredentialStatus }) {
