@@ -111,9 +111,12 @@ export async function issueServiceReportCredential(data: ServiceReportCredential
 
     const pdfBuffer = await renderToBuffer(pdfElement as any);
     
-    await sendCredentialEmail(holder.email, holder.fullName, pdfBuffer, 'INFORME_SERVICIO', logoBuffer);
+    const emailResult = await sendCredentialEmail(holder.email, holder.fullName, pdfBuffer, 'INFORME_SERVICIO', logoBuffer);
 
     revalidatePath('/admin-panel/servicios/informes');
+    if (!emailResult.success) {
+      return { success: false, error: 'Certificado creado pero falló el envío de correo: ' + (emailResult.error?.message || 'Error de Resend') };
+    }
     return { success: true, validationCode: credential.validationCode };
   } catch (error: any) {
     console.error('Error issuing service report credential:', error);
@@ -303,7 +306,10 @@ export async function issueCourseDiploma(data: CourseDiplomaBulkData) {
 
       const pdfBuffer = await renderToBuffer(pdfElement as any);
       
-      await sendCredentialEmail(credential.holder.email, credential.holder.fullName, pdfBuffer, 'DIPLOMA_CAPACITACION', logoBuffer);
+      const emailResult = await sendCredentialEmail(credential.holder.email, credential.holder.fullName, pdfBuffer, 'DIPLOMA_CAPACITACION', logoBuffer);
+      if (!emailResult.success) {
+        return { success: false, error: 'Diploma generado pero falló el correo: ' + (emailResult.error?.message || 'Error de Resend') };
+      }
 
       results.push({ rut: participant.rut, success: true, validationCode: credential.validationCode });
     } catch (err) {
