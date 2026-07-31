@@ -1,7 +1,8 @@
 import QRCode from 'qrcode';
 
 export async function generateQR(validationCode: string): Promise<string> {
-  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/certificados?code=${validationCode}`;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.fydingenieria.cl';
+  const url = `${siteUrl}/certificados?code=${validationCode}`;
   try {
     const qrBase64 = await QRCode.toDataURL(url, {
       color: {

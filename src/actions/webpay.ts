@@ -19,7 +19,7 @@ export async function initWebpayRecovery(certificateCode: string) {
     const buyOrder = `FYD-${Date.now()}`;
     const sessionId = `SES-${cred.id}`.substring(0, 60); 
     const amount = parseInt(process.env.CERTIFICATE_RECOVERY_AMOUNT_CLP || '12000');
-    const returnUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/webpay/commit`;
+    const returnUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.fydingenieria.cl'}/api/webpay/commit`;
 
     const response = await tx.create(buyOrder, sessionId, amount, returnUrl);
     

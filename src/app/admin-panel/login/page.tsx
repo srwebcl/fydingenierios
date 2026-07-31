@@ -46,12 +46,7 @@ export default function Login() {
           <p className="text-brand-grey text-sm">Ingrese sus credenciales corporativas</p>
         </div>
 
-        {/* Demo Credentials Notice */}
-        <div className="bg-brand-light border border-brand-teal/30 p-4 rounded-lg mb-6 text-sm text-center">
-          <p className="text-brand-dark font-bold mb-1">Credenciales Demo</p>
-          <p className="text-brand-grey font-mono">Usuario: <span className="text-brand-teal font-bold">admin</span></p>
-          <p className="text-brand-grey font-mono">Clave: <span className="text-brand-teal font-bold">123456</span></p>
-        </div>
+
 
         {error && <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm border border-red-200">{error}</div>}
 

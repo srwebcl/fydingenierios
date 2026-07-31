@@ -20,11 +20,11 @@ export async function POST(req: Request) {
         where: { webpayToken: tbk_token, status: PaymentStatus.INICIADA },
         data: { status: PaymentStatus.RECHAZADA }
       });
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL}/certificados?error=pago_cancelado`);
+      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.fydingenieria.cl'}/certificados?error=pago_cancelado`);
     }
 
     if (!token_ws) {
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL}/certificados?error=token_invalido`);
+      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.fydingenieria.cl'}/certificados?error=token_invalido`);
     }
 
     const tx = new WebpayPlus.Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS, IntegrationApiKeys.WEBPAY, Environment.Integration));
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     });
 
     if (!payment) {
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL}/certificados?error=pago_no_encontrado`);
+      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.fydingenieria.cl'}/certificados?error=pago_no_encontrado`);
     }
 
     if (response.status === 'AUTHORIZED' && response.response_code === 0) {
@@ -145,16 +145,16 @@ export async function POST(req: Request) {
       const pdfBuffer = await renderToBuffer(pdfElement as any);
       await sendCredentialEmail(holder.email, holder.fullName, pdfBuffer, cred.type, logoBuffer);
 
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL}/certificados?code=${cred.validationCode}&recovery=success`);
+      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.fydingenieria.cl'}/certificados?code=${cred.validationCode}&recovery=success`);
     } else {
       await prisma.credentialRecoveryPayment.update({
         where: { id: payment.id },
         data: { status: PaymentStatus.RECHAZADA }
       });
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL}/certificados?error=pago_rechazado`);
+      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.fydingenieria.cl'}/certificados?error=pago_rechazado`);
     }
   } catch (error) {
     console.error('Error en commit Webpay:', error);
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL}/certificados?error=error_interno`);
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.fydingenieria.cl'}/certificados?error=error_interno`);
   }
 }
