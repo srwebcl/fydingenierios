@@ -115,7 +115,7 @@ export async function issueServiceReportCredential(data: ServiceReportCredential
 
     revalidatePath('/admin-panel/servicios/informes');
     if (!emailResult.success) {
-      return { success: false, error: 'Certificado creado pero falló el envío de correo: ' + (emailResult.error?.message || 'Error de Resend') };
+      return { success: false, error: 'Certificado creado pero falló el envío de correo: ' + ((emailResult.error as any)?.message || 'Error de Resend') };
     }
     return { success: true, validationCode: credential.validationCode };
   } catch (error: any) {
@@ -308,7 +308,7 @@ export async function issueCourseDiploma(data: CourseDiplomaBulkData) {
       
       const emailResult = await sendCredentialEmail(credential.holder.email, credential.holder.fullName, pdfBuffer, 'DIPLOMA_CAPACITACION', logoBuffer);
       if (!emailResult.success) {
-        return { success: false, error: 'Diploma generado pero falló el correo: ' + (emailResult.error?.message || 'Error de Resend') };
+        return { success: false, error: 'Diploma generado pero falló el correo: ' + ((emailResult.error as any)?.message || 'Error de Resend') };
       }
 
       results.push({ rut: participant.rut, success: true, validationCode: credential.validationCode });
