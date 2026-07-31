@@ -45,7 +45,7 @@ export async function sendCredentialEmail(
           <style>
             body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #F4FAF9; color: #0B3B3F; margin: 0; padding: 40px 20px; }
             .container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-            .header { background-color: #0B3B3F; padding: 30px 40px; text-align: center; border-bottom: 4px solid #00A6A6; }
+            .header { background-color: #FFFFFF; padding: 40px 40px 30px; text-align: center; border-bottom: 4px solid #00A6A6; }
             .header img { max-width: 180px; height: auto; }
             .content { padding: 40px; }
             .title { font-size: 24px; font-weight: bold; color: #00A6A6; margin-top: 0; margin-bottom: 24px; letter-spacing: -0.5px; }
@@ -139,7 +139,7 @@ export async function sendQuotationEmail(
           <style>
             body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #F4FAF9; color: #0B3B3F; margin: 0; padding: 40px 20px; }
             .container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-            .header { background-color: #0B3B3F; padding: 30px 40px; text-align: center; border-bottom: 4px solid #00A6A6; }
+            .header { background-color: #FFFFFF; padding: 40px 40px 30px; text-align: center; border-bottom: 4px solid #00A6A6; }
             .header img { max-width: 180px; height: auto; }
             .content { padding: 40px; }
             .title { font-size: 24px; font-weight: bold; color: #00A6A6; margin-top: 0; margin-bottom: 24px; letter-spacing: -0.5px; }
