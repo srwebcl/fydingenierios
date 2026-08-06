@@ -140,6 +140,16 @@ const styles = StyleSheet.create({
     opacity: 0.1,
     zIndex: -1,
     objectFit: 'contain'
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+    fontSize: 10,
+    color: '#00A6A6',
+    fontWeight: 'bold',
   }
 });
 
@@ -239,6 +249,11 @@ export const CourseDiplomaPDF = ({ data }: { data: DiplomaData }) => {
             <Text style={styles.signatureTitle}>Mg. Ing Civil Industrial / VA CAT IV ISO 18436-2</Text>
             <Text style={styles.signatureTitle}>Instructor Responsable del Curso</Text>
           </View>
+        </View>
+
+        {/* FOOTER */}
+        <View style={styles.footer}>
+          <Text>www.fydingenieria.cl</Text>
         </View>
       </Page>
     </Document>
