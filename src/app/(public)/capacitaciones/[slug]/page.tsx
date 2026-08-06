@@ -26,7 +26,9 @@ export default async function CapacitacionIndividual({ params }: { params: Promi
 
   // Obtener sesiones abiertas
   let sessions: any[] = [];
+  let settings: any = null;
   try {
+    settings = await prisma.settings.findFirst();
     sessions = await prisma.courseSession.findMany({
       where: { 
         courseSlug: slug,
@@ -210,7 +212,7 @@ export default async function CapacitacionIndividual({ params }: { params: Promi
                 ) : (
                   <>
                     <p className="text-sm text-brand-light/90 mb-4 text-center">Consulta nuestras próximas convocatorias o solicita una capacitación exclusiva para tu empresa.</p>
-                    <a href="#contacto" className="block w-full bg-white text-brand-teal font-bold py-3 rounded-lg text-sm hover:bg-brand-light transition text-center">
+                    <a href={settings?.whatsappNumber ? `https://wa.me/${settings.whatsappNumber.replace(/[^0-9]/g, '')}?text=Hola,%20me%20interesa%20obtener%20información%20sobre%20el%20curso%20${encodeURIComponent(course.title)}` : '#contacto'} target="_blank" rel="noopener noreferrer" className="block w-full bg-white text-brand-teal font-bold py-3 rounded-lg text-sm hover:bg-brand-light transition text-center">
                       Solicitar Información
                     </a>
                   </>

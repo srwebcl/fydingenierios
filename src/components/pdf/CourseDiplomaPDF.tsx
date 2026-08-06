@@ -200,6 +200,7 @@ export const CourseDiplomaPDF = ({ data }: { data: DiplomaData }) => {
           </View>
           <View style={styles.headerColRight}>
             <Text style={styles.certNumber}>Certificado N° {data.certificateNumber}</Text>
+            <Text style={{ fontSize: 10, color: '#00A6A6', fontWeight: 'bold', textAlign: 'right', marginTop: 4 }}>www.fydingenieria.cl</Text>
           </View>
         </View>
 
@@ -251,10 +252,6 @@ export const CourseDiplomaPDF = ({ data }: { data: DiplomaData }) => {
           </View>
         </View>
 
-        {/* FOOTER */}
-        <View style={styles.footer}>
-          <Text>www.fydingenieria.cl</Text>
-        </View>
       </Page>
     </Document>
   );

@@ -1,8 +1,16 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { prisma } from '@/lib/db';
 
-export default function Footer() {
+export default async function Footer() {
+  let settings = null;
+  try {
+    settings = await prisma.settings.findFirst();
+  } catch (error) {
+    console.error("Error fetching settings for footer:", error);
+  }
+
   return (
     <footer className="bg-brand-dark text-brand-light pt-16 pb-8 border-t-4 border-brand-teal">
       <div className="container mx-auto px-4">
@@ -47,8 +55,8 @@ export default function Footer() {
             <h4 className="font-bold text-brand-lime mb-4 text-sm tracking-widest uppercase">Contacto</h4>
             <ul className="space-y-3 text-sm text-brand-light/80">
               <li>📍 Rancagua, Región de O'Higgins, Chile.</li>
-              <li>📧 contacto@fydingenieria.cl</li>
-              <li>📞 +56 9 8389 4138</li>
+              <li>📧 {settings?.contactEmail || 'contacto@fydingenieria.cl'}</li>
+              <li>📞 {settings?.whatsappNumber || '+56 9 8389 4138'}</li>
             </ul>
           </div>
           

@@ -1,109 +1,137 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
 
-// Register fonts if needed (using default for now to avoid async loading issues)
-
 const styles = StyleSheet.create({
   page: {
-    padding: 50,
     fontFamily: 'Helvetica',
     fontSize: 10,
     color: '#0B3B3F',
     lineHeight: 1.5,
+    backgroundColor: '#FFFFFF',
+    paddingBottom: 60, // Space for footer
   },
-  topBar: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 12,
-    backgroundColor: '#00A6A6',
-  },
-  headerRow: {
+  headerBanner: {
+    backgroundColor: '#0B3B3F',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 50,
-    marginTop: 20,
+    alignItems: 'center',
+    padding: '30 40',
+    marginBottom: 30,
   },
   logo: {
     width: 140,
   },
-  titleContainer: {
+  headerTextContainer: {
     alignItems: 'flex-end',
   },
-  titleText: {
-    fontSize: 24,
+  headerTitle: {
+    color: '#FFFFFF',
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    marginBottom: 6,
-  },
-  infoLabel: {
-    fontWeight: 'bold',
-    marginRight: 6,
-  },
-  contactGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 40,
-  },
-  contactBox: {
-    width: '48%',
-    backgroundColor: '#F4FAF9',
-    padding: 16,
-    borderRadius: 6,
-    border: '1px solid #E5E7EB',
-  },
-  contactBoxTitle: {
-    fontSize: 9,
-    color: '#00A6A6',
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textTransform: 'uppercase',
-  },
-  contactName: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginBottom: 6,
-  },
-  contactText: {
-    color: '#5B6B6C',
     marginBottom: 4,
   },
-  serviceHighlight: {
-    backgroundColor: '#0B3B3F',
+  headerSubtitle: {
+    color: '#00A6A6',
+    fontSize: 10,
+  },
+  contentContainer: {
+    paddingHorizontal: 40,
+  },
+  titleCard: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    border: '1px solid #E5E7EB',
+    borderRadius: 8,
     padding: 16,
-    borderRadius: 6,
-    marginBottom: 30,
+    marginBottom: 20,
+    backgroundColor: '#F4FAF9',
   },
-  serviceHighlightText: {
-    color: '#FFFFFF',
-    fontSize: 12,
-    fontWeight: 'bold',
+  titleCardLeft: {
+    flex: 1,
   },
-  sectionTitle: {
-    fontSize: 12,
+  mainTitle: {
+    fontSize: 18,
     fontWeight: 'bold',
-    borderBottom: '1px solid #E5E7EB',
-    paddingBottom: 6,
+    color: '#00A6A6',
+    marginBottom: 4,
+  },
+  subTitle: {
+    fontSize: 10,
+    color: '#5B6B6C',
+  },
+  titleCardRight: {
+    alignItems: 'flex-end',
+  },
+  badge: {
+    backgroundColor: '#FFFFFF',
+    border: '1px solid #E5E7EB',
+    borderRadius: 4,
+    padding: '4 8',
+    marginBottom: 4,
+  },
+  badgeText: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#00A6A6',
+  },
+  grid: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  card: {
+    width: '48%',
+    border: '1px solid #E5E7EB',
+    borderRadius: 8,
+    padding: 16,
+  },
+  cardFull: {
+    width: '100%',
+    border: '1px solid #E5E7EB',
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 20,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 12,
+    borderBottom: '1px solid #F4FAF9',
+    paddingBottom: 8,
+  },
+  cardTitle: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#0B3B3F',
+    textTransform: 'uppercase',
+  },
+  row: {
+    flexDirection: 'row',
+    marginBottom: 6,
+  },
+  label: {
+    width: 80,
+    color: '#5B6B6C',
+    fontSize: 9,
+  },
+  value: {
+    flex: 1,
+    fontWeight: 'bold',
+    fontSize: 10,
   },
   paragraph: {
     color: '#5B6B6C',
-    marginBottom: 24,
     lineHeight: 1.5,
   },
   table: {
     width: '100%',
-    marginBottom: 40,
   },
   tableHeader: {
     flexDirection: 'row',
     backgroundColor: '#F4FAF9',
     padding: 10,
-    borderBottom: '1px solid #00A6A6',
+    borderBottom: '2px solid #00A6A6',
   },
   tableHeaderCell: {
     fontWeight: 'bold',
@@ -117,38 +145,37 @@ const styles = StyleSheet.create({
   },
   tableCell: {
     color: '#5B6B6C',
-    paddingVertical: 2,
+    fontSize: 9,
   },
-  col1: { width: '50%' },
-  col2: { width: '10%', textAlign: 'center' },
+  col1: { width: '45%' },
+  col2: { width: '15%', textAlign: 'center' },
   col3: { width: '15%', textAlign: 'center' },
   col4: { width: '25%', textAlign: 'right' },
   totalsContainer: {
-    width: '40%',
-    alignSelf: 'flex-end',
-    marginBottom: 30,
+    width: '50%',
+    backgroundColor: '#F4FAF9',
+    borderRadius: 8,
+    padding: 12,
   },
   totalRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 6,
-    borderBottom: '1px solid #E5E7EB',
+    paddingVertical: 4,
   },
   totalLabel: {
-    fontWeight: 'bold',
     color: '#5B6B6C',
+    fontSize: 10,
   },
   totalValue: {
     fontWeight: 'bold',
+    fontSize: 10,
   },
   grandTotalRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: 8,
-    backgroundColor: '#F4FAF9',
+    borderTop: '1px solid #00A6A6',
     marginTop: 4,
-    paddingHorizontal: 8,
-    borderRadius: 4,
   },
   grandTotalLabel: {
     fontWeight: 'bold',
@@ -160,24 +187,21 @@ const styles = StyleSheet.create({
     color: '#00A6A6',
     fontSize: 12,
   },
-  termsBox: {
-    backgroundColor: '#F9FAFB',
-    padding: 12,
-    borderRadius: 6,
-    border: '1px dashed #D1D5DB',
-  },
   footer: {
     position: 'absolute',
-    bottom: 30,
-    left: 40,
-    right: 40,
-    textAlign: 'center',
-    borderTop: '1px solid #E5E7EB',
-    paddingTop: 10,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#0B3B3F',
+    padding: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 40,
   },
   footerText: {
-    color: '#9CA3AF',
-    fontSize: 8,
+    color: '#FFFFFF',
+    fontSize: 9,
   }
 });
 
@@ -192,98 +216,166 @@ export const QuotationPDF = ({ data, logoBase64 }: QuotationPDFProps) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View style={styles.topBar} />
         
-        <View style={styles.headerRow}>
+        {/* HEADER BANNER */}
+        <View style={styles.headerBanner} fixed>
           {logoBase64 ? (
             <Image src={logoBase64} style={styles.logo} />
           ) : (
-            <Text style={{ fontSize: 20, color: '#00A6A6', fontWeight: 'bold' }}>F&D INGENIEROS</Text>
+            <Text style={{ fontSize: 24, color: '#00A6A6', fontWeight: 'bold' }}>F&D INGENIERÍA</Text>
           )}
+          <View style={styles.headerTextContainer}>
+            <Text style={styles.headerTitle}>PROPUESTA COMERCIAL</Text>
+            <Text style={styles.headerSubtitle}>CONFIABILIDAD • PRECISIÓN • RESULTADOS</Text>
+          </View>
+        </View>
+
+        <View style={styles.contentContainer}>
           
-          <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>COTIZACIÓN</Text>
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>N°:</Text>
-              <Text>{data.quoteNumber}</Text>
+          {/* TITLE CARD */}
+          <View style={styles.titleCard}>
+            <View style={styles.titleCardLeft}>
+              <Text style={styles.mainTitle}>DOCUMENTO OFICIAL</Text>
+              <Text style={styles.subTitle}>La siguiente propuesta técnica y económica ha sido emitida directamente por F&D Ingeniería en Mantenimiento.</Text>
             </View>
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>FECHA:</Text>
-              <Text>{new Date(data.date).toLocaleDateString('es-CL')}</Text>
+            <View style={styles.titleCardRight}>
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>N° {data.quoteNumber}</Text>
+              </View>
+              <Text style={{ fontSize: 9, color: '#5B6B6C' }}>Fecha: {new Date(data.date).toLocaleDateString('es-CL')}</Text>
             </View>
           </View>
-        </View>
 
-        <View style={styles.contactGrid}>
-          <View style={styles.contactBox}>
-            <Text style={styles.contactBoxTitle}>Preparado Para</Text>
-            <Text style={styles.contactName}>{data.clientName}</Text>
-            {data.clientType === 'EMPRESA' && <Text style={styles.contactText}>{data.clientCompany}</Text>}
-            <Text style={styles.contactText}>{data.clientPhone}</Text>
-            <Text style={styles.contactText}>{data.clientEmail}</Text>
+          {/* TWO COLUMN INFO */}
+          <View style={styles.grid}>
+            <View style={styles.card}>
+              <View style={styles.cardHeader}>
+                <Text style={styles.cardTitle}>Información del Cliente</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.label}>Nombre</Text>
+                <Text style={styles.value}>{data.clientName}</Text>
+              </View>
+              {data.clientType === 'EMPRESA' && (
+                <View style={styles.row}>
+                  <Text style={styles.label}>Empresa</Text>
+                  <Text style={styles.value}>{data.clientCompany}</Text>
+                </View>
+              )}
+              <View style={styles.row}>
+                <Text style={styles.label}>Email</Text>
+                <Text style={styles.value}>{data.clientEmail}</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.label}>Teléfono</Text>
+                <Text style={styles.value}>{data.clientPhone}</Text>
+              </View>
+            </View>
+
+            <View style={styles.card}>
+              <View style={styles.cardHeader}>
+                <Text style={styles.cardTitle}>Datos del Emisor</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.label}>Empresa</Text>
+                <Text style={styles.value}>{data.senderCompany}</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.label}>RUT</Text>
+                <Text style={styles.value}>{data.senderRut}</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.label}>Ejecutivo</Text>
+                <Text style={styles.value}>{data.senderName}</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.label}>Email</Text>
+                <Text style={styles.value}>{data.senderEmail}</Text>
+              </View>
+            </View>
+          </View>
+
+          {/* SERVICE HIGHLIGHT */}
+          <View style={styles.cardFull}>
+            <View style={styles.cardHeader}>
+              <Text style={styles.cardTitle}>Detalle del Requerimiento</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.label}>Servicio</Text>
+              <Text style={[styles.value, { color: '#00A6A6' }]}>{data.serviceName}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.label}>Descripción</Text>
+              <Text style={[styles.value, { fontWeight: 'normal', color: '#5B6B6C' }]}>{data.requirements}</Text>
+            </View>
+          </View>
+
+          {/* TABLE */}
+          <View style={styles.cardFull}>
+            <View style={styles.cardHeader}>
+              <Text style={styles.cardTitle}>Inversión Estimada</Text>
+            </View>
+            <View style={styles.table}>
+              <View style={styles.tableHeader}>
+                <Text style={[styles.tableHeaderCell, styles.col1]}>Detalle</Text>
+                <Text style={[styles.tableHeaderCell, styles.col2]}>Unidad</Text>
+                <Text style={[styles.tableHeaderCell, styles.col3]}>Cant.</Text>
+                <Text style={[styles.tableHeaderCell, styles.col4]}>Total</Text>
+              </View>
+              
+              {items.map((item: any, i: number) => (
+                <View key={i} style={styles.tableRow} wrap={false}>
+                  <Text style={[styles.tableCell, styles.col1]}>{item.detail}</Text>
+                  <Text style={[styles.tableCell, styles.col2]}>{item.unit}</Text>
+                  <Text style={[styles.tableCell, styles.col3]}>{item.quantity}</Text>
+                  <Text style={[styles.tableCell, styles.col4]}>${(item.quantity * item.unitPrice).toLocaleString('es-CL')}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+
+          {/* TOTALS & TERMS - WRAPPED TOGETHER SO THEY DONT CUT */}
+          <View wrap={false}>
+            <View style={styles.grid}>
+              <View style={[styles.card, { width: '45%' }]}>
+                <View style={styles.cardHeader}>
+                  <Text style={styles.cardTitle}>Condiciones Comerciales</Text>
+                </View>
+                <View style={styles.row}>
+                  <Text style={styles.label}>Validez</Text>
+                  <Text style={styles.value}>{data.validityDays} días corridos</Text>
+                </View>
+                <View style={styles.row}>
+                  <Text style={styles.label}>Pago</Text>
+                  <Text style={styles.value}>{data.paymentTerms}</Text>
+                </View>
+              </View>
+
+              <View style={styles.totalsContainer}>
+                <View style={styles.totalRow}>
+                  <Text style={styles.totalLabel}>Subtotal Neto</Text>
+                  <Text style={styles.totalValue}>${data.subtotal.toLocaleString('es-CL')}</Text>
+                </View>
+                {data.clientType === 'EMPRESA' && (
+                  <View style={styles.totalRow}>
+                    <Text style={styles.totalLabel}>IVA (19%)</Text>
+                    <Text style={styles.totalValue}>${data.iva.toLocaleString('es-CL')}</Text>
+                  </View>
+                )}
+                <View style={styles.grandTotalRow}>
+                  <Text style={styles.grandTotalLabel}>TOTAL</Text>
+                  <Text style={styles.grandTotalValue}>${data.total.toLocaleString('es-CL')}</Text>
+                </View>
+              </View>
+            </View>
           </View>
           
-          <View style={styles.contactBox}>
-            <Text style={styles.contactBoxTitle}>Emitido Por</Text>
-            <Text style={styles.contactName}>{data.senderName}</Text>
-            <Text style={styles.contactText}>{data.senderCompany}</Text>
-            <Text style={styles.contactText}>RUT: {data.senderRut}</Text>
-            <Text style={styles.contactText}>{data.senderAddress}</Text>
-            <Text style={styles.contactText}>{data.senderEmail}</Text>
-          </View>
         </View>
 
-        <View style={styles.serviceHighlight}>
-          <Text style={styles.serviceHighlightText}>Servicio: {data.serviceName}</Text>
-        </View>
-
-        <Text style={styles.sectionTitle}>Descripción del Requerimiento</Text>
-        <Text style={styles.paragraph}>{data.requirements}</Text>
-
-        <Text style={styles.sectionTitle}>Detalle de Inversión</Text>
-        <View style={styles.table}>
-          <View style={styles.tableHeader}>
-            <Text style={[styles.tableHeaderCell, styles.col1]}>Detalle</Text>
-            <Text style={[styles.tableHeaderCell, styles.col2]}>Unidad</Text>
-            <Text style={[styles.tableHeaderCell, styles.col3]}>Cant.</Text>
-            <Text style={[styles.tableHeaderCell, styles.col4]}>Total</Text>
-          </View>
-          
-          {items.map((item: any, i: number) => (
-            <View key={i} style={styles.tableRow}>
-              <Text style={[styles.tableCell, styles.col1]}>{item.detail}</Text>
-              <Text style={[styles.tableCell, styles.col2]}>{item.unit}</Text>
-              <Text style={[styles.tableCell, styles.col3]}>{item.quantity}</Text>
-              <Text style={[styles.tableCell, styles.col4]}>${(item.quantity * item.unitPrice).toLocaleString('es-CL')}</Text>
-            </View>
-          ))}
-        </View>
-
-        <View style={styles.totalsContainer}>
-          <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>Subtotal Netos:</Text>
-            <Text style={styles.totalValue}>${data.subtotal.toLocaleString('es-CL')}</Text>
-          </View>
-          {data.clientType === 'EMPRESA' && (
-            <View style={styles.totalRow}>
-              <Text style={styles.totalLabel}>IVA (19%):</Text>
-              <Text style={styles.totalValue}>${data.iva.toLocaleString('es-CL')}</Text>
-            </View>
-          )}
-          <View style={styles.grandTotalRow}>
-            <Text style={styles.grandTotalLabel}>TOTAL:</Text>
-            <Text style={styles.grandTotalValue}>${data.total.toLocaleString('es-CL')}</Text>
-          </View>
-        </View>
-
-        <View style={styles.termsBox}>
-          <Text style={[styles.sectionTitle, { borderBottom: 'none', marginBottom: 4 }]}>Condiciones Comerciales</Text>
-          <Text style={{ marginBottom: 4 }}><Text style={styles.infoLabel}>Validez:</Text> {data.validityDays} días corridos</Text>
-          <Text><Text style={styles.infoLabel}>Condiciones de Pago:</Text> {data.paymentTerms}</Text>
-        </View>
-
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>F&D INGENIEROS - WWW.FYDINGENIERIA.CL</Text>
+        {/* FOOTER BANNER */}
+        <View style={styles.footer} fixed>
+          <Text style={styles.footerText}>Ingeniería en Mantenimiento F&D SpA.</Text>
+          <Text style={styles.footerText}>www.fydingenieria.cl</Text>
         </View>
       </Page>
     </Document>
