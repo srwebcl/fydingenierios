@@ -20,19 +20,19 @@ export default async function PrintableQuotationPage({ params }: { params: Promi
         <a href="/admin-panel/cotizaciones" className="text-brand-grey hover:text-brand-teal transition font-medium">
           &larr; Volver
         </a>
-        <PrintButton />
+        <PrintButton id={id} />
       </div>
 
       {/* A4 Document Container */}
-      <div className="max-w-[21cm] min-h-[29.7cm] mx-auto bg-white shadow-xl print:shadow-none print:min-h-0 print:max-w-none relative box-border overflow-visible">
+      <div className="max-w-[21cm] mx-auto bg-white shadow-xl print:shadow-none print:w-full print:max-w-none print:m-0 relative box-border overflow-visible">
         
         {/* Top Decorative Bar */}
         <div className="h-3 w-full bg-gradient-to-r from-brand-lime to-brand-teal"></div>
 
-        <div className="p-12 h-full flex flex-col">
+        <div className="p-12 print:p-4 h-full flex flex-col">
           
           {/* HEADER ROW */}
-          <div className="flex justify-between items-start mb-12">
+          <div className="flex justify-between items-start mb-12 print:mb-4">
             {/* Logo */}
             <div className="w-1/3">
               <Image src="/logo.jpeg" alt="F&D Ingeniería" width={180} height={80} className="w-full max-w-[180px] object-contain" />
@@ -55,7 +55,7 @@ export default async function PrintableQuotationPage({ params }: { params: Promi
           </div>
 
           {/* CONTACT INFO */}
-          <div className="grid grid-cols-2 gap-8 mb-10 text-sm">
+          <div className="grid grid-cols-2 gap-8 print:gap-4 mb-10 print:mb-4 text-sm">
             
             {/* CLIENT (A:) */}
             <div className="bg-brand-light/30 rounded-xl p-5 border border-brand-light">
@@ -85,7 +85,7 @@ export default async function PrintableQuotationPage({ params }: { params: Promi
           </div>
 
           {/* SERVICE TITLE HIGHLIGHT */}
-          <div className="mb-8">
+          <div className="mb-8 print:mb-3">
             <p className="text-brand-grey mb-2">De acuerdo con vuestra solicitud, enviamos cotización por los siguientes servicios:</p>
             <div className="bg-brand-dark text-white p-4 rounded-lg font-bold text-lg">
               {quote.serviceName}
@@ -93,13 +93,13 @@ export default async function PrintableQuotationPage({ params }: { params: Promi
           </div>
 
           {/* REQUIREMENTS SECTION */}
-          <div className="mb-8">
+          <div className="mb-8 print:mb-3">
             <h3 className="font-bold text-brand-dark mb-2 border-b-2 border-brand-light pb-2">Descripción del Requerimiento</h3>
             <div className="text-brand-grey whitespace-pre-wrap leading-relaxed">{quote.requirements}</div>
           </div>
 
           {/* TERMS AND PAYMENT */}
-          <div className="flex gap-8 mb-8 text-sm">
+          <div className="flex gap-8 print:gap-4 mb-8 print:mb-3 text-sm">
             <div className="flex-1 bg-brand-light/20 p-5 rounded-xl border border-brand-light">
               <span className="block font-bold text-brand-teal mb-2 uppercase tracking-wide text-xs">Vigencia de la Oferta</span>
               <span className="text-brand-dark font-medium text-lg">{quote.validityDays} días</span>
@@ -111,7 +111,7 @@ export default async function PrintableQuotationPage({ params }: { params: Promi
           </div>
 
           {/* ECONOMIC OFFER TABLE */}
-          <div className="mb-8">
+          <div className="mb-8 print:mb-2 break-inside-avoid">
             <h3 className="font-bold text-brand-dark mb-4 text-lg">Oferta Económica</h3>
             <div className="rounded-xl overflow-hidden border border-brand-light">
               <table className="w-full text-left text-sm border-collapse">
@@ -127,7 +127,7 @@ export default async function PrintableQuotationPage({ params }: { params: Promi
                 </thead>
                 <tbody className="divide-y divide-brand-light">
                   {items.map((item, i) => (
-                    <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-brand-light/10'}>
+                    <tr key={i} className={`${i % 2 === 0 ? 'bg-white' : 'bg-brand-light/10'} break-inside-avoid`}>
                       <td className="py-3 px-4 text-center font-medium text-brand-grey">{i + 1}</td>
                       <td className="py-3 px-4 font-bold text-brand-dark">{item.detail}</td>
                       <td className="py-3 px-4 text-center text-brand-dark">{item.quantity}</td>
@@ -142,7 +142,7 @@ export default async function PrintableQuotationPage({ params }: { params: Promi
           </div>
 
           {/* TOTALS AND FOOTER */}
-          <div className="flex justify-between items-end mt-auto pt-8">
+          <div className="flex justify-between items-end mt-auto pt-8 print:pt-4 pb-12 print:pb-4 break-inside-avoid">
             {/* Bank Details (Left side) */}
             <div className="w-1/2">
               {quote.clientType === 'EMPRESA' && (
@@ -154,7 +154,7 @@ export default async function PrintableQuotationPage({ params }: { params: Promi
                     <span className="font-medium">Banco:</span> <span>Banco de Chile</span>
                     <span className="font-medium">Tipo:</span> <span>Cuenta Vista</span>
                     <span className="font-medium">N° Cuenta:</span> <span>00-004-37252-65</span>
-                    <span className="font-medium">Correo:</span> <span>contacto@fydingenieria.cl</span>
+                    <span className="font-medium">Correo:</span> <span>beatriz.rain@fydingenieria.cl</span>
                   </div>
                 </div>
               )}
@@ -167,6 +167,12 @@ export default async function PrintableQuotationPage({ params }: { params: Promi
                   <span>Subtotal</span>
                   <span className="font-medium text-brand-dark">${quote.subtotal.toLocaleString('es-CL')}</span>
                 </div>
+                {quote.discountPercent! > 0 && (
+                  <div className="flex justify-between text-brand-grey mb-2">
+                    <span>Descuento ({quote.discountPercent}%)</span>
+                    <span className="font-medium text-red-500">-${(quote.subtotal * (quote.discountPercent! / 100)).toLocaleString('es-CL')}</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-brand-grey mb-3">
                   <span>IVA {quote.clientType === 'PERSONA' ? '(0%)' : '(19%)'}</span>
                   <span className="font-medium text-brand-dark">${quote.iva.toLocaleString('es-CL')}</span>

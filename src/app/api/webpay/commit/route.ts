@@ -92,11 +92,13 @@ export async function POST(req: Request) {
         });
       } else {
         const { CourseDiplomaPDF } = await import('@/components/pdf/CourseDiplomaPDF');
-        let courseName = cred.courseSlug!;
+        let courseName = cred.courseSlug || '';
+        let courseCertificationText = 'ISO 18436-2';
         try {
           const course = await prisma.course.findUnique({ where: { slug: cred.courseSlug! } });
           if (course) {
             courseName = course.title;
+            if (course.certificationText) courseCertificationText = course.certificationText;
           } else {
             const courseNameMap: Record<string, string> = {
               'analisis-de-vibraciones': 'Análisis Avanzado de Vibraciones e Interpretación de Espectros',
@@ -108,17 +110,21 @@ export async function POST(req: Request) {
           }
         } catch (err) {}
 
-        let signatureDanielBase64, signatureAlamiroBase64;
+        let signatureDanielBase64, signatureAlamiroBase64, timbreBase64;
         try {
           const fs = await import('fs');
           const path = await import('path');
           const danielPath = path.join(process.cwd(), 'public', 'firma-daniel.png');
           const alamiroPath = path.join(process.cwd(), 'public', 'firma-alamiro.png');
+          const timbrePath = path.join(process.cwd(), 'public', 'timbre.png');
           if (fs.existsSync(danielPath)) {
             signatureDanielBase64 = `data:image/png;base64,${fs.readFileSync(danielPath).toString('base64')}`;
           }
           if (fs.existsSync(alamiroPath)) {
             signatureAlamiroBase64 = `data:image/png;base64,${fs.readFileSync(alamiroPath).toString('base64')}`;
+          }
+          if (fs.existsSync(timbrePath)) {
+            timbreBase64 = `data:image/png;base64,${fs.readFileSync(timbrePath).toString('base64')}`;
           }
         } catch (err) {}
 
@@ -137,7 +143,9 @@ export async function POST(req: Request) {
             qrBase64,
             logoBase64,
             signatureDanielBase64,
-            signatureAlamiroBase64
+            signatureAlamiroBase64,
+            timbreBase64,
+            certificationText: courseCertificationText
           }
         });
       }

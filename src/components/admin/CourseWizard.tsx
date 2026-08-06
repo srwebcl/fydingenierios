@@ -70,6 +70,7 @@ export default function CourseWizard({ initialData, isEditing = false, options =
     instructorName: initialData?.instructorName || '',
     instructorTitle: initialData?.instructorTitle || '',
     instructorDesc: initialData?.instructorDesc || '',
+    certificationText: initialData?.certificationText || '',
   });
 
   const [syllabus, setSyllabus] = useState<{ title: string, topics: string[] }[]>(
@@ -276,6 +277,21 @@ export default function CourseWizard({ initialData, isEditing = false, options =
               <input type="checkbox" name="includesDiploma" checked={formData.includesDiploma} onChange={handleChange} id="diploma" className="w-5 h-5" />
               <label htmlFor="diploma" className="text-sm font-bold text-brand-dark">Incluye Emisión de Diploma Oficial F&D</label>
             </div>
+
+            {formData.includesDiploma && (
+              <div className="col-span-full bg-brand-light/10 p-4 rounded border border-brand-light">
+                <label className="block text-sm font-bold text-brand-dark mb-1">Norma de Certificación (Para Diploma / Validación)</label>
+                <input 
+                  type="text" 
+                  name="certificationText" 
+                  value={formData.certificationText} 
+                  onChange={handleChange} 
+                  className="w-full border border-brand-grey/30 rounded px-3 py-2 bg-white" 
+                  placeholder="Ej: ISO 18436-2" 
+                />
+                <p className="text-xs text-brand-grey mt-1">Texto legal que aparecerá en los diplomas generados y el portal de validación. Si se deja en blanco se usará ISO 18436-2 por defecto.</p>
+              </div>
+            )}
           </div>
         )}
 

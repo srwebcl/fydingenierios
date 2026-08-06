@@ -11,7 +11,7 @@ export default async function Capacitaciones() {
   return (
     <main className="container mx-auto px-4 py-16 max-w-7xl">
       <div className="text-center mb-12 max-w-3xl mx-auto">
-        <h1 className="font-heading text-4xl md:text-5xl font-bold text-brand-dark mb-4">Academia F&D Ingeniería</h1>
+        <h1 className="font-heading text-4xl md:text-5xl font-bold text-brand-dark mb-4">Centro de Especialización</h1>
         <div className="h-1 w-20 bg-gradient-to-r from-brand-lime to-brand-teal mx-auto rounded mb-6"></div>
         <p className="text-xl text-brand-grey leading-relaxed">
           Potenciamos el desarrollo profesional a través de programas de capacitación diseñados para personas y empresas, combinando conocimientos teóricos, aplicación práctica y casos reales para fortalecer las competencias técnicas y mejorar el desempeño en la industria.

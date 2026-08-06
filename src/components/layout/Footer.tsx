@@ -45,7 +45,7 @@ export default async function Footer() {
             <h4 className="font-bold text-brand-lime mb-4 text-sm tracking-widest uppercase">Empresa</h4>
             <ul className="space-y-3 text-sm text-brand-light/80">
               <li><Link href="/quienes-somos" className="hover:text-brand-teal transition">Quiénes Somos</Link></li>
-              <li><Link href="/capacitaciones" className="hover:text-brand-teal transition">Academia F&D</Link></li>
+              <li><Link href="/capacitaciones" className="hover:text-brand-teal transition">Centro de Especialización</Link></li>
               <li><Link href="/certificados" className="hover:text-brand-teal transition">Validar Credencial</Link></li>
               <li><Link href="/contacto" className="hover:text-brand-teal transition">Contacto</Link></li>
             </ul>

@@ -111,9 +111,28 @@ export default async function CertificadosPage({ searchParams }: PageProps) {
 
   const isDiploma = cred.type === CredentialType.DIPLOMA_CAPACITACION;
   
-  // Extraer configuración
+  // Extraer configuración y curso (si aplica)
   const settings = await prisma.settings.findFirst();
   const contactEmail = settings?.contactEmail || 'contacto@fydingenieria.cl';
+
+  let courseTitle = cred.courseSlug?.replace(/-/g, ' ').toUpperCase() || 'CURSO DE CAPACITACIÓN';
+  let certificationText = 'norma ISO 18436 ni por ASNT';
+  let courseInstructor = 'Alamiro Andrés Fernández Huenuqueo';
+  let courseDuration = '';
+  let courseModality = '';
+
+  if (isDiploma && cred.courseSlug) {
+    const course = await prisma.course.findUnique({
+      where: { slug: cred.courseSlug }
+    });
+    if (course) {
+      courseTitle = course.title;
+      if (course.certificationText) certificationText = course.certificationText;
+      if (course.instructorName) courseInstructor = course.instructorName;
+      if (course.durationHours) courseDuration = `${course.durationHours} horas`;
+      if (course.modality) courseModality = course.modality;
+    }
+  }
 
   // Configuración de visualización basada en el estado
   const statusConfig = {
@@ -299,12 +318,24 @@ export default async function CertificadosPage({ searchParams }: PageProps) {
               <table className="w-full text-sm">
                 <tbody>
                   <tr className="border-b border-gray-100">
-                    <td className="py-2 text-brand-grey w-1/3 flex items-center gap-2"><BookOpen size={14}/> Programa</td>
-                    <td className="py-2 font-bold">{isDiploma ? cred.courseSlug?.replace(/-/g, ' ').toUpperCase() : (serviceNameMap[cred.serviceSlug as string] || cred.serviceSlug)?.toUpperCase()}</td>
+                    <td className="py-2 text-brand-grey w-1/3 flex items-center gap-2"><BookOpen size={14}/> {isDiploma ? 'Curso' : 'Programa'}</td>
+                    <td className="py-2 font-bold">{isDiploma ? courseTitle : (serviceNameMap[cred.serviceSlug as string] || cred.serviceSlug)?.toUpperCase()}</td>
                   </tr>
                   
                   {isDiploma ? (
                     <>
+                      {courseDuration && (
+                        <tr className="border-b border-gray-100">
+                          <td className="py-2 text-brand-grey flex items-center gap-2"><Calendar size={14}/> Duración</td>
+                          <td className="py-2 font-medium">{courseDuration}</td>
+                        </tr>
+                      )}
+                      {courseModality && (
+                        <tr className="border-b border-gray-100">
+                          <td className="py-2 text-brand-grey flex items-center gap-2"><Globe size={14}/> Modalidad</td>
+                          <td className="py-2 font-medium">{courseModality}</td>
+                        </tr>
+                      )}
                       <tr className="border-b border-gray-100">
                         <td className="py-2 text-brand-grey flex items-center gap-2"><CheckCircle2 size={14}/> Resultado</td>
                         <td className="py-2">
@@ -342,7 +373,7 @@ export default async function CertificadosPage({ searchParams }: PageProps) {
                     {isDiploma ? 'Instructor Responsable' : 'Ingeniero Responsable'}
                   </h3>
                 </div>
-                <p className="font-bold text-lg mb-1">{isDiploma ? (cred as any).courseInstructor || 'Alamiro Andrés Fernández Huenuqueo' : 'Ingeniería F&D'}</p>
+                <p className="font-bold text-lg mb-1">{isDiploma ? courseInstructor : 'Ingeniería F&D'}</p>
                 <p className="text-sm text-brand-grey">
                   Elaborado y validado por equipo técnico especializado.
                 </p>
@@ -357,7 +388,7 @@ export default async function CertificadosPage({ searchParams }: PageProps) {
                   <h3 className="font-bold text-brand-teal uppercase text-sm tracking-wide">Organismo Emisor</h3>
                 </div>
                 <p className="font-bold text-lg">F&D Ingeniería en Mantenimiento</p>
-                <p className="text-sm text-brand-grey mb-2">{isDiploma ? 'Academia F&D' : 'División de Servicios y Confiabilidad'}</p>
+                <p className="text-sm text-brand-grey mb-2">{isDiploma ? 'Centro de Especialización' : 'División de Servicios y Confiabilidad'}</p>
                 <a href="https://www.fydingenieria.cl" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-brand-teal font-medium">
                   <Globe size={14} /> www.fydingenieria.cl
                 </a>
@@ -377,18 +408,18 @@ export default async function CertificadosPage({ searchParams }: PageProps) {
             </div>
             
             {isDiploma ? (
-              <div className="text-sm text-green-900 space-y-3 pl-12">
+              <div className="text-sm text-green-900 space-y-3 md:pl-12">
                 <p>Este certificado acredita que el participante completó satisfactoriamente el programa de entrenamiento impartido por <strong>F&D Ingeniería en Mantenimiento</strong>.</p>
                 <p>El contenido del programa fue desarrollado considerando los lineamientos técnicos aplicables y las mejores prácticas de la industria.</p>
                 <div className="flex gap-3 items-start bg-green-100 p-3 rounded border border-green-300 mt-2">
                   <Info size={16} className="shrink-0 mt-0.5 text-green-700" />
                   <p className="text-xs text-green-800">
-                    Este documento acredita la realización del entrenamiento impartido por F&D Ingeniería en Mantenimiento y <strong>no constituye una certificación internacional de competencia emitida por un organismo certificador acreditado</strong>.
+                    Este documento acredita la realización del entrenamiento impartido por F&D Ingeniería en Mantenimiento y <strong>no constituye una certificación internacional de competencia emitida por un organismo certificador acreditado conforme a {certificationText}</strong>.
                   </p>
                 </div>
               </div>
             ) : (
-              <div className="text-sm text-green-900 space-y-3 pl-12">
+              <div className="text-sm text-green-900 space-y-3 md:pl-12">
                 <p>Este documento certifica la autenticidad del informe técnico emitido por <strong>F&D Ingeniería en Mantenimiento</strong>.</p>
                 <p>Los resultados y hallazgos detallados en el informe físico o digital original son respaldados por nuestros ingenieros especialistas.</p>
                 {cred.findingsSummary && (
@@ -407,30 +438,34 @@ export default async function CertificadosPage({ searchParams }: PageProps) {
           </div>
 
           {/* SECURITY & AUTHENTICITY BAR */}
-          <div className="border border-gray-200 rounded-lg p-4 bg-gray-50 flex flex-wrap md:flex-nowrap justify-between gap-4 text-xs font-medium text-brand-grey mb-6 items-center">
-            <h4 className="w-full text-center font-bold text-brand-dark mb-2 md:hidden">SEGURIDAD Y AUTENTICIDAD</h4>
+          <div className="border border-gray-200 rounded-lg p-4 bg-gray-50 grid grid-cols-2 md:flex justify-between gap-4 text-xs font-medium text-brand-grey mb-6 items-center text-center md:text-left">
+            <h4 className="col-span-2 text-center font-bold text-brand-dark mb-2 md:hidden">SEGURIDAD Y AUTENTICIDAD</h4>
             
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col md:flex-row items-center gap-2 mx-auto md:mx-0">
               <ShieldCheck size={24} className="text-brand-dark" />
-              <span>Documento<br/>emitido digitalmente</span>
+              <span className="hidden md:inline">Documento<br/>emitido digitalmente</span>
+              <span className="md:hidden">Emitido digitalmente</span>
             </div>
             <div className="hidden md:block w-px h-8 bg-gray-300"></div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col md:flex-row items-center gap-2 mx-auto md:mx-0">
               <Database size={24} className="text-brand-dark" />
-              <span>Registro encontrado en<br/>la base de datos</span>
+              <span className="hidden md:inline">Registro encontrado en<br/>la base de datos</span>
+              <span className="md:hidden">Base de datos</span>
             </div>
             <div className="hidden md:block w-px h-8 bg-gray-300"></div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col md:flex-row items-center gap-2 mx-auto md:mx-0">
               <Lock size={24} className="text-brand-dark" />
-              <span>Código de validación<br/>verificado correctamente</span>
+              <span className="hidden md:inline">Código de validación<br/>verificado correctamente</span>
+              <span className="md:hidden">Validado online</span>
             </div>
             <div className="hidden md:block w-px h-8 bg-gray-300"></div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col md:flex-row items-center gap-2 mx-auto md:mx-0">
               <CheckCircle2 size={24} className="text-green-600" />
-              <span className="text-green-700">Documento<br/>auténtico {displayStatus === 'VIGENTE' && 'y vigente'}</span>
+              <span className="text-green-700 hidden md:inline">Documento<br/>auténtico {displayStatus === 'VIGENTE' && 'y vigente'}</span>
+              <span className="text-green-700 md:hidden">Documento auténtico</span>
             </div>
           </div>
 

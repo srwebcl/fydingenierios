@@ -169,6 +169,7 @@ interface DiplomaData {
   signatureDanielBase64?: string;
   signatureAlamiroBase64?: string;
   timbreBase64?: string;
+  certificationText?: string;
 }
 
 export const CourseDiplomaPDF = ({ data }: { data: DiplomaData }) => {
@@ -177,6 +178,7 @@ export const CourseDiplomaPDF = ({ data }: { data: DiplomaData }) => {
   const monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
   const currentMonth = monthNames[dateObj.getMonth()];
   const currentYear = dateObj.getFullYear();
+  const isoNorm = data.certificationText || 'ISO 18436-2';
 
   return (
     <Document>
@@ -219,7 +221,7 @@ export const CourseDiplomaPDF = ({ data }: { data: DiplomaData }) => {
           }</Text>
           
           <Text style={styles.bodyText}>
-            Este certificado acredita la participación y finalización del entrenamiento. No constituye certificación oficial de competencia según ASNT o ISO, el curso se realizó durante los días del {data.courseDates} con duración total de {data.courseHours} horas, de acuerdo con la práctica de F&D INGENIERIA EN MANTENIMIENTO "entrenamiento confeccionado de acuerdo con los lineamientos de la norma ISO 18436-2, en el método de ensayo:"
+            Este certificado acredita la participación y finalización del entrenamiento. No constituye certificación oficial de competencia según ASNT o ISO, el curso se realizó durante los días del {data.courseDates} con duración total de {data.courseHours} horas, de acuerdo con la práctica de F&D INGENIERIA EN MANTENIMIENTO "entrenamiento confeccionado de acuerdo con los lineamientos de la norma {isoNorm}, en el método de ensayo:"
           </Text>
           
           <Text style={styles.courseName}>"{data.courseName}"</Text>

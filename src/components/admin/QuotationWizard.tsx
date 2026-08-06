@@ -26,11 +26,14 @@ export function QuotationWizard() {
   const [paymentTerms, setPaymentTerms] = useState('50% para aceptar oferta del servicio, 50% inicio del servicio');
 
   const [items, setItems] = useState<Item[]>([{ detail: '', unit: 'dias', quantity: 1, unitPrice: 0, total: 0 }]);
+  const [discountPercent, setDiscountPercent] = useState(0);
 
   // Calculations
   const subtotal = items.reduce((acc, item) => acc + item.total, 0);
-  const iva = clientType === 'EMPRESA' ? subtotal * 0.19 : 0;
-  const total = subtotal + iva;
+  const discountAmount = subtotal * (discountPercent / 100);
+  const subtotalAfterDiscount = subtotal - discountAmount;
+  const iva = clientType === 'EMPRESA' ? subtotalAfterDiscount * 0.19 : 0;
+  const total = subtotalAfterDiscount + iva;
 
   const handleItemChange = (index: number, field: keyof Item, value: any) => {
     const newItems = [...items];
@@ -69,6 +72,7 @@ export function QuotationWizard() {
       validityDays: Number(validityDays),
       paymentTerms,
       items,
+      discountPercent: Number(discountPercent),
       subtotal,
       iva,
       total
@@ -152,7 +156,22 @@ export function QuotationWizard() {
           
           <div>
             <label className="block text-sm font-semibold text-brand-dark mb-1">Servicio / Título de la Cotización</label>
-            <input type="text" value={serviceName} onChange={e => setServiceName(e.target.value)} className="w-full border border-brand-light rounded-lg px-4 py-2 focus:outline-none focus:border-brand-teal transition" placeholder="Ej. TERMOGRAFÍA INFRARROJA NIVEL I (Para 2 personas)" required />
+            <input 
+              type="text" 
+              value={serviceName} 
+              onChange={e => {
+                setServiceName(e.target.value);
+                // Si el item 1 está vacío, llenarlo automáticamente
+                if (items.length > 0 && items[0].detail === '') {
+                  const newItems = [...items];
+                  newItems[0].detail = e.target.value;
+                  setItems(newItems);
+                }
+              }} 
+              className="w-full border border-brand-light rounded-lg px-4 py-2 focus:outline-none focus:border-brand-teal transition" 
+              placeholder="Ej. TERMOGRAFÍA INFRARROJA NIVEL I (Para 2 personas)" 
+              required 
+            />
           </div>
 
           <div>
@@ -228,6 +247,16 @@ export function QuotationWizard() {
               <div className="flex justify-between mb-2">
                 <span className="font-semibold text-brand-dark">Subtotal</span>
                 <span>${subtotal.toLocaleString('es-CL')}</span>
+              </div>
+              <div className="flex justify-between mb-2 items-center">
+                <span className="font-semibold text-brand-dark flex items-center gap-2">
+                  Descuento
+                  <div className="flex items-center bg-gray-100 rounded px-2">
+                    <input type="number" min="0" max="100" value={discountPercent} onChange={e => setDiscountPercent(Number(e.target.value))} className="w-12 bg-transparent text-right py-1 focus:outline-none text-sm" />
+                    <span className="text-sm font-bold text-gray-500">%</span>
+                  </div>
+                </span>
+                <span className="text-red-500">-${discountAmount.toLocaleString('es-CL')}</span>
               </div>
               <div className="flex justify-between mb-2">
                 <span className="font-semibold text-brand-dark">IVA {clientType === 'PERSONA' ? '(0%)' : ''}</span>

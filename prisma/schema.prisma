@@ -223,7 +223,7 @@ model Quotation {
   clientEmail     String
   
   senderName      String   @default("Beatriz Venegas Rain")
-  senderEmail     String   @default("contacto@fydingenieria.cl")
+  senderEmail     String   @default("beatriz.rain@fydingenieria.cl")
   senderCompany   String   @default("F&D Ingeniería en Mantenimiento")
   senderRut       String   @default("78.243.503-5")
   senderAddress   String   @default("Dr. Antonio Donghi Paladinos 2156, Rancagua")
@@ -235,6 +235,7 @@ model Quotation {
   
   items           Json     // [{ detail, unit, quantity, unitPrice, total }]
   
+  discountPercent Int?     @default(0) // Descuento porcentual opcional
   subtotal        Float
   iva             Float
   total           Float

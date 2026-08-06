@@ -174,10 +174,12 @@ export async function issueCourseDiploma(data: CourseDiplomaBulkData) {
 
   // Obtener el título real del curso desde la base de datos
   let courseName = data.courseSlug;
+  let courseCertificationText = 'ISO 18436-2';
   try {
     const course = await prisma.course.findUnique({ where: { slug: data.courseSlug } });
     if (course) {
       courseName = course.title;
+      if (course.certificationText) courseCertificationText = course.certificationText;
     } else {
       // Fallback
       const courseNameMap: Record<string, string> = {
@@ -300,7 +302,8 @@ export async function issueCourseDiploma(data: CourseDiplomaBulkData) {
           logoBase64,
           signatureDanielBase64,
           signatureAlamiroBase64,
-          timbreBase64
+          timbreBase64,
+          certificationText: courseCertificationText
         }
       });
 

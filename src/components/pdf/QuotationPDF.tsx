@@ -4,204 +4,171 @@ import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/
 const styles = StyleSheet.create({
   page: {
     fontFamily: 'Helvetica',
-    fontSize: 10,
-    color: '#0B3B3F',
-    lineHeight: 1.5,
+    fontSize: 9,
+    color: '#1F2937', // Dark gray instead of pure black
+    padding: 30,
     backgroundColor: '#FFFFFF',
-    paddingBottom: 60, // Space for footer
   },
-  headerBanner: {
-    backgroundColor: '#0B3B3F',
+  headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '30 40',
-    marginBottom: 30,
+    alignItems: 'flex-start',
+    marginBottom: 20,
+  },
+  logoContainer: {
+    width: '60%',
   },
   logo: {
-    width: 140,
+    width: 150,
+    marginBottom: 10,
   },
-  headerTextContainer: {
-    alignItems: 'flex-end',
+  companyInfo: {
+    fontSize: 8,
+    color: '#4B5563',
+    lineHeight: 1.3,
   },
-  headerTitle: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  headerSubtitle: {
-    color: '#00A6A6',
-    fontSize: 10,
-  },
-  contentContainer: {
-    paddingHorizontal: 40,
-  },
-  titleCard: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  folioBox: {
+    width: '35%',
+    border: '2px solid #00A6A6', // Brand Teal border
+    borderRadius: 6,
+    padding: 10,
     alignItems: 'center',
-    border: '1px solid #E5E7EB',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 20,
-    backgroundColor: '#F4FAF9',
+    backgroundColor: '#F4FAF9', // Very light teal
   },
-  titleCardLeft: {
-    flex: 1,
-  },
-  mainTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#00A6A6',
-    marginBottom: 4,
-  },
-  subTitle: {
-    fontSize: 10,
-    color: '#5B6B6C',
-  },
-  titleCardRight: {
-    alignItems: 'flex-end',
-  },
-  badge: {
-    backgroundColor: '#FFFFFF',
-    border: '1px solid #E5E7EB',
-    borderRadius: 4,
-    padding: '4 8',
-    marginBottom: 4,
-  },
-  badgeText: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: '#00A6A6',
-  },
-  grid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  card: {
-    width: '48%',
-    border: '1px solid #E5E7EB',
-    borderRadius: 8,
-    padding: 16,
-  },
-  cardFull: {
-    width: '100%',
-    border: '1px solid #E5E7EB',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 20,
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-    borderBottom: '1px solid #F4FAF9',
-    paddingBottom: 8,
-  },
-  cardTitle: {
+  folioTextRut: {
+    color: '#0B3B3F', // Brand Dark
     fontSize: 11,
     fontWeight: 'bold',
-    color: '#0B3B3F',
-    textTransform: 'uppercase',
+    marginBottom: 6,
+  },
+  folioTextTitle: {
+    color: '#00A6A6',
+    fontSize: 13,
+    fontWeight: 'bold',
+    marginBottom: 6,
+  },
+  folioTextNumber: {
+    color: '#E53E3E',
+    fontSize: 11,
+    fontWeight: 'bold',
+  },
+  clientBox: {
+    border: '1px solid #E5E7EB',
+    borderRadius: 6,
+    padding: 10,
+    marginBottom: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#F9FAFB',
+  },
+  clientLeft: {
+    width: '60%',
+  },
+  clientRight: {
+    width: '38%',
   },
   row: {
     flexDirection: 'row',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   label: {
-    width: 80,
-    color: '#5B6B6C',
-    fontSize: 9,
+    width: 70,
+    fontWeight: 'bold',
+    color: '#0B3B3F',
   },
   value: {
     flex: 1,
-    fontWeight: 'bold',
-    fontSize: 10,
   },
-  paragraph: {
-    color: '#5B6B6C',
-    lineHeight: 1.5,
+  serviceTitleBox: {
+    marginBottom: 15,
+    paddingBottom: 5,
+    borderBottom: '2px solid #00A6A6',
+  },
+  serviceTitle: {
+    fontWeight: 'bold',
+    fontSize: 11,
+    color: '#0B3B3F',
+    textTransform: 'uppercase',
+  },
+  serviceDesc: {
+    fontSize: 9,
+    marginTop: 4,
+    color: '#4B5563',
   },
   table: {
     width: '100%',
+    border: '1px solid #E5E7EB',
+    borderRadius: 6,
+    marginBottom: 15,
+    overflow: 'hidden',
   },
   tableHeader: {
     flexDirection: 'row',
-    backgroundColor: '#F4FAF9',
-    padding: 10,
-    borderBottom: '2px solid #00A6A6',
+    backgroundColor: '#0B3B3F',
   },
   tableHeaderCell: {
+    padding: 6,
     fontWeight: 'bold',
-    color: '#00A6A6',
-    fontSize: 9,
+    color: '#FFFFFF',
+    borderRight: '1px solid #1F4F53', // slightly lighter than header bg
+    textAlign: 'center',
+    fontSize: 8,
   },
   tableRow: {
     flexDirection: 'row',
-    padding: 10,
     borderBottom: '1px solid #E5E7EB',
   },
   tableCell: {
-    color: '#5B6B6C',
-    fontSize: 9,
+    padding: 6,
+    borderRight: '1px solid #E5E7EB',
+    fontSize: 8,
+    color: '#1F2937',
   },
-  col1: { width: '45%' },
-  col2: { width: '15%', textAlign: 'center' },
-  col3: { width: '15%', textAlign: 'center' },
-  col4: { width: '25%', textAlign: 'right' },
+  col1: { width: '8%', textAlign: 'center' },
+  col2: { width: '45%' },
+  col3: { width: '10%', textAlign: 'center' },
+  col4: { width: '12%', textAlign: 'center' },
+  col5: { width: '12.5%', textAlign: 'right' },
+  col6: { width: '12.5%', textAlign: 'right', borderRight: 'none' },
+  totalsContainerWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
   totalsContainer: {
-    width: '50%',
+    width: '40%',
+    border: '1px solid #00A6A6',
+    borderRadius: 6,
     backgroundColor: '#F4FAF9',
-    borderRadius: 8,
-    padding: 12,
+    overflow: 'hidden',
   },
   totalRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 4,
+    borderBottom: '1px solid #BFE8E8', // Soft teal line
   },
   totalLabel: {
-    color: '#5B6B6C',
-    fontSize: 10,
+    width: '60%',
+    padding: 6,
+    borderRight: '1px solid #BFE8E8',
+    textAlign: 'right',
+    fontWeight: 'bold',
+    fontSize: 8,
+    color: '#0B3B3F',
   },
   totalValue: {
+    width: '40%',
+    padding: 6,
+    textAlign: 'right',
+    fontSize: 8,
     fontWeight: 'bold',
-    fontSize: 10,
-  },
-  grandTotalRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 8,
-    borderTop: '1px solid #00A6A6',
-    marginTop: 4,
-  },
-  grandTotalLabel: {
-    fontWeight: 'bold',
-    color: '#00A6A6',
-    fontSize: 12,
-  },
-  grandTotalValue: {
-    fontWeight: 'bold',
-    color: '#00A6A6',
-    fontSize: 12,
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#0B3B3F',
-    padding: 15,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 40,
   },
   footerText: {
-    color: '#FFFFFF',
-    fontSize: 9,
+    position: 'absolute',
+    bottom: 30,
+    left: 30,
+    right: 30,
+    textAlign: 'center',
+    fontSize: 7,
+    color: '#9CA3AF',
   }
 });
 
@@ -217,166 +184,123 @@ export const QuotationPDF = ({ data, logoBase64 }: QuotationPDFProps) => {
     <Document>
       <Page size="A4" style={styles.page}>
         
-        {/* HEADER BANNER */}
-        <View style={styles.headerBanner} fixed>
-          {logoBase64 ? (
-            <Image src={logoBase64} style={styles.logo} />
-          ) : (
-            <Text style={{ fontSize: 24, color: '#00A6A6', fontWeight: 'bold' }}>F&D INGENIERÍA</Text>
-          )}
-          <View style={styles.headerTextContainer}>
-            <Text style={styles.headerTitle}>PROPUESTA COMERCIAL</Text>
-            <Text style={styles.headerSubtitle}>CONFIABILIDAD • PRECISIÓN • RESULTADOS</Text>
-          </View>
-        </View>
-
-        <View style={styles.contentContainer}>
-          
-          {/* TITLE CARD */}
-          <View style={styles.titleCard}>
-            <View style={styles.titleCardLeft}>
-              <Text style={styles.mainTitle}>DOCUMENTO OFICIAL</Text>
-              <Text style={styles.subTitle}>La siguiente propuesta técnica y económica ha sido emitida directamente por F&D Ingeniería en Mantenimiento.</Text>
-            </View>
-            <View style={styles.titleCardRight}>
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>N° {data.quoteNumber}</Text>
-              </View>
-              <Text style={{ fontSize: 9, color: '#5B6B6C' }}>Fecha: {new Date(data.date).toLocaleDateString('es-CL')}</Text>
-            </View>
-          </View>
-
-          {/* TWO COLUMN INFO */}
-          <View style={styles.grid}>
-            <View style={styles.card}>
-              <View style={styles.cardHeader}>
-                <Text style={styles.cardTitle}>Información del Cliente</Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={styles.label}>Nombre</Text>
-                <Text style={styles.value}>{data.clientName}</Text>
-              </View>
-              {data.clientType === 'EMPRESA' && (
-                <View style={styles.row}>
-                  <Text style={styles.label}>Empresa</Text>
-                  <Text style={styles.value}>{data.clientCompany}</Text>
-                </View>
-              )}
-              <View style={styles.row}>
-                <Text style={styles.label}>Email</Text>
-                <Text style={styles.value}>{data.clientEmail}</Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={styles.label}>Teléfono</Text>
-                <Text style={styles.value}>{data.clientPhone}</Text>
-              </View>
-            </View>
-
-            <View style={styles.card}>
-              <View style={styles.cardHeader}>
-                <Text style={styles.cardTitle}>Datos del Emisor</Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={styles.label}>Empresa</Text>
-                <Text style={styles.value}>{data.senderCompany}</Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={styles.label}>RUT</Text>
-                <Text style={styles.value}>{data.senderRut}</Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={styles.label}>Ejecutivo</Text>
-                <Text style={styles.value}>{data.senderName}</Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={styles.label}>Email</Text>
-                <Text style={styles.value}>{data.senderEmail}</Text>
-              </View>
-            </View>
-          </View>
-
-          {/* SERVICE HIGHLIGHT */}
-          <View style={styles.cardFull}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle}>Detalle del Requerimiento</Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={styles.label}>Servicio</Text>
-              <Text style={[styles.value, { color: '#00A6A6' }]}>{data.serviceName}</Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={styles.label}>Descripción</Text>
-              <Text style={[styles.value, { fontWeight: 'normal', color: '#5B6B6C' }]}>{data.requirements}</Text>
-            </View>
-          </View>
-
-          {/* TABLE */}
-          <View style={styles.cardFull}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle}>Inversión Estimada</Text>
-            </View>
-            <View style={styles.table}>
-              <View style={styles.tableHeader}>
-                <Text style={[styles.tableHeaderCell, styles.col1]}>Detalle</Text>
-                <Text style={[styles.tableHeaderCell, styles.col2]}>Unidad</Text>
-                <Text style={[styles.tableHeaderCell, styles.col3]}>Cant.</Text>
-                <Text style={[styles.tableHeaderCell, styles.col4]}>Total</Text>
-              </View>
-              
-              {items.map((item: any, i: number) => (
-                <View key={i} style={styles.tableRow} wrap={false}>
-                  <Text style={[styles.tableCell, styles.col1]}>{item.detail}</Text>
-                  <Text style={[styles.tableCell, styles.col2]}>{item.unit}</Text>
-                  <Text style={[styles.tableCell, styles.col3]}>{item.quantity}</Text>
-                  <Text style={[styles.tableCell, styles.col4]}>${(item.quantity * item.unitPrice).toLocaleString('es-CL')}</Text>
-                </View>
-              ))}
-            </View>
-          </View>
-
-          {/* TOTALS & TERMS - WRAPPED TOGETHER SO THEY DONT CUT */}
-          <View wrap={false}>
-            <View style={styles.grid}>
-              <View style={[styles.card, { width: '45%' }]}>
-                <View style={styles.cardHeader}>
-                  <Text style={styles.cardTitle}>Condiciones Comerciales</Text>
-                </View>
-                <View style={styles.row}>
-                  <Text style={styles.label}>Validez</Text>
-                  <Text style={styles.value}>{data.validityDays} días corridos</Text>
-                </View>
-                <View style={styles.row}>
-                  <Text style={styles.label}>Pago</Text>
-                  <Text style={styles.value}>{data.paymentTerms}</Text>
-                </View>
-              </View>
-
-              <View style={styles.totalsContainer}>
-                <View style={styles.totalRow}>
-                  <Text style={styles.totalLabel}>Subtotal Neto</Text>
-                  <Text style={styles.totalValue}>${data.subtotal.toLocaleString('es-CL')}</Text>
-                </View>
-                {data.clientType === 'EMPRESA' && (
-                  <View style={styles.totalRow}>
-                    <Text style={styles.totalLabel}>IVA (19%)</Text>
-                    <Text style={styles.totalValue}>${data.iva.toLocaleString('es-CL')}</Text>
-                  </View>
-                )}
-                <View style={styles.grandTotalRow}>
-                  <Text style={styles.grandTotalLabel}>TOTAL</Text>
-                  <Text style={styles.grandTotalValue}>${data.total.toLocaleString('es-CL')}</Text>
-                </View>
-              </View>
-            </View>
+        {/* HEADER */}
+        <View style={styles.headerContainer}>
+          <View style={styles.logoContainer}>
+            {logoBase64 ? (
+              <Image src={logoBase64} style={styles.logo} />
+            ) : (
+              <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>F&D INGENIERÍA</Text>
+            )}
+            <Text style={styles.companyInfo}>{data.senderCompany}</Text>
+            <Text style={styles.companyInfo}>Giro: Servicios de Ingeniería en Mantenimiento</Text>
+            <Text style={styles.companyInfo}>Email: {data.senderEmail}</Text>
+            <Text style={styles.companyInfo}>Ejecutivo: {data.senderName}</Text>
           </View>
           
+          <View style={styles.folioBox}>
+            <Text style={styles.folioTextRut}>R.U.T.: {data.senderRut}</Text>
+            <Text style={styles.folioTextTitle}>COTIZACIÓN</Text>
+            <Text style={styles.folioTextNumber}>Nº {data.quoteNumber}</Text>
+          </View>
         </View>
 
-        {/* FOOTER BANNER */}
-        <View style={styles.footer} fixed>
-          <Text style={styles.footerText}>Ingeniería en Mantenimiento F&D SpA.</Text>
-          <Text style={styles.footerText}>www.fydingenieria.cl</Text>
+        {/* CLIENT INFO BOX */}
+        <View style={styles.clientBox}>
+          <View style={styles.clientLeft}>
+            <View style={styles.row}>
+              <Text style={styles.label}>SEÑOR(ES):</Text>
+              <Text style={styles.value}>{data.clientName}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.label}>EMPRESA:</Text>
+              <Text style={styles.value}>{data.clientCompany || 'Independiente'}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.label}>EMAIL:</Text>
+              <Text style={styles.value}>{data.clientEmail}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.label}>TELÉFONO:</Text>
+              <Text style={styles.value}>{data.clientPhone || 'No registrado'}</Text>
+            </View>
+          </View>
+          <View style={styles.clientRight}>
+            <View style={styles.row}>
+              <Text style={styles.label}>FECHA:</Text>
+              <Text style={styles.value}>{new Date(data.date).toLocaleDateString('es-CL')}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.label}>VALIDEZ:</Text>
+              <Text style={styles.value}>{data.validityDays} días corridos</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.label}>PAGO:</Text>
+              <Text style={styles.value}>{data.paymentTerms}</Text>
+            </View>
+          </View>
         </View>
+
+        {/* SERVICE DESCRIPTION */}
+        <View style={styles.serviceTitleBox}>
+          <Text style={styles.serviceTitle}>Referencia: {data.serviceName}</Text>
+          <Text style={styles.serviceDesc}>{data.requirements}</Text>
+        </View>
+
+        {/* TABLE */}
+        <View style={styles.table}>
+          <View style={styles.tableHeader}>
+            <Text style={[styles.tableHeaderCell, styles.col1]}>N°</Text>
+            <Text style={[styles.tableHeaderCell, styles.col2]}>Descripción</Text>
+            <Text style={[styles.tableHeaderCell, styles.col3]}>Cant.</Text>
+            <Text style={[styles.tableHeaderCell, styles.col4]}>Unidad</Text>
+            <Text style={[styles.tableHeaderCell, styles.col5]}>Precio</Text>
+            <Text style={[styles.tableHeaderCell, styles.col6, { borderRight: 'none' }]}>Valor</Text>
+          </View>
+          
+          {items.map((item: any, i: number) => (
+            <View key={i} style={styles.tableRow}>
+              <Text style={[styles.tableCell, styles.col1]}>{i + 1}</Text>
+              <Text style={[styles.tableCell, styles.col2]}>{item.detail}</Text>
+              <Text style={[styles.tableCell, styles.col3]}>{item.quantity}</Text>
+              <Text style={[styles.tableCell, styles.col4]}>{item.unit}</Text>
+              <Text style={[styles.tableCell, styles.col5]}>${item.unitPrice.toLocaleString('es-CL')}</Text>
+              <Text style={[styles.tableCell, styles.col6, { borderRight: 'none' }]}>${(item.quantity * item.unitPrice).toLocaleString('es-CL')}</Text>
+            </View>
+          ))}
+        </View>
+
+        {/* TOTALS */}
+        <View style={styles.totalsContainerWrapper} wrap={false}>
+          <View style={styles.totalsContainer}>
+            <View style={styles.totalRow}>
+              <Text style={styles.totalLabel}>MONTO NETO</Text>
+              <Text style={styles.totalValue}>$ {data.subtotal.toLocaleString('es-CL')}</Text>
+            </View>
+            {data.discountPercent > 0 && (
+              <View style={styles.totalRow}>
+                <Text style={styles.totalLabel}>DESCUENTO ({data.discountPercent}%)</Text>
+                <Text style={[styles.totalValue, { color: '#E53E3E' }]}>-$ {(data.subtotal * (data.discountPercent / 100)).toLocaleString('es-CL')}</Text>
+              </View>
+            )}
+            {data.clientType === 'EMPRESA' && (
+              <View style={styles.totalRow}>
+                <Text style={styles.totalLabel}>I.V.A. 19%</Text>
+                <Text style={styles.totalValue}>$ {data.iva.toLocaleString('es-CL')}</Text>
+              </View>
+            )}
+            <View style={[styles.totalRow, { borderBottom: 'none' }]}>
+              <Text style={styles.totalLabel}>TOTAL</Text>
+              <Text style={styles.totalValue}>$ {data.total.toLocaleString('es-CL')}</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* FOOTER */}
+        <Text style={styles.footerText} fixed>
+          Documento generado oficialmente por F&D Ingeniería en Mantenimiento SpA | www.fydingenieria.cl
+        </Text>
+
       </Page>
     </Document>
   );

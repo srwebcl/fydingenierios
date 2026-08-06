@@ -14,6 +14,7 @@ export async function createQuotation(data: {
   validityDays: number;
   paymentTerms: string;
   items: any[];
+  discountPercent?: number;
   subtotal: number;
   iva: number;
   total: number;

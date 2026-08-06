@@ -12,7 +12,7 @@ export default function Navbar() {
     { href: '/', label: 'Inicio' },
     { href: '/quienes-somos', label: 'Quiénes Somos' },
     { href: '/servicios', label: 'Servicios' },
-    { href: '/capacitaciones', label: 'Academia F&D' },
+    { href: '/capacitaciones', label: 'Centro de Especialización' },
     { href: '/contacto', label: 'Contacto' },
   ];
 
