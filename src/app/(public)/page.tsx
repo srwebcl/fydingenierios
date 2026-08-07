@@ -19,14 +19,14 @@ export default async function Home() {
       {/* Hero Section */}
       <section className="relative py-24 md:py-32 border-b border-brand-grey/20 overflow-hidden">
         <HeroVideoBackground />
-        <div className="container mx-auto px-4 text-center max-w-4xl relative z-10">
-          <h1 className="font-heading text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+        <div className="container mx-auto px-6 sm:px-4 text-center max-w-4xl relative z-10">
+          <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-lime to-brand-teal pb-2 inline-block">
               Mantenimiento Predictivo
-            </span> <br />
-            y Centro de Especialización
+            </span> <br className="hidden sm:block" />
+            <span className="sm:hidden"> </span>y Centro de Especialización
           </h1>
-          <p className="text-xl text-brand-light/90 mb-10 leading-relaxed font-sans">
+          <p className="text-lg sm:text-xl text-brand-light/90 mb-10 leading-relaxed font-sans px-2 sm:px-0">
             Garantizamos la disponibilidad de sus activos críticos mediante tecnología de diagnóstico avanzado, servicios de certificación y capacitación especializada.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
