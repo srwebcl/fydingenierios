@@ -50,8 +50,8 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning className="min-h-full flex flex-col font-sans bg-background text-foreground">
         {children}
+        <GoogleAnalytics gaId="AW-18371400854" />
       </body>
-      <GoogleAnalytics gaId="AW-18371400854" />
     </html>
   );
 }
