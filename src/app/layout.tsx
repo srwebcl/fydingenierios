@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Sora } from "next/font/google";
+import { GoogleAnalytics } from '@next/third-parties/google';
 import "./globals.css";
 
 const inter = Inter({
@@ -50,6 +51,7 @@ export default function RootLayout({
       <body suppressHydrationWarning className="min-h-full flex flex-col font-sans bg-background text-foreground">
         {children}
       </body>
+      <GoogleAnalytics gaId="AW-18371400854" />
     </html>
   );
 }

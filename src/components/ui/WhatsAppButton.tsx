@@ -3,6 +3,7 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import { MessageCircle } from 'lucide-react';
+import { sendGAEvent } from '@next/third-parties/google';
 
 export function WhatsAppButton({ phoneNumber }: { phoneNumber?: string }) {
   const pathname = usePathname();
@@ -23,11 +24,17 @@ export function WhatsAppButton({ phoneNumber }: { phoneNumber?: string }) {
   const encodedMessage = encodeURIComponent(message);
   const whatsappUrl = `https://wa.me/${phone.replace('+', '')}?text=${encodedMessage}`;
 
+  const handleWhatsAppClick = () => {
+    // Disparar evento de conversión de Google Ads
+    sendGAEvent('event', 'conversion', { 'send_to': 'AW-18371400854/dWrvCJ2nsN0cEJaplbhE' });
+  };
+
   return (
     <a 
       href={whatsappUrl} 
       target="_blank" 
       rel="noopener noreferrer"
+      onClick={handleWhatsAppClick}
       className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 hover:shadow-[#25D366]/50 transition-all duration-300 group flex items-center justify-center"
       aria-label="Contactar por WhatsApp"
     >

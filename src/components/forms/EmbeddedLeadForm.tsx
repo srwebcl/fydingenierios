@@ -11,13 +11,25 @@ type EmbeddedLeadFormProps = {
 
 export function EmbeddedLeadForm({ interestType, interestSlug, title = "¿Necesita este servicio?", subtitle = "Cotice hoy mismo y uno de nuestros ingenieros especialistas le contactará." }: EmbeddedLeadFormProps) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+  const [honeypot, setHoneypot] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (honeypot) {
+      console.log('Bot detectado.');
+      setStatus('loading');
+      setTimeout(() => setStatus('success'), 1000);
+      return;
+    }
+
     setStatus('loading');
     // Simulated submission for now. Sprint 4 will connect this to real actions.
     setTimeout(() => {
       setStatus('success');
+      import('@next/third-parties/google').then(({ sendGAEvent }) => {
+        sendGAEvent('event', 'conversion', { 'send_to': 'AW-18371400854/135dCJqnsN0cEJaplbhE' });
+      });
     }, 1000);
   };
 
@@ -42,6 +54,12 @@ export function EmbeddedLeadForm({ interestType, interestSlug, title = "¿Necesi
         {/* Campos ocultos de rastreo */}
         <input type="hidden" name="interestType" value={interestType} />
         <input type="hidden" name="interestSlug" value={interestSlug} />
+        
+        {/* Honeypot */}
+        <div aria-hidden="true" style={{ display: 'none', position: 'absolute', left: '-9999px' }}>
+          <label htmlFor="embedded-website">Website</label>
+          <input type="text" id="embedded-website" name="embedded-website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+        </div>
 
         <div>
           <label className="block text-xs font-bold text-brand-dark mb-1">Nombre Completo *</label>

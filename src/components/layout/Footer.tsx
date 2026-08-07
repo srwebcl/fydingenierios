@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { prisma } from '@/lib/db';
+import { PhoneLink } from '@/components/ui/PhoneLink';
 
 export default async function Footer() {
   let settings = null;
@@ -55,8 +56,8 @@ export default async function Footer() {
             <h4 className="font-bold text-brand-lime mb-4 text-sm tracking-widest uppercase">Contacto</h4>
             <ul className="space-y-3 text-sm text-brand-light/80">
               <li>📍 Rancagua, Región de O'Higgins, Chile.</li>
-              <li>📧 {settings?.contactEmail || 'contacto@fydingenieria.cl'}</li>
-              <li>📞 {settings?.whatsappNumber || '+56 9 8389 4138'}</li>
+              <li>📧 <a href={`mailto:${settings?.contactEmail || 'contacto@fydingenieria.cl'}`} className="hover:text-brand-teal transition-colors">{settings?.contactEmail || 'contacto@fydingenieria.cl'}</a></li>
+              <li>📞 <PhoneLink phone={settings?.whatsappNumber || '+56 9 8389 4138'} /></li>
             </ul>
           </div>
           

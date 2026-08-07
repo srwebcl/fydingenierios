@@ -38,11 +38,27 @@ export function StepByStepContactForm({ servicesList = [], coursesList = [] }: P
     setStep(3);
   };
 
+  const [honeypot, setHoneypot] = useState('');
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Si el honeypot fue llenado, es un bot.
+    if (honeypot) {
+      console.log('Bot detectado.');
+      // Simulamos éxito para no alertar al bot
+      setStatus('loading');
+      setTimeout(() => setStatus('success'), 1200);
+      return;
+    }
+
     setStatus('loading');
     setTimeout(() => {
       setStatus('success');
+      // Trigger Google Ads Conversion on successful human submit
+      import('@next/third-parties/google').then(({ sendGAEvent }) => {
+        sendGAEvent('event', 'conversion', { 'send_to': 'AW-18371400854/135dCJqnsN0cEJaplbhE' });
+      });
     }, 1200);
   };
 
@@ -169,6 +185,12 @@ export function StepByStepContactForm({ servicesList = [], coursesList = [] }: P
                 <label className="block text-sm font-bold text-brand-dark mb-1">Teléfono Móvil *</label>
                 <input required type="tel" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
               </div>
+            </div>
+
+            {/* Honeypot field - invisible to humans */}
+            <div aria-hidden="true" style={{ display: 'none', position: 'absolute', left: '-9999px' }}>
+              <label htmlFor="website">Website</label>
+              <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
             </div>
 
             <div>

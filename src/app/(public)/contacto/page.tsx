@@ -6,9 +6,21 @@ import toast from 'react-hot-toast';
 
 export default function Contacto() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [honeypot, setHoneypot] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    if (honeypot) {
+      console.log('Bot detectado.');
+      setStatus('loading');
+      setTimeout(() => {
+        setStatus('success');
+        toast.success('Mensaje enviado exitosamente');
+      }, 1000);
+      return;
+    }
+
     setStatus('loading');
     
     const formData = new FormData(e.currentTarget);
@@ -26,6 +38,9 @@ export default function Contacto() {
     if (result.success) {
       setStatus('success');
       toast.success('Mensaje enviado exitosamente');
+      import('@next/third-parties/google').then(({ sendGAEvent }) => {
+        sendGAEvent('event', 'conversion', { 'send_to': 'AW-18371400854/135dCJqnsN0cEJaplbhE' });
+      });
     } else {
       setStatus('error');
       toast.error('Error: ' + (result.error || 'No se pudo enviar'));
@@ -56,6 +71,12 @@ export default function Contacto() {
           </div>
         ) : (
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* Honeypot */}
+            <div aria-hidden="true" style={{ display: 'none', position: 'absolute', left: '-9999px' }}>
+              <label htmlFor="contacto-website">Website</label>
+              <input type="text" id="contacto-website" name="contacto-website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-bold text-brand-dark mb-2">Nombre Completo *</label>
