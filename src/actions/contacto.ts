@@ -13,7 +13,7 @@ export async function sendContactFormEmail(data: {
   message: string;
 }) {
   try {
-    const receiver = process.env.EMAIL_NOTIFICACIONES || 'contacto@fydingenieria.cl';
+    const receiver = process.env.EMAIL_VENTAS || process.env.EMAIL_GENERAL || 'contacto@fydingenieria.cl';
     // Siempre intentamos enviar desde el correo oficial corporativo
     const sender = 'contacto@fydingenieria.cl';
 

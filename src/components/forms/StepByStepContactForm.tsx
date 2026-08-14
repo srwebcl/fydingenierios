@@ -40,7 +40,7 @@ export function StepByStepContactForm({ servicesList = [], coursesList = [] }: P
 
   const [honeypot, setHoneypot] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     // Si el honeypot fue llenado, es un bot.
@@ -53,13 +53,36 @@ export function StepByStepContactForm({ servicesList = [], coursesList = [] }: P
     }
 
     setStatus('loading');
-    setTimeout(() => {
-      setStatus('success');
-      // Trigger Google Ads Conversion on successful human submit
-      import('@next/third-parties/google').then(({ sendGAEvent }) => {
-        sendGAEvent('event', 'conversion', { 'send_to': 'AW-18371400854/135dCJqnsN0cEJaplbhE' });
-      });
-    }, 1200);
+    
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      fullName: formData.get('fullName') as string,
+      company: formData.get('company') as string,
+      email: formData.get('email') as string,
+      phone: formData.get('phone') as string,
+      reason: `${area} - ${service}`,
+      message: formData.get('message') as string,
+    };
+
+    try {
+      const { sendContactFormEmail } = await import('@/actions/contacto');
+      const result = await sendContactFormEmail(data);
+      
+      if (result.success) {
+        setStatus('success');
+        // Trigger Google Ads Conversion on successful human submit
+        import('@next/third-parties/google').then(({ sendGAEvent }) => {
+          sendGAEvent('event', 'conversion', { 'send_to': 'AW-18371400854/135dCJqnsN0cEJaplbhE' });
+        });
+      } else {
+        setStatus('idle');
+        alert('Hubo un error al enviar su solicitud. Por favor intente nuevamente o contáctenos por teléfono.');
+      }
+    } catch (err) {
+      console.error(err);
+      setStatus('idle');
+      alert('Error de conexión al enviar el formulario.');
+    }
   };
 
   const resetForm = () => {
@@ -171,19 +194,19 @@ export function StepByStepContactForm({ servicesList = [], coursesList = [] }: P
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <label className="block text-sm font-bold text-brand-dark mb-1">Nombre Completo *</label>
-                <input required type="text" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
+                <input required type="text" name="fullName" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
               </div>
               <div>
                 <label className="block text-sm font-bold text-brand-dark mb-1">Empresa</label>
-                <input type="text" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
+                <input type="text" name="company" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
               </div>
               <div>
                 <label className="block text-sm font-bold text-brand-dark mb-1">Correo Electrónico *</label>
-                <input required type="email" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
+                <input required type="email" name="email" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
               </div>
               <div>
                 <label className="block text-sm font-bold text-brand-dark mb-1">Teléfono Móvil *</label>
-                <input required type="tel" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
+                <input required type="tel" name="phone" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
               </div>
             </div>
 
@@ -195,7 +218,7 @@ export function StepByStepContactForm({ servicesList = [], coursesList = [] }: P
 
             <div>
               <label className="block text-sm font-bold text-brand-dark mb-1">Detalle del requerimiento *</label>
-              <textarea required rows={4} className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" placeholder="Indique cantidad de equipos, normas a certificar, o cualquier información relevante..."></textarea>
+              <textarea required name="message" rows={4} className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" placeholder="Indique cantidad de equipos, normas a certificar, o cualquier información relevante..."></textarea>
             </div>
 
             <button 

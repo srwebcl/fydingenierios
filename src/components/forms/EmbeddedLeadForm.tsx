@@ -13,7 +13,7 @@ export function EmbeddedLeadForm({ interestType, interestSlug, title = "¿Necesi
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
   const [honeypot, setHoneypot] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     if (honeypot) {
@@ -24,13 +24,35 @@ export function EmbeddedLeadForm({ interestType, interestSlug, title = "¿Necesi
     }
 
     setStatus('loading');
-    // Simulated submission for now. Sprint 4 will connect this to real actions.
-    setTimeout(() => {
-      setStatus('success');
-      import('@next/third-parties/google').then(({ sendGAEvent }) => {
-        sendGAEvent('event', 'conversion', { 'send_to': 'AW-18371400854/135dCJqnsN0cEJaplbhE' });
-      });
-    }, 1000);
+    
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      fullName: formData.get('fullName') as string,
+      company: formData.get('company') as string,
+      email: formData.get('email') as string,
+      phone: formData.get('phone') as string,
+      reason: `${interestType} - ${interestSlug}`,
+      message: formData.get('message') as string,
+    };
+
+    try {
+      const { sendContactFormEmail } = await import('@/actions/contacto');
+      const result = await sendContactFormEmail(data);
+      
+      if (result.success) {
+        setStatus('success');
+        import('@next/third-parties/google').then(({ sendGAEvent }) => {
+          sendGAEvent('event', 'conversion', { 'send_to': 'AW-18371400854/135dCJqnsN0cEJaplbhE' });
+        });
+      } else {
+        setStatus('idle');
+        alert('Error al enviar el formulario.');
+      }
+    } catch (err) {
+      console.error(err);
+      setStatus('idle');
+      alert('Error de conexión.');
+    }
   };
 
   if (status === 'success') {
@@ -63,27 +85,27 @@ export function EmbeddedLeadForm({ interestType, interestSlug, title = "¿Necesi
 
         <div>
           <label className="block text-xs font-bold text-brand-dark mb-1">Nombre Completo *</label>
-          <input required type="text" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
+          <input required type="text" name="fullName" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
         </div>
         
         <div>
           <label className="block text-xs font-bold text-brand-dark mb-1">Empresa</label>
-          <input type="text" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
+          <input type="text" name="company" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
         </div>
         
         <div>
           <label className="block text-xs font-bold text-brand-dark mb-1">Correo Electrónico *</label>
-          <input required type="email" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
+          <input required type="email" name="email" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
         </div>
         
         <div>
           <label className="block text-xs font-bold text-brand-dark mb-1">Teléfono *</label>
-          <input required type="tel" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
+          <input required type="tel" name="phone" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
         </div>
 
         <div>
           <label className="block text-xs font-bold text-brand-dark mb-1">Mensaje / Detalle *</label>
-          <textarea required rows={3} className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" placeholder="Detalle los equipos a evaluar..."></textarea>
+          <textarea required name="message" rows={3} className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" placeholder="Detalle los equipos a evaluar..."></textarea>
         </div>
 
         <button 

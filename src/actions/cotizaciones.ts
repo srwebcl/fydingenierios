@@ -20,10 +20,19 @@ export async function createQuotation(data: {
   total: number;
 }) {
   try {
-    // Generate quote number based on current count
-    const count = await prisma.quotation.count();
-    const nextNum = (count + 1).toString().padStart(4, '0');
-    const quoteNumber = `COT-FD-${nextNum}`;
+    const lastQuote = await prisma.quotation.findFirst({
+      orderBy: { createdAt: 'desc' }
+    });
+    
+    let nextNumStr = '0001';
+    if (lastQuote && lastQuote.quoteNumber) {
+      const parts = lastQuote.quoteNumber.split('-');
+      const lastNum = parts[parts.length - 1];
+      if (lastNum && !isNaN(parseInt(lastNum, 10))) {
+        nextNumStr = (parseInt(lastNum, 10) + 1).toString().padStart(4, '0');
+      }
+    }
+    const quoteNumber = `COT-FD-${nextNumStr}`;
 
     const quotation = await prisma.quotation.create({
       data: {
