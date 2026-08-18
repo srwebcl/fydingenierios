@@ -6,22 +6,27 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { LayoutDashboard, Award, Users, Settings, LogOut, FileText } from 'lucide-react';
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ role, permissions = [] }: { role?: string, permissions?: string[] }) {
   const pathname = usePathname();
 
+  const isSeller = role === 'SELLER';
+  const hasAccess = (module: string) => !isSeller || permissions.includes('ALL') || permissions.includes(module);
+
   const menu = [
-    { href: '/admin-panel', label: 'Dashboard', icon: LayoutDashboard },
-    { type: 'divider', label: 'Servicios' },
-    { href: '/admin-panel/servicios', label: 'Servicios Web', icon: Settings },
-    { href: '/admin-panel/servicios/informes', label: 'Informes Técnicos', icon: FileText },
-    { type: 'divider', label: 'Capacitaciones' },
-    { href: '/admin-panel/capacitaciones', label: 'Cursos', icon: Users },
-    { href: '/admin-panel/capacitaciones/diplomas', label: 'Diplomas', icon: Award },
-    { type: 'divider', label: 'Comercial' },
-    { href: '/admin-panel/cotizaciones', label: 'Cotizaciones PDF', icon: FileText },
-    { href: '/admin-panel/leads', label: 'Bandeja Leads', icon: FileText },
-    { href: '/admin-panel/perfil', label: 'Configuración', icon: Settings },
-  ];
+    { href: '/admin-panel', label: 'Dashboard', icon: LayoutDashboard, show: true },
+    { type: 'divider', label: 'Servicios', show: hasAccess('servicios') || hasAccess('informes') },
+    { href: '/admin-panel/servicios', label: 'Servicios Web', icon: Settings, show: hasAccess('servicios') },
+    { href: '/admin-panel/servicios/informes', label: 'Informes Técnicos', icon: FileText, show: hasAccess('informes') },
+    { type: 'divider', label: 'Capacitaciones', show: hasAccess('cursos') || hasAccess('diplomas') },
+    { href: '/admin-panel/capacitaciones', label: 'Cursos', icon: Users, show: hasAccess('cursos') },
+    { href: '/admin-panel/capacitaciones/diplomas', label: 'Diplomas', icon: Award, show: hasAccess('diplomas') },
+    { type: 'divider', label: 'Comercial', show: hasAccess('comercial') || hasAccess('leads') },
+    { href: '/admin-panel/cotizaciones', label: 'Cotizaciones PDF', icon: FileText, show: hasAccess('comercial') },
+    { href: '/admin-panel/leads', label: 'Bandeja Leads', icon: FileText, show: hasAccess('leads') },
+    { type: 'divider', label: 'Administración', show: !isSeller },
+    { href: '/admin-panel/usuarios', label: 'Usuarios', icon: Users, show: !isSeller },
+    { href: '/admin-panel/perfil', label: 'Configuración', icon: Settings, show: !isSeller },
+  ].filter(m => m.show);
 
   return (
     <aside className="w-full md:w-64 bg-brand-dark text-brand-light flex flex-col md:h-screen sticky bottom-0 md:top-0 z-50 order-2 md:order-1 border-t md:border-t-0 md:border-r border-brand-teal/20 print:hidden">
