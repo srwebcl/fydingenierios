@@ -48,7 +48,8 @@ export async function emailQuotation(id: string) {
       quote.quoteNumber,
       quote.serviceName,
       pdfBuffer,
-      logoBuffer
+      logoBuffer,
+      quote.senderEmail
     );
 
     return result;

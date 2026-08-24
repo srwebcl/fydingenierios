@@ -1,6 +1,7 @@
 'use server'
 
 import { Resend } from 'resend';
+import { prisma } from '@/lib/db';
 
 const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder');
 
@@ -13,6 +14,32 @@ export async function sendContactFormEmail(data: {
   message: string;
 }) {
   try {
+    let interestType: 'SERVICIO' | 'CAPACITACION' | 'GENERAL' = 'GENERAL';
+    const reasonLower = data.reason.toLowerCase();
+    if (reasonLower.includes('capacitacion') || reasonLower.includes('capacitación') || reasonLower.includes('curso') || reasonLower.includes('diploma')) {
+      interestType = 'CAPACITACION';
+    } else if (reasonLower.includes('servicio') || reasonLower.includes('informe') || reasonLower.includes('predictivo')) {
+      interestType = 'SERVICIO';
+    }
+
+    try {
+      await prisma.lead.create({
+        data: {
+          name: data.fullName,
+          company: data.company || null,
+          email: data.email,
+          phone: data.phone,
+          message: data.message,
+          interestType: interestType,
+          interestSlug: data.reason, 
+          source: 'Formulario Web'
+        }
+      });
+    } catch (e) {
+      console.error('Error al guardar el Lead:', e);
+      // No cortamos el flujo si la db falla, igual enviamos el correo
+    }
+
     const receiver = process.env.EMAIL_VENTAS || process.env.EMAIL_GENERAL || 'contacto@fydingenieria.cl';
     // Siempre intentamos enviar desde el correo oficial corporativo
     const sender = 'contacto@fydingenieria.cl';

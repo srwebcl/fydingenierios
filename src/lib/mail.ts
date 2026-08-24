@@ -103,7 +103,8 @@ export async function sendQuotationEmail(
   quoteNumber: string,
   serviceName: string,
   pdfBuffer: Buffer, 
-  logoBuffer?: Buffer
+  logoBuffer?: Buffer,
+  senderEmail?: string
 ) {
   try {
     const sender = process.env.EMAIL_NOTIFICACIONES || 'contacto@fydingenieria.cl';
@@ -130,6 +131,7 @@ export async function sendQuotationEmail(
     const { data, error } = await resend.emails.send({
       from: `F&D Ingenieros <${sender}>`,
       to: [email],
+      bcc: senderEmail ? [senderEmail] : [],
       subject: `Cotización ${quoteNumber}: ${serviceName} - F&D Ingenieros`,
       text: `Hola ${clientName},\n\nAdjunto enviamos nuestra cotización comercial para los servicios solicitados.\n\nAtentamente,\nF&D Ingenieros`,
       html: `
