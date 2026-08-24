@@ -50,15 +50,62 @@ export async function sendContactFormEmail(data: {
       replyTo: data.email,
       subject: `Nuevo mensaje de Contacto: ${data.reason} - ${data.fullName}`,
       html: `
-        <h2>Nuevo mensaje desde Formulario Web</h2>
-        <p><strong>Nombre:</strong> ${data.fullName}</p>
-        <p><strong>Empresa:</strong> ${data.company || 'N/A'}</p>
-        <p><strong>Email:</strong> ${data.email}</p>
-        <p><strong>Teléfono:</strong> ${data.phone}</p>
-        <p><strong>Motivo:</strong> ${data.reason}</p>
-        <br/>
-        <p><strong>Mensaje:</strong></p>
-        <p>${data.message.replace(/\n/g, '<br/>')}</p>
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #F4FAF9; color: #0B3B3F; margin: 0; padding: 40px 20px; }
+            .container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+            .header { background-color: #00A6A6; padding: 30px; text-align: center; }
+            .header h2 { color: #FFFFFF; margin: 0; font-size: 24px; }
+            .content { padding: 40px; }
+            .field { margin-bottom: 20px; }
+            .label { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #5B6B6C; font-weight: bold; margin-bottom: 5px; display: block; }
+            .value { font-size: 16px; color: #0B3B3F; margin: 0; padding: 12px; background-color: #F4FAF9; border-radius: 6px; border: 1px solid #E5E7EB; }
+            .message-box { background-color: #F4FAF9; border-left: 4px solid #6EFA3C; padding: 16px 20px; border-radius: 0 8px 8px 0; margin-top: 30px; }
+            .message-box p { margin: 0; font-size: 15px; color: #0B3B3F; line-height: 1.6; }
+            .footer { background-color: #F4FAF9; padding: 20px; text-align: center; border-top: 1px solid #e4e4e7; }
+            .footer p { margin: 0; font-size: 12px; color: #5B6B6C; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h2>Nuevo Lead Web F&D</h2>
+            </div>
+            <div class="content">
+              <div class="field">
+                <span class="label">Motivo de contacto</span>
+                <p class="value" style="font-weight: bold; color: #00A6A6;">${data.reason}</p>
+              </div>
+              <div class="field">
+                <span class="label">Nombre del cliente</span>
+                <p class="value">${data.fullName}</p>
+              </div>
+              <div class="field">
+                <span class="label">Empresa</span>
+                <p class="value">${data.company || 'N/A'}</p>
+              </div>
+              <div class="field">
+                <span class="label">Correo Electrónico</span>
+                <p class="value"><a href="mailto:${data.email}">${data.email}</a></p>
+              </div>
+              <div class="field">
+                <span class="label">Teléfono</span>
+                <p class="value">${data.phone}</p>
+              </div>
+              
+              <div class="message-box">
+                <span class="label">Mensaje</span>
+                <p>${data.message.replace(/\n/g, '<br/>')}</p>
+              </div>
+            </div>
+            <div class="footer">
+              <p>Generado automáticamente desde fydingenieria.cl</p>
+            </div>
+          </div>
+        </body>
+        </html>
       `,
     });
 

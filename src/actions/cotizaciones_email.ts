@@ -2,14 +2,14 @@
 
 import { prisma } from '@/lib/db';
 import React from 'react';
-import { sendQuotationEmail } from '@/lib/mail';
+import { sendQuotationEmail, sendQuotationSentNotificationEmail } from '@/lib/mail';
 import fs from 'fs/promises';
 import path from 'path';
 
 // Helper to get logo buffer
 async function getLogoBuffer(): Promise<Buffer | undefined> {
   try {
-    const logoPath = path.join(process.cwd(), 'public', 'logo.jpeg');
+    const logoPath = path.join(process.cwd(), 'public', 'logo.webp');
     return await fs.readFile(logoPath);
   } catch (err) {
     console.warn('Logo no encontrado para PDF, usando solo texto.');
@@ -31,7 +31,7 @@ export async function emailQuotation(id: string) {
     const logoBuffer = await getLogoBuffer();
     let logoBase64 = undefined;
     if (logoBuffer) {
-      logoBase64 = `data:image/jpeg;base64,${logoBuffer.toString('base64')}`;
+      logoBase64 = `data:image/webp;base64,${logoBuffer.toString('base64')}`;
     }
 
     const pdfElement = React.createElement(QuotationPDF, {
@@ -41,16 +41,25 @@ export async function emailQuotation(id: string) {
 
     const pdfBuffer = await renderToBuffer(pdfElement as any);
 
-    // Send email
+    // Send email to client
     const result = await sendQuotationEmail(
       quote.clientEmail,
       quote.clientName,
       quote.quoteNumber,
       quote.serviceName,
       pdfBuffer,
-      logoBuffer,
-      quote.senderEmail
+      logoBuffer
     );
+
+    // If successful, send notification to sender
+    if (result.success && quote.senderEmail) {
+      await sendQuotationSentNotificationEmail(
+        quote.senderEmail,
+        quote.clientName,
+        quote.clientEmail,
+        quote.quoteNumber
+      );
+    }
 
     return result;
   } catch (error) {

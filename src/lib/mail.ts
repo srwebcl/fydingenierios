@@ -131,7 +131,6 @@ export async function sendQuotationEmail(
     const { data, error } = await resend.emails.send({
       from: `F&D Ingenieros <${sender}>`,
       to: [email],
-      bcc: senderEmail ? [senderEmail] : [],
       subject: `Cotización ${quoteNumber}: ${serviceName} - F&D Ingenieros`,
       text: `Hola ${clientName},\n\nAdjunto enviamos nuestra cotización comercial para los servicios solicitados.\n\nAtentamente,\nF&D Ingenieros`,
       html: `
@@ -189,6 +188,67 @@ export async function sendQuotationEmail(
     return { success: true, data };
   } catch (error) {
     console.error('Failed to send email:', error);
+    return { success: false, error };
+  }
+}
+
+export async function sendQuotationSentNotificationEmail(
+  senderEmail: string,
+  clientName: string,
+  clientEmail: string,
+  quoteNumber: string
+) {
+  try {
+    const sender = process.env.EMAIL_NOTIFICACIONES || 'contacto@fydingenieria.cl';
+
+    const { data, error } = await resend.emails.send({
+      from: `Plataforma F&D <${sender}>`,
+      to: [senderEmail],
+      subject: `Notificación: Cotización ${quoteNumber} enviada con éxito`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #F4FAF9; color: #0B3B3F; margin: 0; padding: 40px 20px; }
+            .container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+            .header { background-color: #00A6A6; padding: 30px; text-align: center; }
+            .header h2 { color: #FFFFFF; margin: 0; font-size: 24px; }
+            .content { padding: 40px; }
+            .text { font-size: 16px; line-height: 1.6; color: #5B6B6C; margin-bottom: 24px; }
+            .highlight { background-color: #F4FAF9; border-left: 4px solid #6EFA3C; padding: 16px 20px; border-radius: 0 8px 8px 0; margin-bottom: 30px; }
+            .highlight p { margin: 0; font-size: 15px; color: #0B3B3F; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h2>Confirmación de Envío</h2>
+            </div>
+            <div class="content">
+              <p class="text">La plataforma ha enviado exitosamente la <strong>Cotización ${quoteNumber}</strong>.</p>
+              
+              <div class="highlight">
+                <p><strong>Destinatario:</strong> ${clientName}<br/>
+                <strong>Correo enviado a:</strong> ${clientEmail}</p>
+              </div>
+
+              <p class="text">El cliente ya recibió el correo oficial con el PDF adjunto de la propuesta comercial.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `
+    });
+
+    if (error) {
+      console.error('Resend error in notification:', error);
+      return { success: false, error };
+    }
+
+    return { success: true, data };
+  } catch (error) {
+    console.error('Failed to send notification email:', error);
     return { success: false, error };
   }
 }

@@ -5,11 +5,12 @@ import React, { useState } from 'react';
 type EmbeddedLeadFormProps = {
   interestType: 'SERVICIO' | 'CAPACITACION';
   interestSlug: string;
+  interestName?: string;
   title?: string;
   subtitle?: string;
 };
 
-export function EmbeddedLeadForm({ interestType, interestSlug, title = "¿Necesita este servicio?", subtitle = "Cotice hoy mismo y uno de nuestros ingenieros especialistas le contactará." }: EmbeddedLeadFormProps) {
+export function EmbeddedLeadForm({ interestType, interestSlug, interestName, title = "¿Necesita este servicio?", subtitle = "Cotice hoy mismo y uno de nuestros ingenieros especialistas le contactará." }: EmbeddedLeadFormProps) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
   const [honeypot, setHoneypot] = useState('');
 
@@ -31,7 +32,7 @@ export function EmbeddedLeadForm({ interestType, interestSlug, title = "¿Necesi
       company: formData.get('company') as string,
       email: formData.get('email') as string,
       phone: formData.get('phone') as string,
-      reason: `${interestType} - ${interestSlug}`,
+      reason: interestName ? `${interestName} (${interestSlug})` : `${interestType} - ${interestSlug}`,
       message: formData.get('message') as string,
     };
 

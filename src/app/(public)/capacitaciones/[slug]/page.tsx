@@ -220,8 +220,9 @@ export default async function CapacitacionIndividual({ params }: { params: Promi
               </div>
 
               <EmbeddedLeadForm 
-                interestType="CAPACITACION"
-                interestSlug={course.slug}
+                interestType="CAPACITACION" 
+                interestSlug={course.slug} 
+                interestName={course.title}
                 title={sessions.length > 0 ? "Inscribirse / Cotizar Curso" : "Cotizar Curso Cerrado"}
                 subtitle={sessions.length > 0 ? "Asegure su cupo completando el formulario. Le enviaremos el programa detallado y medios de pago." : "Desarrollamos programas In Company, adaptando los contenidos, horarios y actividades prácticas a las necesidades específicas de cada organización."}
               />

@@ -118,6 +118,7 @@ export default async function ServicioIndividual({ params }: { params: Promise<{
               <EmbeddedLeadForm 
                 interestType="SERVICIO"
                 interestSlug={service.slug}
+                interestName={service.title}
                 title="Cotizar este servicio"
                 subtitle="Complete los datos y un ingeniero se pondrá en contacto para evaluar su requerimiento técnico."
               />
