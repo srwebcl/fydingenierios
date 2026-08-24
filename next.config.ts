@@ -42,6 +42,11 @@ const nextConfig: NextConfig = {
         source: '/author/:path*',
         destination: '/',
         permanent: true,
+      },
+      {
+        source: '/capacitaciones/an-lisis-de-vibraciones-nivel-ii',
+        destination: '/capacitaciones/analisis-de-vibraciones-nivel-ii',
+        permanent: true,
       }
     ];
   }

@@ -16,6 +16,9 @@ const sora = Sora({
 export const metadata: Metadata = {
   title: "F&D Ingenieros | Mantenimiento Predictivo, Confiabilidad y Capacitación Industrial",
   description: "Ingeniería en mantenimiento predictivo, confiabilidad y gestión de activos en Rancagua y todo Chile. Análisis de vibraciones, RCM, termografía y capacitaciones técnicas certificables.",
+  icons: {
+    icon: "/logo.webp",
+  },
 };
 
 const schemaJSON = {

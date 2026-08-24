@@ -93,7 +93,12 @@ export default function CourseWizard({ initialData, isEditing = false, options =
     if (formData.title && !formData.slug) {
       setFormData(prev => ({
         ...prev,
-        slug: formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')
+        slug: formData.title
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/(^-|-$)+/g, '')
       }));
     }
   };
