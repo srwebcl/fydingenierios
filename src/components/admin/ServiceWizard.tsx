@@ -31,7 +31,13 @@ export function ServiceWizard({ initialData }: Props) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => {
-      const updated = { ...prev, [name]: value };
+      let finalValue = value;
+      // Si están editando el slug manualmente, limpiamos las barras (/)
+      if (name === 'slug') {
+        finalValue = finalValue.replace(/\//g, '');
+      }
+      
+      const updated = { ...prev, [name]: finalValue };
       // auto-generate slug from title if we are creating
       if (name === 'title' && !initialData) {
         updated.slug = value
@@ -39,7 +45,8 @@ export function ServiceWizard({ initialData }: Props) {
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "")
           .replace(/[^a-z0-9]+/g, '-')
-          .replace(/(^-|-$)+/g, '');
+          .replace(/(^-|-$)+/g, '')
+          .replace(/^\/+|\/+$/g, '');
       }
       return updated;
     });

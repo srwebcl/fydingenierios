@@ -83,9 +83,16 @@ export default function CourseWizard({ initialData, isEditing = false, options =
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
+    let finalValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
+    
+    // Si están editando el slug manualmente, limpiamos las barras (/)
+    if (name === 'slug' && typeof finalValue === 'string') {
+      finalValue = finalValue.replace(/\//g, '');
+    }
+
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+      [name]: finalValue
     }));
   };
 
@@ -99,6 +106,7 @@ export default function CourseWizard({ initialData, isEditing = false, options =
           .replace(/[\u0300-\u036f]/g, "")
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/(^-|-$)+/g, '')
+          .replace(/^\/+|\/+$/g, '')
       }));
     }
   };
