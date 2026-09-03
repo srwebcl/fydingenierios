@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 export default function QuienesSomos() {
   return (
@@ -58,6 +59,61 @@ export default function QuienesSomos() {
               <p className="text-brand-grey text-sm leading-relaxed">{valor.desc}</p>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* NUESTRO EQUIPO */}
+      <div className="mt-24">
+        <div className="text-center mb-12">
+          <h2 className="font-heading text-3xl font-bold text-brand-dark mb-3">Nuestro Equipo</h2>
+          <div className="h-1 w-16 bg-gradient-to-r from-brand-lime to-brand-teal mx-auto rounded"></div>
+          <p className="mt-6 text-brand-grey text-lg max-w-3xl mx-auto leading-relaxed">
+            F&D Ingeniería está liderada por profesionales con experiencia en mantenimiento industrial, confiabilidad de activos, gestión empresarial y desarrollo comercial. Nuestro equipo combina conocimientos técnicos, experiencia en terreno y una visión orientada a entregar soluciones confiables y de alto valor para la industria.
+          </p>
+        </div>
+
+        <div className="space-y-12 md:space-y-16">
+          {/* Alamiro */}
+          <div className="flex flex-col md:flex-row items-center gap-8 bg-brand-light/30 p-8 rounded-2xl">
+            <div className="w-48 h-64 md:w-56 md:h-72 shrink-0 relative rounded-2xl overflow-hidden shadow-lg">
+              <Image src="/alamiro-fernandez.jpeg" alt="Alamiro Fernández Huenuqueo" fill className="object-cover object-top" />
+            </div>
+            <div className="text-center md:text-left">
+              <h3 className="text-2xl font-bold text-brand-dark">Alamiro Fernández Huenuqueo</h3>
+              <p className="text-brand-teal font-medium text-lg mb-4">Socio fundador y gerente general</p>
+              <p className="text-brand-grey leading-relaxed text-left">
+                Ingeniero Civil Industrial, Magíster en Gestión de Organizaciones y especialista en mantenimiento predictivo y confiabilidad de activos. Analista de Vibraciones ISO 18436-2 Categoría IV, con experiencia en diagnóstico de maquinaria, monitoreo de condición, gestión de contratos y formación técnica especializada para la industria.
+              </p>
+            </div>
+          </div>
+
+          {/* Daniel */}
+          <div className="flex flex-col md:flex-row-reverse items-center gap-8 bg-brand-white p-8 rounded-2xl border border-brand-light shadow-sm">
+            <div className="w-48 h-64 md:w-56 md:h-72 shrink-0 relative rounded-2xl overflow-hidden shadow-lg">
+              <Image src="/daniel-dinamarca.jpeg" alt="Daniel Dinamarca" fill className="object-cover object-top" />
+            </div>
+            <div className="text-center md:text-right">
+              <h3 className="text-2xl font-bold text-brand-dark">Daniel Dinamarca</h3>
+              <p className="text-brand-teal font-medium text-lg mb-4">Socio fundador y gerente comercial</p>
+              <p className="text-brand-grey leading-relaxed text-left md:text-right">
+                Ingeniero Civil Industrial y Diplomado en Excelencia Operacional y Gestión de Activos. Cuenta con experiencia en gestión comercial, desarrollo de negocios y generación de soluciones orientadas a las necesidades de los clientes, contribuyendo al posicionamiento y crecimiento de F&D Ingeniería.
+              </p>
+            </div>
+          </div>
+
+          {/* Beatriz */}
+          <div className="flex flex-col md:flex-row items-center gap-8 bg-brand-light/30 p-8 rounded-2xl">
+            <div className="w-48 h-64 md:w-56 md:h-72 shrink-0 relative rounded-2xl overflow-hidden shadow-lg">
+              <Image src="/beatriz-rain.jpeg" alt="Beatriz Rain" fill className="object-cover object-top" />
+            </div>
+            <div className="text-center md:text-left">
+              <h3 className="text-2xl font-bold text-brand-dark">Beatriz Rain</h3>
+              <p className="text-brand-teal font-medium text-lg mb-4">Secretaria Administrativa de Servicios y Capacitaciones</p>
+              <p className="text-brand-grey leading-relaxed text-left">
+                Responsable del apoyo administrativo, atención de clientes y coordinación de solicitudes relacionadas con los servicios y capacitaciones de F&D Ingeniería. Gestiona consultas, inscripciones y seguimiento comercial, facilitando una atención ordenada y oportuna.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </main>

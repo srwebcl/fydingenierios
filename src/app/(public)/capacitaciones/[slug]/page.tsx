@@ -111,10 +111,6 @@ export default async function CapacitacionIndividual({ params }: { params: Promi
                   <h4 className="font-bold text-brand-dark mb-1">Material</h4>
                   <p className="text-brand-grey m-0">{course.material || 'Manual y material complementario'}</p>
                 </div>
-                <div className="sm:col-span-2">
-                  <h4 className="font-bold text-brand-dark mb-1">Certificación</h4>
-                  <p className="text-brand-grey m-0">{course.certificationText || 'Certificado Oficial'}</p>
-                </div>
               </div>
             </section>
             

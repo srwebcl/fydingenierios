@@ -12,6 +12,7 @@ type EmbeddedLeadFormProps = {
 
 export function EmbeddedLeadForm({ interestType, interestSlug, interestName, title = "¿Necesita este servicio?", subtitle = "Cotice hoy mismo y uno de nuestros ingenieros especialistas le contactará." }: EmbeddedLeadFormProps) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+  const [clientType, setClientType] = useState<'PARTICULAR' | 'EMPRESA' | ''>('');
   const [honeypot, setHoneypot] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -34,6 +35,10 @@ export function EmbeddedLeadForm({ interestType, interestSlug, interestName, tit
       phone: formData.get('phone') as string,
       reason: interestName ? `${interestName} (${interestSlug})` : `${interestType} - ${interestSlug}`,
       message: formData.get('message') as string,
+      clientType: clientType || undefined,
+      rut: formData.get('rut') as string || undefined,
+      companyRut: formData.get('companyRut') as string || undefined,
+      participantsCount: formData.get('participantsCount') ? parseInt(formData.get('participantsCount') as string, 10) : undefined,
     };
 
     try {
@@ -84,30 +89,83 @@ export function EmbeddedLeadForm({ interestType, interestSlug, interestName, tit
           <input type="text" id="embedded-website" name="embedded-website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
         </div>
 
-        <div>
-          <label className="block text-xs font-bold text-brand-dark mb-1">Nombre Completo *</label>
-          <input required type="text" name="fullName" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
-        </div>
-        
-        <div>
-          <label className="block text-xs font-bold text-brand-dark mb-1">Empresa</label>
-          <input type="text" name="company" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
-        </div>
-        
-        <div>
-          <label className="block text-xs font-bold text-brand-dark mb-1">Correo Electrónico *</label>
-          <input required type="email" name="email" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
-        </div>
-        
-        <div>
-          <label className="block text-xs font-bold text-brand-dark mb-1">Teléfono *</label>
-          <input required type="tel" name="phone" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
-        </div>
+        {interestType === 'CAPACITACION' && (
+          <div className="mb-4">
+            <label className="block text-xs font-bold text-brand-dark mb-2">¿Quién contratará y pagará la capacitación? *</label>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setClientType('PARTICULAR')}
+                className={`px-3 py-2 text-sm rounded border ${clientType === 'PARTICULAR' ? 'bg-brand-teal text-white border-brand-teal font-bold' : 'bg-brand-light border-brand-grey/30 text-brand-dark hover:border-brand-teal'}`}
+              >
+                Particular
+              </button>
+              <button
+                type="button"
+                onClick={() => setClientType('EMPRESA')}
+                className={`px-3 py-2 text-sm rounded border ${clientType === 'EMPRESA' ? 'bg-brand-teal text-white border-brand-teal font-bold' : 'bg-brand-light border-brand-grey/30 text-brand-dark hover:border-brand-teal'}`}
+              >
+                Empresa
+              </button>
+            </div>
+          </div>
+        )}
 
-        <div>
-          <label className="block text-xs font-bold text-brand-dark mb-1">Mensaje / Detalle *</label>
-          <textarea required name="message" rows={3} className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" placeholder="Detalle los equipos a evaluar..."></textarea>
-        </div>
+        {(interestType !== 'CAPACITACION' || clientType !== '') && (
+          <>
+            <div>
+              <label className="block text-xs font-bold text-brand-dark mb-1">
+                {clientType === 'EMPRESA' ? 'Nombre del contacto *' : 'Nombre Completo *'}
+              </label>
+              <input required type="text" name="fullName" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
+            </div>
+            
+            {clientType === 'PARTICULAR' && (
+              <div>
+                <label className="block text-xs font-bold text-brand-dark mb-1">RUT *</label>
+                <input required type="text" name="rut" placeholder="Ej: 12.345.678-9" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
+              </div>
+            )}
+
+            {(interestType !== 'CAPACITACION' || clientType === 'EMPRESA') && (
+              <div>
+                <label className="block text-xs font-bold text-brand-dark mb-1">
+                  {clientType === 'EMPRESA' ? 'Nombre o razón social de la empresa *' : 'Empresa'}
+                </label>
+                <input required={clientType === 'EMPRESA'} type="text" name="company" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
+              </div>
+            )}
+
+            {clientType === 'EMPRESA' && (
+              <div>
+                <label className="block text-xs font-bold text-brand-dark mb-1">RUT de la empresa *</label>
+                <input required type="text" name="companyRut" placeholder="Ej: 76.543.210-K" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
+              </div>
+            )}
+            
+            <div>
+              <label className="block text-xs font-bold text-brand-dark mb-1">Correo Electrónico *</label>
+              <input required type="email" name="email" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
+            </div>
+            
+            <div>
+              <label className="block text-xs font-bold text-brand-dark mb-1">Teléfono *</label>
+              <input required type="tel" name="phone" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
+            </div>
+
+            {clientType === 'EMPRESA' && (
+              <div>
+                <label className="block text-xs font-bold text-brand-dark mb-1">Cantidad de participantes *</label>
+                <input required type="number" min="1" name="participantsCount" className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" />
+              </div>
+            )}
+
+            <div>
+              <label className="block text-xs font-bold text-brand-dark mb-1">Mensaje / Detalle *</label>
+              <textarea required name="message" rows={3} className="w-full border border-brand-grey/30 rounded px-3 py-2 text-sm focus:outline-none focus:border-brand-teal bg-brand-light" placeholder="Detalle los equipos a evaluar..."></textarea>
+            </div>
+          </>
+        )}
 
         <button 
           type="submit" 

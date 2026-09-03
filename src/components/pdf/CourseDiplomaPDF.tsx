@@ -208,7 +208,7 @@ export const CourseDiplomaPDF = ({ data }: { data: DiplomaData }) => {
 
         {/* MIDDLE SECTION (Vertically Centered) */}
         <View style={styles.middleSection}>
-          <Text style={styles.subtitle}>CERTIFICADO DE ENTRENAMIENTO:</Text>
+          <Text style={styles.subtitle}>CERTIFICADO DE CAPACITACIÓN:</Text>
           <Text style={styles.studentName}>{data.studentName}</Text>
           <Text style={styles.studentRut}>{
             (() => {
@@ -221,7 +221,15 @@ export const CourseDiplomaPDF = ({ data }: { data: DiplomaData }) => {
           }</Text>
           
           <Text style={styles.bodyText}>
-            Este certificado acredita la participación y finalización del entrenamiento. No constituye certificación oficial de competencia según ASNT o ISO, el curso se realizó durante los días del {data.courseDates} con duración total de {data.courseHours} horas, de acuerdo con la práctica de F&D INGENIERIA EN MANTENIMIENTO "entrenamiento confeccionado de acuerdo con los lineamientos de la norma {isoNorm}, en el método de ensayo:"
+            {(() => {
+              const template = isoNorm && isoNorm.length > 30
+                ? isoNorm
+                : `Este certificado acredita la participación y finalización de la capacitación. No constituye certificación oficial de competencia según ASNT o ISO, el curso se realizó durante los días {{fechas}}, con duración total de {{horas}} horas, de acuerdo con la práctica de F&D INGENIERIA EN MANTENIMIENTO "capacitación confeccionada de acuerdo con los lineamientos de la norma ${isoNorm || 'N/A'}, en el método de ensayo:"`;
+              console.log("TEMPLATE USED:", template);
+              return template
+                .replace(/\{\{fechas\}\}/g, data.courseDates || 'N/A')
+                .replace(/\{\{horas\}\}/g, (data.courseHours || 0).toString());
+            })()}
           </Text>
           
           <Text style={styles.courseName}>"{data.courseName}"</Text>

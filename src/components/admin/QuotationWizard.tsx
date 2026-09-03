@@ -5,16 +5,17 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight, Building2, User, Plus, Trash2, CheckCircle2 } from 'lucide-react';
 import { createQuotation } from '@/actions/cotizaciones';
 
-type ClientType = 'EMPRESA' | 'PERSONA';
+type ClientType = 'SERVICIO' | 'CAPACITACION';
 type Item = { detail: string; unit: string; quantity: number; unitPrice: number; total: number };
+export type CatalogItem = { id: string; title: string; shortDescription: string; type: 'SERVICIO' | 'CAPACITACION' };
 
-export function QuotationWizard() {
+export function QuotationWizard({ catalogItems = [] }: { catalogItems?: CatalogItem[] }) {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form State
-  const [clientType, setClientType] = useState<ClientType>('EMPRESA');
+  const [clientType, setClientType] = useState<ClientType>('SERVICIO');
   const [clientName, setClientName] = useState('');
   const [clientPhone, setClientPhone] = useState('');
   const [clientCompany, setClientCompany] = useState('');
@@ -22,8 +23,8 @@ export function QuotationWizard() {
 
   const [serviceName, setServiceName] = useState('');
   const [requirements, setRequirements] = useState('');
-  const [validityDays, setValidityDays] = useState(30);
-  const [paymentTerms, setPaymentTerms] = useState('50% para aceptar oferta del servicio, 50% inicio del servicio');
+  const [validityDays, setValidityDays] = useState<number>(30);
+  const [paymentTerms, setPaymentTerms] = useState('50% para aceptar oferta, 50% inicio del servicio');
 
   const [items, setItems] = useState<Item[]>([{ detail: '', unit: 'dias', quantity: 1, unitPrice: 0, total: 0 }]);
   const [discountPercent, setDiscountPercent] = useState(0);
@@ -32,7 +33,7 @@ export function QuotationWizard() {
   const subtotal = items.reduce((acc, item) => acc + item.total, 0);
   const discountAmount = subtotal * (discountPercent / 100);
   const subtotalAfterDiscount = subtotal - discountAmount;
-  const iva = clientType === 'EMPRESA' ? subtotalAfterDiscount * 0.19 : 0;
+  const iva = clientType === 'SERVICIO' ? subtotalAfterDiscount * 0.19 : 0;
   const total = subtotalAfterDiscount + iva;
 
   const handleItemChange = (index: number, field: keyof Item, value: any) => {
@@ -65,7 +66,7 @@ export function QuotationWizard() {
       clientType,
       clientName,
       clientPhone,
-      clientCompany: clientType === 'EMPRESA' ? clientCompany : undefined,
+      clientCompany: clientCompany.trim() !== '' ? clientCompany : undefined,
       clientEmail,
       serviceName,
       requirements,
@@ -105,24 +106,24 @@ export function QuotationWizard() {
       {/* STEP 1: Client Data */}
       {step === 1 && (
         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-          <h2 className="text-2xl font-bold text-brand-dark mb-6">1. Datos del Cliente</h2>
+          <h2 className="text-2xl font-bold text-brand-dark mb-6">1. Tipo de Cotización y Cliente</h2>
           
           <div className="grid grid-cols-2 gap-4 mb-6">
             <button
-              onClick={() => setClientType('EMPRESA')}
-              className={`p-4 border-2 rounded-xl flex flex-col items-center gap-2 transition-all ${clientType === 'EMPRESA' ? 'border-brand-teal bg-brand-teal/5 text-brand-teal' : 'border-brand-light text-brand-grey hover:border-brand-teal/50'}`}
+              onClick={() => setClientType('SERVICIO')}
+              className={`p-4 border-2 rounded-xl flex flex-col items-center gap-2 transition-all ${clientType === 'SERVICIO' ? 'border-brand-teal bg-brand-teal/5 text-brand-teal' : 'border-brand-light text-brand-grey hover:border-brand-teal/50'}`}
             >
               <Building2 size={32} />
-              <span className="font-bold">Empresa</span>
-              <span className="text-xs text-brand-grey">+ 19% IVA, Datos Bancarios</span>
+              <span className="font-bold">Servicio Industrial</span>
+              <span className="text-xs text-brand-grey">+ 19% IVA</span>
             </button>
             <button
-              onClick={() => setClientType('PERSONA')}
-              className={`p-4 border-2 rounded-xl flex flex-col items-center gap-2 transition-all ${clientType === 'PERSONA' ? 'border-brand-teal bg-brand-teal/5 text-brand-teal' : 'border-brand-light text-brand-grey hover:border-brand-teal/50'}`}
+              onClick={() => setClientType('CAPACITACION')}
+              className={`p-4 border-2 rounded-xl flex flex-col items-center gap-2 transition-all ${clientType === 'CAPACITACION' ? 'border-brand-teal bg-brand-teal/5 text-brand-teal' : 'border-brand-light text-brand-grey hover:border-brand-teal/50'}`}
             >
               <User size={32} />
-              <span className="font-bold">Persona Natural</span>
-              <span className="text-xs text-brand-grey">0% IVA, Sin Banco</span>
+              <span className="font-bold">Capacitación</span>
+              <span className="text-xs text-brand-grey">0% IVA (Exento)</span>
             </button>
           </div>
 
@@ -135,12 +136,10 @@ export function QuotationWizard() {
               <label className="block text-sm font-semibold text-brand-dark mb-1">Teléfono</label>
               <input type="text" value={clientPhone} onChange={e => setClientPhone(e.target.value)} className="w-full border border-brand-light rounded-lg px-4 py-2 focus:outline-none focus:border-brand-teal transition" placeholder="Ej. 9-90768062" required />
             </div>
-            {clientType === 'EMPRESA' && (
-              <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-brand-dark mb-1">Nombre Empresa</label>
-                <input type="text" value={clientCompany} onChange={e => setClientCompany(e.target.value)} className="w-full border border-brand-light rounded-lg px-4 py-2 focus:outline-none focus:border-brand-teal transition" placeholder="Ej. Electrical Solutions SPA" required={clientType === 'EMPRESA'} />
-              </div>
-            )}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-semibold text-brand-dark mb-1">Nombre Empresa (Opcional)</label>
+              <input type="text" value={clientCompany} onChange={e => setClientCompany(e.target.value)} className="w-full border border-brand-light rounded-lg px-4 py-2 focus:outline-none focus:border-brand-teal transition" placeholder="Ej. Electrical Solutions SPA" />
+            </div>
             <div className="md:col-span-2">
               <label className="block text-sm font-semibold text-brand-dark mb-1">Correo Electrónico</label>
               <input type="email" value={clientEmail} onChange={e => setClientEmail(e.target.value)} className="w-full border border-brand-light rounded-lg px-4 py-2 focus:outline-none focus:border-brand-teal transition" placeholder="Ej. djofre@mseirl.cl" required />
@@ -152,31 +151,54 @@ export function QuotationWizard() {
       {/* STEP 2: General Configuration */}
       {step === 2 && (
         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-          <h2 className="text-2xl font-bold text-brand-dark mb-6">2. Detalles del Servicio</h2>
+          <h2 className="text-2xl font-bold text-brand-dark mb-6">2. Contexto de la Cotización</h2>
           
+          {catalogItems && catalogItems.length > 0 && (
+            <div className="p-4 bg-brand-light/30 border border-brand-light rounded-xl">
+              <label className="block text-sm font-semibold text-brand-dark mb-2">Importar desde Catálogo (Opcional)</label>
+              <select 
+                className="w-full border border-brand-light rounded-lg px-4 py-2 focus:outline-none focus:border-brand-teal transition bg-white text-brand-dark"
+                onChange={(e) => {
+                  if (!e.target.value) return;
+                  const selected = catalogItems.find(item => item.id === e.target.value);
+                  if (selected) {
+                    setServiceName(selected.title);
+                    setRequirements(selected.shortDescription);
+                    setClientType(selected.type);
+                  }
+                }}
+                defaultValue=""
+              >
+                <option value="">--- Seleccionar Servicio / Curso ---</option>
+                <optgroup label="Servicios Industriales">
+                  {catalogItems.filter(i => i.type === 'SERVICIO').map(item => (
+                    <option key={item.id} value={item.id}>{item.title}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Capacitaciones">
+                  {catalogItems.filter(i => i.type === 'CAPACITACION').map(item => (
+                    <option key={item.id} value={item.id}>{item.title}</option>
+                  ))}
+                </optgroup>
+              </select>
+            </div>
+          )}
+
           <div>
-            <label className="block text-sm font-semibold text-brand-dark mb-1">Servicio / Título de la Cotización</label>
+            <label className="block text-sm font-semibold text-brand-dark mb-1">Título General del Requerimiento</label>
             <input 
               type="text" 
               value={serviceName} 
-              onChange={e => {
-                setServiceName(e.target.value);
-                // Si el item 1 está vacío, llenarlo automáticamente
-                if (items.length > 0 && items[0].detail === '') {
-                  const newItems = [...items];
-                  newItems[0].detail = e.target.value;
-                  setItems(newItems);
-                }
-              }} 
+              onChange={e => setServiceName(e.target.value)} 
               className="w-full border border-brand-light rounded-lg px-4 py-2 focus:outline-none focus:border-brand-teal transition" 
-              placeholder="Ej. TERMOGRAFÍA INFRARROJA NIVEL I (Para 2 personas)" 
+              placeholder="Ej. CURSO DE TERMOGRAFÍA INFRARROJA NIVEL I (Para 2 personas)" 
               required 
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-brand-dark mb-1">Requerimiento (Descripción)</label>
-            <textarea value={requirements} onChange={e => setRequirements(e.target.value)} rows={3} className="w-full border border-brand-light rounded-lg px-4 py-2 focus:outline-none focus:border-brand-teal transition resize-none" placeholder="Ej. Curso para 2 personas. Enfocado en el área Eléctrica..." required></textarea>
+            <label className="block text-sm font-semibold text-brand-dark mb-1">Descripción General / Contexto</label>
+            <textarea value={requirements} onChange={e => setRequirements(e.target.value)} rows={3} className="w-full border border-brand-light rounded-lg px-4 py-2 focus:outline-none focus:border-brand-teal transition resize-none" placeholder="Ej. De acuerdo a lo conversado, se presenta la propuesta técnica y económica para..." required></textarea>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -195,7 +217,10 @@ export function QuotationWizard() {
       {/* STEP 3: Economic Offer */}
       {step === 3 && (
         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-          <h2 className="text-2xl font-bold text-brand-dark mb-6">3. Oferta Económica</h2>
+          <div>
+            <h2 className="text-2xl font-bold text-brand-dark mb-2">3. Desglose de Oferta Económica</h2>
+            <p className="text-sm text-brand-grey mb-6">Ingrese aquí el desglose técnico y comercial de los ítems a cobrar (Ej: Honorarios, Traslados, Materiales, etc.).</p>
+          </div>
           
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">

@@ -283,7 +283,7 @@ export default async function CertificadosPage({ searchParams }: PageProps) {
               <div className="grid grid-cols-2 gap-y-4 sm:gap-y-5 gap-x-3 sm:gap-x-4">
                 <div className="col-span-2 sm:col-span-2">
                   <p className="text-[10px] sm:text-[11px] text-brand-grey font-bold uppercase tracking-wider mb-1 sm:mb-1.5">Clasificación</p>
-                  <p className="font-bold text-xs sm:text-sm text-brand-dark">{isDiploma ? 'Certificado de Entrenamiento' : 'Informe Técnico de Servicio'}</p>
+                  <p className="font-bold text-xs sm:text-sm text-brand-dark">{isDiploma ? 'Certificado de Capacitación' : 'Informe Técnico de Servicio'}</p>
                 </div>
                 {isDiploma && cred.certificateNumber && (
                   <div>
@@ -419,13 +419,16 @@ export default async function CertificadosPage({ searchParams }: PageProps) {
             
             {isDiploma ? (
               <div className="text-xs sm:text-sm text-brand-dark/80 space-y-3 sm:space-y-4 md:pl-14 relative z-10 font-medium">
-                <p>Este certificado acredita que el participante completó satisfactoriamente el programa de entrenamiento impartido por <strong className="text-brand-dark">F&D Ingeniería en Mantenimiento</strong>.</p>
+                <p>Este certificado acredita que el participante completó satisfactoriamente el programa de capacitación impartido por <strong className="text-brand-dark">F&D Ingeniería en Mantenimiento</strong>.</p>
                 <p>El contenido del programa fue desarrollado considerando los lineamientos técnicos aplicables y las mejores prácticas de la industria.</p>
                 <div className="flex gap-3 items-start bg-white p-3 sm:p-4 rounded-xl border border-gray-200 mt-3 sm:mt-4 shadow-sm">
                   <Info size={16} className="shrink-0 mt-0.5 text-brand-teal sm:hidden" />
                   <Info size={18} className="shrink-0 mt-0.5 text-brand-teal hidden sm:block" />
                   <p className="text-[10px] sm:text-xs text-brand-grey leading-relaxed">
-                    Este documento acredita la realización del entrenamiento impartido por F&D Ingeniería en Mantenimiento y <strong className="text-brand-dark">no constituye una certificación internacional de competencia emitida por un organismo certificador acreditado conforme a {certificationText}</strong>.
+                    {certificationText && certificationText.length > 30 
+                      ? certificationText.replace(/\{\{fechas\}\}/g, cred.courseDates || 'las fechas indicadas').replace(/\{\{horas\}\}/g, (cred.courseHours || 0).toString())
+                      : <>Este documento acredita la realización de la capacitación impartida por F&D Ingeniería en Mantenimiento y <strong className="text-brand-dark">no constituye una certificación internacional de competencia emitida por un organismo certificador acreditado conforme a {certificationText}</strong>.</>
+                    }
                   </p>
                 </div>
               </div>

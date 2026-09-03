@@ -7,18 +7,24 @@ datasource db {
 }
 
 model Lead {
-  id            String      @id @default(cuid())
-  name          String
-  company       String?
-  email         String
-  phone         String
-  interestType  InterestType
-  interestSlug  String?     // slug del servicio o curso de interés (ej: "analisis-vibraciones")
-  message       String
-  status        LeadStatus  @default(NUEVO)
-  source        String?     // utm_source / utm_campaign capturado del formulario, clave para medir Google Ads
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id                String      @id @default(cuid())
+  name              String
+  company           String?
+  email             String
+  phone             String
+  interestType      InterestType
+  interestSlug      String?     // slug del servicio o curso de interés (ej: "analisis-vibraciones")
+  message           String
+  
+  clientType        String?     // 'PARTICULAR' | 'EMPRESA'
+  rut               String?     // RUT de persona (si es particular)
+  companyRut        String?     // RUT de empresa (si es empresa)
+  participantsCount Int?        // Cantidad de participantes (si es empresa)
+
+  status            LeadStatus  @default(NUEVO)
+  source            String?     // utm_source / utm_campaign capturado del formulario, clave para medir Google Ads
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
 
   @@index([status])
   @@index([interestSlug])

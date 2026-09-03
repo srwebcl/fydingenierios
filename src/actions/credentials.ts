@@ -421,10 +421,12 @@ export async function generateDiplomaPdfBase64(credentialId: string) {
     } catch (err) {}
 
     let courseName = credential.courseSlug!;
+    let courseCertificationText = 'ISO 18436-2';
     try {
       const course = await prisma.course.findUnique({ where: { slug: credential.courseSlug! } });
       if (course) {
         courseName = course.title;
+        if (course.certificationText) courseCertificationText = course.certificationText;
       } else {
         const courseNameMap: Record<string, string> = {
           'analisis-de-vibraciones': 'Análisis Avanzado de Vibraciones e Interpretación de Espectros',
@@ -468,7 +470,8 @@ export async function generateDiplomaPdfBase64(credentialId: string) {
         logoBase64,
         signatureDanielBase64,
         signatureAlamiroBase64,
-        timbreBase64
+        timbreBase64,
+        certificationText: courseCertificationText
       }
     });
 

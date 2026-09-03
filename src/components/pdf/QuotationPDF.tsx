@@ -270,28 +270,47 @@ export const QuotationPDF = ({ data, logoBase64 }: QuotationPDFProps) => {
           ))}
         </View>
 
-        {/* TOTALS */}
-        <View style={styles.totalsContainerWrapper} wrap={false}>
-          <View style={styles.totalsContainer}>
-            <View style={styles.totalRow}>
-              <Text style={styles.totalLabel}>MONTO NETO</Text>
-              <Text style={styles.totalValue}>$ {data.subtotal.toLocaleString('es-CL')}</Text>
-            </View>
-            {data.discountPercent > 0 && (
+        {/* TOTALS & BANK DETAILS */}
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 15 }} wrap={false}>
+          {/* BANK DETAILS */}
+          <View style={{ width: '50%', fontSize: 9, color: '#4B5563', lineHeight: 1.5, padding: 10, backgroundColor: '#F3F4F6', borderRadius: 4 }}>
+            <Text style={{ fontWeight: 'bold', color: '#0B3B3F', marginBottom: 4, fontSize: 10 }}>Datos para Transferencia:</Text>
+            <Text>Razón Social: INGENIERÍA EN MANTENIMIENTO F&D SpA</Text>
+            <Text>R.U.T: 78.243.503-5</Text>
+            <Text>Banco: Banco de Chile</Text>
+            <Text>Tipo de Cuenta: Cuenta Vista</Text>
+            <Text>N° de Cuenta: 00-004-37252-65</Text>
+            <Text>Correo: Contacto@fydingenieria.cl</Text>
+          </View>
+          
+          {/* TOTALS */}
+          <View style={[styles.totalsContainerWrapper, { marginTop: 0, width: '45%' }]}>
+            <View style={[styles.totalsContainer, { width: '100%' }]}>
               <View style={styles.totalRow}>
-                <Text style={styles.totalLabel}>DESCUENTO ({data.discountPercent}%)</Text>
-                <Text style={[styles.totalValue, { color: '#E53E3E' }]}>-$ {(data.subtotal * (data.discountPercent / 100)).toLocaleString('es-CL')}</Text>
+                <Text style={styles.totalLabel}>MONTO NETO</Text>
+                <Text style={styles.totalValue}>$ {data.subtotal.toLocaleString('es-CL')}</Text>
               </View>
-            )}
-            {data.clientType === 'EMPRESA' && (
-              <View style={styles.totalRow}>
-                <Text style={styles.totalLabel}>I.V.A. 19%</Text>
-                <Text style={styles.totalValue}>$ {data.iva.toLocaleString('es-CL')}</Text>
+              {data.discountPercent > 0 && (
+                <View style={styles.totalRow}>
+                  <Text style={styles.totalLabel}>DESCUENTO ({data.discountPercent}%)</Text>
+                  <Text style={[styles.totalValue, { color: '#E53E3E' }]}>-$ {(data.subtotal * (data.discountPercent / 100)).toLocaleString('es-CL')}</Text>
+                </View>
+              )}
+              {data.iva > 0 ? (
+                <View style={styles.totalRow}>
+                  <Text style={styles.totalLabel}>I.V.A. 19%</Text>
+                  <Text style={styles.totalValue}>$ {data.iva.toLocaleString('es-CL')}</Text>
+                </View>
+              ) : (
+                <View style={styles.totalRow}>
+                  <Text style={styles.totalLabel}>I.V.A. (Exento)</Text>
+                  <Text style={styles.totalValue}>$ 0</Text>
+                </View>
+              )}
+              <View style={[styles.totalRow, { borderBottom: 'none' }]}>
+                <Text style={styles.totalLabel}>TOTAL</Text>
+                <Text style={styles.totalValue}>$ {data.total.toLocaleString('es-CL')}</Text>
               </View>
-            )}
-            <View style={[styles.totalRow, { borderBottom: 'none' }]}>
-              <Text style={styles.totalLabel}>TOTAL</Text>
-              <Text style={styles.totalValue}>$ {data.total.toLocaleString('es-CL')}</Text>
             </View>
           </View>
         </View>

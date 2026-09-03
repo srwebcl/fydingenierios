@@ -38,6 +38,7 @@ export function StepByStepContactForm({ servicesList = [], coursesList = [] }: P
     setStep(3);
   };
 
+  const [clientType, setClientType] = useState<'PARTICULAR' | 'EMPRESA' | ''>('');
   const [honeypot, setHoneypot] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -62,6 +63,10 @@ export function StepByStepContactForm({ servicesList = [], coursesList = [] }: P
       phone: formData.get('phone') as string,
       reason: `${area} - ${service}`,
       message: formData.get('message') as string,
+      clientType: clientType || undefined,
+      rut: formData.get('rut') as string || undefined,
+      companyRut: formData.get('companyRut') as string || undefined,
+      participantsCount: formData.get('participantsCount') ? parseInt(formData.get('participantsCount') as string, 10) : undefined,
     };
 
     try {
@@ -89,6 +94,7 @@ export function StepByStepContactForm({ servicesList = [], coursesList = [] }: P
     setStep(1);
     setArea(null);
     setService('');
+    setClientType('');
     setStatus('idle');
   };
 
@@ -191,24 +197,78 @@ export function StepByStepContactForm({ servicesList = [], coursesList = [] }: P
           </p>
           
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div>
-                <label className="block text-sm font-bold text-brand-dark mb-1">Nombre Completo *</label>
-                <input required type="text" name="fullName" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
+            
+            {area === 'Capacitaciones' && (
+              <div className="mb-6">
+                <label className="block text-sm font-bold text-brand-dark mb-3 text-center">¿Quién contratará y pagará la capacitación? *</label>
+                <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">
+                  <button
+                    type="button"
+                    onClick={() => setClientType('PARTICULAR')}
+                    className={`px-4 py-3 text-sm rounded-lg border-2 transition-colors ${clientType === 'PARTICULAR' ? 'bg-brand-teal text-white border-brand-teal font-bold shadow-md' : 'bg-brand-light border-brand-grey/30 text-brand-dark hover:border-brand-teal'}`}
+                  >
+                    Particular
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setClientType('EMPRESA')}
+                    className={`px-4 py-3 text-sm rounded-lg border-2 transition-colors ${clientType === 'EMPRESA' ? 'bg-brand-teal text-white border-brand-teal font-bold shadow-md' : 'bg-brand-light border-brand-grey/30 text-brand-dark hover:border-brand-teal'}`}
+                  >
+                    Empresa
+                  </button>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-bold text-brand-dark mb-1">Empresa</label>
-                <input type="text" name="company" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
+            )}
+
+            {(area !== 'Capacitaciones' || clientType !== '') && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-bold text-brand-dark mb-1">
+                    {clientType === 'EMPRESA' ? 'Nombre del contacto *' : 'Nombre Completo *'}
+                  </label>
+                  <input required type="text" name="fullName" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
+                </div>
+                
+                {clientType === 'PARTICULAR' && (
+                  <div>
+                    <label className="block text-sm font-bold text-brand-dark mb-1">RUT *</label>
+                    <input required type="text" name="rut" placeholder="Ej: 12.345.678-9" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
+                  </div>
+                )}
+                
+                {(area !== 'Capacitaciones' || clientType === 'EMPRESA') && (
+                  <div>
+                    <label className="block text-sm font-bold text-brand-dark mb-1">
+                      {clientType === 'EMPRESA' ? 'Nombre o razón social de la empresa *' : 'Empresa'}
+                    </label>
+                    <input required={clientType === 'EMPRESA'} type="text" name="company" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
+                  </div>
+                )}
+                
+                {clientType === 'EMPRESA' && (
+                  <div>
+                    <label className="block text-sm font-bold text-brand-dark mb-1">RUT de la empresa *</label>
+                    <input required type="text" name="companyRut" placeholder="Ej: 76.543.210-K" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
+                  </div>
+                )}
+                
+                <div>
+                  <label className="block text-sm font-bold text-brand-dark mb-1">Correo Electrónico *</label>
+                  <input required type="email" name="email" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-brand-dark mb-1">Teléfono Móvil *</label>
+                  <input required type="tel" name="phone" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
+                </div>
+                
+                {clientType === 'EMPRESA' && (
+                  <div>
+                    <label className="block text-sm font-bold text-brand-dark mb-1">Cantidad de participantes *</label>
+                    <input required type="number" min="1" name="participantsCount" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
+                  </div>
+                )}
               </div>
-              <div>
-                <label className="block text-sm font-bold text-brand-dark mb-1">Correo Electrónico *</label>
-                <input required type="email" name="email" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-brand-dark mb-1">Teléfono Móvil *</label>
-                <input required type="tel" name="phone" className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" />
-              </div>
-            </div>
+            )}
 
             {/* Honeypot field - invisible to humans */}
             <div aria-hidden="true" style={{ display: 'none', position: 'absolute', left: '-9999px' }}>
@@ -216,10 +276,12 @@ export function StepByStepContactForm({ servicesList = [], coursesList = [] }: P
               <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
             </div>
 
-            <div>
-              <label className="block text-sm font-bold text-brand-dark mb-1">Detalle del requerimiento *</label>
-              <textarea required name="message" rows={4} className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" placeholder="Indique cantidad de equipos, normas a certificar, o cualquier información relevante..."></textarea>
-            </div>
+            {(area !== 'Capacitaciones' || clientType !== '') && (
+              <div>
+                <label className="block text-sm font-bold text-brand-dark mb-1">Detalle del requerimiento *</label>
+                <textarea required name="message" rows={4} className="w-full border border-brand-grey/30 rounded-lg px-4 py-3 focus:outline-none focus:border-brand-teal bg-brand-light" placeholder="Indique cantidad de equipos, normas a certificar, o cualquier información relevante..."></textarea>
+              </div>
+            )}
 
             <button 
               type="submit" 

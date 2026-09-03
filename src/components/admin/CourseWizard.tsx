@@ -293,16 +293,16 @@ export default function CourseWizard({ initialData, isEditing = false, options =
 
             {formData.includesDiploma && (
               <div className="col-span-full bg-brand-light/10 p-4 rounded border border-brand-light">
-                <label className="block text-sm font-bold text-brand-dark mb-1">Norma de Certificación (Para Diploma / Validación)</label>
-                <input 
-                  type="text" 
+                <label className="block text-sm font-bold text-brand-dark mb-1">Párrafo de Certificación (Para Diploma / Validación)</label>
+                <p className="text-xs text-brand-grey mb-2">Pega aquí el texto completo que irá en el diploma. Usa los comodines <strong>{"{{fechas}}"}</strong> y <strong>{"{{horas}}"}</strong> para que el sistema los complete automáticamente al emitir un certificado.</p>
+                <textarea 
                   name="certificationText" 
                   value={formData.certificationText} 
                   onChange={handleChange} 
+                  rows={4}
                   className="w-full border border-brand-grey/30 rounded px-3 py-2 bg-white" 
-                  placeholder="Ej: ISO 18436-2" 
+                  placeholder="Ej: Este certificado acredita la participación y finalización de la capacitación. El curso se realizó durante los días {{fechas}}, con una duración total de {{horas}} horas..." 
                 />
-                <p className="text-xs text-brand-grey mt-1">Texto legal que aparecerá en los diplomas generados y el portal de validación. Si se deja en blanco se usará ISO 18436-2 por defecto.</p>
               </div>
             )}
           </div>

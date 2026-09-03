@@ -2,8 +2,24 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { QuotationWizard } from '@/components/admin/QuotationWizard';
+import { prisma } from '@/lib/db';
 
-export default function NuevaCotizacionPage() {
+export default async function NuevaCotizacionPage() {
+  const courses = await prisma.course.findMany({
+    select: { id: true, title: true, shortDescription: true },
+    orderBy: { title: 'asc' }
+  });
+  
+  const services = await prisma.service.findMany({
+    select: { id: true, title: true, shortDescription: true },
+    orderBy: { title: 'asc' }
+  });
+
+  const catalogItems = [
+    ...courses.map(c => ({ ...c, type: 'CAPACITACION' as const })),
+    ...services.map(s => ({ ...s, type: 'SERVICIO' as const }))
+  ];
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
@@ -19,7 +35,7 @@ export default function NuevaCotizacionPage() {
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-brand-light p-6 md:p-8">
-        <QuotationWizard />
+        <QuotationWizard catalogItems={catalogItems} />
       </div>
     </div>
   );

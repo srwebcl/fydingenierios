@@ -12,6 +12,10 @@ export async function sendContactFormEmail(data: {
   phone: string;
   reason: string;
   message: string;
+  clientType?: string;
+  rut?: string;
+  companyRut?: string;
+  participantsCount?: number;
 }) {
   try {
     let interestType: 'SERVICIO' | 'CAPACITACION' | 'GENERAL' = 'GENERAL';
@@ -32,7 +36,11 @@ export async function sendContactFormEmail(data: {
           message: data.message,
           interestType: interestType,
           interestSlug: data.reason, 
-          source: 'Formulario Web'
+          source: 'Formulario Web',
+          clientType: data.clientType || null,
+          rut: data.rut || null,
+          companyRut: data.companyRut || null,
+          participantsCount: data.participantsCount || null,
         }
       });
     } catch (e) {
@@ -43,6 +51,38 @@ export async function sendContactFormEmail(data: {
     const receiver = process.env.EMAIL_VENTAS || process.env.EMAIL_GENERAL || 'contacto@fydingenieria.cl';
     // Siempre intentamos enviar desde el correo oficial corporativo
     const sender = 'contacto@fydingenieria.cl';
+
+    const clientTypeHtml = data.clientType 
+      ? `
+        <div class="field">
+          <span class="label">Modalidad de Contratación</span>
+          <p class="value">${data.clientType === 'PARTICULAR' ? 'Particular / Persona Natural' : 'Empresa / Institución'}</p>
+        </div>
+      ` : '';
+
+    const rutHtml = data.rut
+      ? `
+        <div class="field">
+          <span class="label">RUT Persona</span>
+          <p class="value">${data.rut}</p>
+        </div>
+      ` : '';
+
+    const companyRutHtml = data.companyRut
+      ? `
+        <div class="field">
+          <span class="label">RUT Empresa</span>
+          <p class="value">${data.companyRut}</p>
+        </div>
+      ` : '';
+
+    const participantsHtml = data.participantsCount
+      ? `
+        <div class="field">
+          <span class="label">Participantes</span>
+          <p class="value">${data.participantsCount}</p>
+        </div>
+      ` : '';
 
     const { data: resendData, error } = await resend.emails.send({
       from: `Formulario Web F&D <${sender}>`,
@@ -78,14 +118,19 @@ export async function sendContactFormEmail(data: {
                 <span class="label">Motivo de contacto</span>
                 <p class="value" style="font-weight: bold; color: #00A6A6;">${data.reason}</p>
               </div>
+              ${clientTypeHtml}
               <div class="field">
-                <span class="label">Nombre del cliente</span>
+                <span class="label">${data.clientType === 'EMPRESA' ? 'Nombre del contacto' : 'Nombre del cliente'}</span>
                 <p class="value">${data.fullName}</p>
               </div>
+              ${rutHtml}
+              ${data.company || data.clientType === 'EMPRESA' ? `
               <div class="field">
                 <span class="label">Empresa</span>
                 <p class="value">${data.company || 'N/A'}</p>
               </div>
+              ` : ''}
+              ${companyRutHtml}
               <div class="field">
                 <span class="label">Correo Electrónico</span>
                 <p class="value"><a href="mailto:${data.email}">${data.email}</a></p>
@@ -94,6 +139,7 @@ export async function sendContactFormEmail(data: {
                 <span class="label">Teléfono</span>
                 <p class="value">${data.phone}</p>
               </div>
+              ${participantsHtml}
               
               <div class="message-box">
                 <span class="label">Mensaje</span>
