@@ -284,7 +284,7 @@ export function QuotationWizard({ catalogItems = [] }: { catalogItems?: CatalogI
                 <span className="text-red-500">-${discountAmount.toLocaleString('es-CL')}</span>
               </div>
               <div className="flex justify-between mb-2">
-                <span className="font-semibold text-brand-dark">IVA {clientType === 'PERSONA' ? '(0%)' : ''}</span>
+                <span className="font-semibold text-brand-dark">IVA {clientType === 'CAPACITACION' ? '(0%)' : ''}</span>
                 <span>${iva.toLocaleString('es-CL')}</span>
               </div>
               <div className="flex justify-between text-lg font-bold text-brand-teal pt-2 border-t border-brand-light">
