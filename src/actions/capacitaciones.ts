@@ -64,6 +64,8 @@ export async function createCourseSession(formData: FormData) {
     });
 
     revalidatePath('/admin-panel/capacitaciones');
+    revalidatePath('/capacitaciones');
+    revalidatePath('/capacitaciones/[slug]', 'page');
     return { success: true, session };
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -80,6 +82,8 @@ export async function closeCourseSession(id: string) {
       data: { status: 'CERRADA' },
     });
     revalidatePath('/admin-panel/capacitaciones');
+    revalidatePath('/capacitaciones');
+    revalidatePath('/capacitaciones/[slug]', 'page');
     return { success: true };
   } catch (error) {
     return { success: false, error: 'Error al cerrar la sesión' };
@@ -93,6 +97,8 @@ export async function finishCourseSession(id: string) {
       data: { status: 'FINALIZADA' },
     });
     revalidatePath('/admin-panel/capacitaciones');
+    revalidatePath('/capacitaciones');
+    revalidatePath('/capacitaciones/[slug]', 'page');
     return { success: true };
   } catch (error) {
     return { success: false, error: 'Error al finalizar la sesión' };
@@ -127,6 +133,8 @@ export async function createCourse(data: any) {
       }
     });
     revalidatePath('/admin-panel/capacitaciones');
+    revalidatePath('/capacitaciones');
+    revalidatePath('/capacitaciones/[slug]', 'page');
     return { success: true, course };
   } catch (error) {
     console.error('Error creating course:', error);
@@ -163,6 +171,8 @@ export async function updateCourse(id: string, data: any) {
       }
     });
     revalidatePath('/admin-panel/capacitaciones');
+    revalidatePath('/capacitaciones');
+    revalidatePath('/capacitaciones/[slug]', 'page');
     return { success: true, course };
   } catch (error) {
     console.error('Error updating course:', error);
