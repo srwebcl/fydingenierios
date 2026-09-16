@@ -65,7 +65,7 @@ export async function createCourseSession(formData: FormData) {
 
     revalidatePath('/admin-panel/capacitaciones');
     revalidatePath('/capacitaciones');
-    revalidatePath('/capacitaciones/[slug]', 'page');
+    revalidatePath(`/capacitaciones/${session.courseSlug}`);
     return { success: true, session };
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -77,13 +77,13 @@ export async function createCourseSession(formData: FormData) {
 
 export async function closeCourseSession(id: string) {
   try {
-    await db.courseSession.update({
+    const session = await db.courseSession.update({
       where: { id },
       data: { status: 'CERRADA' },
     });
     revalidatePath('/admin-panel/capacitaciones');
     revalidatePath('/capacitaciones');
-    revalidatePath('/capacitaciones/[slug]', 'page');
+    revalidatePath(`/capacitaciones/${session.courseSlug}`);
     return { success: true };
   } catch (error) {
     return { success: false, error: 'Error al cerrar la sesión' };
@@ -92,13 +92,13 @@ export async function closeCourseSession(id: string) {
 
 export async function finishCourseSession(id: string) {
   try {
-    await db.courseSession.update({
+    const session = await db.courseSession.update({
       where: { id },
       data: { status: 'FINALIZADA' },
     });
     revalidatePath('/admin-panel/capacitaciones');
     revalidatePath('/capacitaciones');
-    revalidatePath('/capacitaciones/[slug]', 'page');
+    revalidatePath(`/capacitaciones/${session.courseSlug}`);
     return { success: true };
   } catch (error) {
     return { success: false, error: 'Error al finalizar la sesión' };
@@ -134,7 +134,7 @@ export async function createCourse(data: any) {
     });
     revalidatePath('/admin-panel/capacitaciones');
     revalidatePath('/capacitaciones');
-    revalidatePath('/capacitaciones/[slug]', 'page');
+    revalidatePath(`/capacitaciones/${course.slug}`);
     return { success: true, course };
   } catch (error) {
     console.error('Error creating course:', error);
@@ -144,6 +144,8 @@ export async function createCourse(data: any) {
 
 export async function updateCourse(id: string, data: any) {
   try {
+    const existing = await db.course.findUnique({ where: { id }, select: { slug: true } });
+
     const course = await db.course.update({
       where: { id },
       data: {
@@ -172,7 +174,10 @@ export async function updateCourse(id: string, data: any) {
     });
     revalidatePath('/admin-panel/capacitaciones');
     revalidatePath('/capacitaciones');
-    revalidatePath('/capacitaciones/[slug]', 'page');
+    revalidatePath(`/capacitaciones/${course.slug}`);
+    if (existing && existing.slug !== course.slug) {
+      revalidatePath(`/capacitaciones/${existing.slug}`);
+    }
     return { success: true, course };
   } catch (error) {
     console.error('Error updating course:', error);
