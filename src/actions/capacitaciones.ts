@@ -105,6 +105,21 @@ export async function finishCourseSession(id: string) {
   }
 }
 
+export async function deleteCourseSession(id: string) {
+  try {
+    const session = await db.courseSession.delete({ where: { id } });
+    revalidatePath('/admin-panel/capacitaciones');
+    revalidatePath('/capacitaciones');
+    revalidatePath(`/capacitaciones/${session.courseSlug}`);
+    return { success: true };
+  } catch (error: any) {
+    if (error.code === 'P2003') {
+      return { success: false, error: 'No se puede eliminar: esta sesión tiene inscritos o diplomas vinculados.' };
+    }
+    return { success: false, error: 'Error al eliminar la sesión' };
+  }
+}
+
 export async function createCourse(data: any) {
   try {
     const course = await db.course.create({
@@ -182,5 +197,29 @@ export async function updateCourse(id: string, data: any) {
   } catch (error) {
     console.error('Error updating course:', error);
     return { success: false, error: 'Error al actualizar el curso' };
+  }
+}
+
+export async function deleteCourse(id: string) {
+  try {
+    const course = await db.course.findUnique({ where: { id }, select: { slug: true } });
+    if (!course) {
+      return { success: false, error: 'Curso no encontrado' };
+    }
+
+    const sessionsCount = await db.courseSession.count({ where: { courseSlug: course.slug } });
+    if (sessionsCount > 0) {
+      return { success: false, error: 'No se puede eliminar: este curso tiene sesiones programadas. Elimínalas primero.' };
+    }
+
+    await db.course.delete({ where: { id } });
+
+    revalidatePath('/admin-panel/capacitaciones');
+    revalidatePath('/capacitaciones');
+    revalidatePath(`/capacitaciones/${course.slug}`);
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting course:', error);
+    return { success: false, error: 'Error al eliminar el curso' };
   }
 }

@@ -7,24 +7,24 @@ datasource db {
 }
 
 model Lead {
-  id                String      @id @default(cuid())
-  name              String
-  company           String?
-  email             String
-  phone             String
-  interestType      InterestType
-  interestSlug      String?     // slug del servicio o curso de interés (ej: "analisis-vibraciones")
-  message           String
-  
-  clientType        String?     // 'PARTICULAR' | 'EMPRESA'
-  rut               String?     // RUT de persona (si es particular)
-  companyRut        String?     // RUT de empresa (si es empresa)
-  participantsCount Int?        // Cantidad de participantes (si es empresa)
+  id           String       @id @default(cuid())
+  name         String
+  company      String?
+  email        String
+  phone        String
+  interestType InterestType
+  interestSlug String? // slug del servicio o curso de interés (ej: "analisis-vibraciones")
+  message      String
 
-  status            LeadStatus  @default(NUEVO)
-  source            String?     // utm_source / utm_campaign capturado del formulario, clave para medir Google Ads
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+  clientType        String? // 'PARTICULAR' | 'EMPRESA'
+  rut               String? // RUT de persona (si es particular)
+  companyRut        String? // RUT de empresa (si es empresa)
+  participantsCount Int? // Cantidad de participantes (si es empresa)
+
+  status    LeadStatus @default(NUEVO)
+  source    String? // utm_source / utm_campaign capturado del formulario, clave para medir Google Ads
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
   @@index([status])
   @@index([interestSlug])
@@ -45,49 +45,49 @@ enum LeadStatus {
 }
 
 model Holder {
-  id            String        @id @default(cuid())
-  rut           String        @unique
-  fullName      String
-  company       String?
-  email         String
-  phone         String?
-  credentials   Credential[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id          String       @id @default(cuid())
+  rut         String       @unique
+  fullName    String
+  company     String?
+  email       String
+  phone       String?
+  credentials Credential[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model Credential {
-  id                String            @id @default(cuid())
-  holder            Holder            @relation(fields: [holderId], references: [id])
-  holderId          String
-  type              CredentialType
+  id       String         @id @default(cuid())
+  holder   Holder         @relation(fields: [holderId], references: [id])
+  holderId String
+  type     CredentialType
 
   // --- Campos exclusivos de INFORME_SERVICIO (null si type = DIPLOMA_CAPACITACION) ---
-  serviceSlug       String?           // ej: "analisis-de-vibraciones"
-  clientCompany     String?           // Empresa Mandante
-  equipmentTag      String?           // Equipo / Activo analizado
-  reportTitle       String?           // Título oficial del informe técnico
-  findingsSummary   String?           // Resumen breve de hallazgos
+  serviceSlug     String? // ej: "analisis-de-vibraciones"
+  clientCompany   String? // Empresa Mandante
+  equipmentTag    String? // Equipo / Activo analizado
+  reportTitle     String? // Título oficial del informe técnico
+  findingsSummary String? // Resumen breve de hallazgos
 
   // --- Campos exclusivos de DIPLOMA_CAPACITACION (null si type = INFORME_SERVICIO) ---
-  courseSlug        String?           // ej: "analisis-de-vibraciones"
-  courseSession     CourseSession?    @relation(fields: [courseSessionId], references: [id])
-  courseSessionId   String?           // sesión/fecha específica que cursó el participante
-  approvalType      ApprovalType?     // PARTICIPACION o APROBACION
-  scorePercent      Int?              // nota o % de aprobación, si aplica
-  courseDates       String?           // ej: "03 al 05 de febrero del 2026"
-  courseHours       Int?              // ej: 24
+  courseSlug      String? // ej: "analisis-de-vibraciones"
+  courseSession   CourseSession? @relation(fields: [courseSessionId], references: [id])
+  courseSessionId String? // sesión/fecha específica que cursó el participante
+  approvalType    ApprovalType? // PARTICIPACION o APROBACION
+  scorePercent    Int? // nota o % de aprobación, si aplica
+  courseDates     String? // ej: "03 al 05 de febrero del 2026"
+  courseHours     Int? // ej: 24
 
   // --- Campos comunes a ambos tipos ---
-  certificateNumber String?           @unique  // Folio visual, ej: F&D-VA-2026-001
-  issueDate         DateTime          @default(now())
-  expiryDate        DateTime?         // obligatorio y = issueDate + 1 año para soldadores; NULL (no expira) para diplomas, salvo [VALIDAR CON CLIENTE]
-  validationCode    String            @unique  // hash único, ver permissions.md sección 3
-  status            CredentialStatus  @default(VIGENTE)
-  pdfUrl            String?           // referencia al último PDF generado/reenviado
+  certificateNumber String?                     @unique // Folio visual, ej: F&D-VA-2026-001
+  issueDate         DateTime                    @default(now())
+  expiryDate        DateTime? // obligatorio y = issueDate + 1 año para soldadores; NULL (no expira) para diplomas, salvo [VALIDAR CON CLIENTE]
+  validationCode    String                      @unique // hash único, ver permissions.md sección 3
+  status            CredentialStatus            @default(VIGENTE)
+  pdfUrl            String? // referencia al último PDF generado/reenviado
   recoveryPayments  CredentialRecoveryPayment[]
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
+  createdAt         DateTime                    @default(now())
+  updatedAt         DateTime                    @updatedAt
 
   @@index([validationCode])
   @@index([type, status])
@@ -110,14 +110,14 @@ enum CredentialStatus {
 }
 
 model CredentialRecoveryPayment {
-  id              String    @id @default(cuid())
-  credential      Credential @relation(fields: [credentialId], references: [id])
-  credentialId    String
-  amount          Int         // CLP, ej. 12000 [VALIDAR CON CLIENTE]
-  webpayToken     String?
-  status          PaymentStatus @default(INICIADA)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id           String        @id @default(cuid())
+  credential   Credential    @relation(fields: [credentialId], references: [id])
+  credentialId String
+  amount       Int // CLP, ej. 12000 [VALIDAR CON CLIENTE]
+  webpayToken  String?
+  status       PaymentStatus @default(INICIADA)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 enum PaymentStatus {
@@ -127,20 +127,84 @@ enum PaymentStatus {
 }
 
 model CourseSession {
-  id             String    @id @default(cuid())
-  courseSlug     String    // referencia al curso estático, ej: "analisis-de-vibraciones"
-  startDate      DateTime
-  endDate        DateTime?
-  modality       Modality
-  location       String?   // ej: "Rancagua - Sala FYD" o "In-Company"
-  seatsTotal     Int
-  seatsTaken     Int       @default(0)
-  status         SessionStatus @default(ABIERTA)
-  credentials    Credential[]  // diplomas emitidos a los participantes de esta sesión
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  id          String        @id @default(cuid())
+  courseSlug  String // referencia al curso estático, ej: "analisis-de-vibraciones"
+  startDate   DateTime
+  endDate     DateTime?
+  modality    Modality
+  location    String? // ej: "Rancagua - Sala FYD" o "In-Company"
+  seatsTotal  Int
+  seatsTaken  Int           @default(0)
+  status      SessionStatus @default(ABIERTA)
+  credentials Credential[] // diplomas emitidos a los participantes de esta sesión
+  enrollments Enrollment[] // inscripciones recibidas para esta sesión
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   @@index([courseSlug, status])
+}
+
+model Enrollment {
+  id              String        @id @default(cuid())
+  courseSession   CourseSession @relation(fields: [courseSessionId], references: [id])
+  courseSessionId String
+
+  // --- Datos del participante ---
+  fullName   String
+  rut        String
+  position   String? // cargo
+  company    String?
+  department String? // área / departamento
+  phone      String
+  email      String
+
+  // --- Antecedentes técnicos y de experiencia ---
+  education             String? // formación profesional / técnica
+  maintenanceExperience MaintenanceExperience?
+  techExperience        TechExperience?
+  relatedCertifications String?
+  previousCourses       String?
+
+  // --- Requerimientos especiales ---
+  specialRequirements String?
+
+  // --- Datos de facturación / contacto empresa (opcional) ---
+  businessName        String? // razón social
+  businessRut         String?
+  coordinationContact String?
+  billingEmail        String?
+  purchaseOrder       String?
+
+  // --- Uso interno F&D ---
+  instructor String? // relator
+  status     EnrollmentStatus @default(INSCRITO)
+  notes      String? // observaciones
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseSessionId, status])
+}
+
+enum MaintenanceExperience {
+  SIN_EXPERIENCIA
+  ANIOS_1_3
+  ANIOS_3_5
+  MAS_5
+}
+
+enum TechExperience {
+  SIN_EXPERIENCIA
+  BASICA
+  INTERMEDIA
+  AVANZADA
+}
+
+enum EnrollmentStatus {
+  INSCRITO
+  CONFIRMADO
+  RECHAZADO
+  LISTA_ESPERA
 }
 
 enum Modality {
@@ -151,19 +215,19 @@ enum Modality {
 
 enum SessionStatus {
   ABIERTA
-  CUPOS_LIMITADOS  // <= 20% de cupos disponibles, calculado en frontend, no almacenado
+  CUPOS_LIMITADOS // <= 20% de cupos disponibles, calculado en frontend, no almacenado
   CERRADA
   FINALIZADA
 }
 
 model Settings {
-  id                  String   @id @default("singleton")
-  contactEmail        String   @default("contacto@fydingenieria.cl")
-  whatsappNumber      String   @default("+56990153483")
-  businessHoursOpen   String   @default("09:00")
-  businessHoursClose  String   @default("18:30")
-  tickerText          String   @default("Especialistas en Confiabilidad de Activos y Mantenimiento Predictivo • Certificación Oficial de Informes Técnicos • Programas de Capacitación Técnica con Validación • ")
-  updatedAt           DateTime @updatedAt
+  id                 String   @id @default("singleton")
+  contactEmail       String   @default("contacto@fydingenieria.cl")
+  whatsappNumber     String   @default("+56990153483")
+  businessHoursOpen  String   @default("09:00")
+  businessHoursClose String   @default("18:30")
+  tickerText         String   @default("Especialistas en Confiabilidad de Activos y Mantenimiento Predictivo • Certificación Oficial de Informes Técnicos • Programas de Capacitación Técnica con Validación • ")
+  updatedAt          DateTime @updatedAt
 }
 
 model Service {
@@ -200,18 +264,18 @@ model Course {
   instructorName    String?
   instructorTitle   String?
   instructorDesc    String?
-  syllabus          Json     // Guardará [{ title: string, topics: string[] }]
-  faqs              Json     // Guardará [{ question: string, answer: string }]
-  pdfUrl            String?  // Link externo al PDF del programa
+  syllabus          Json // Guardará [{ title: string, topics: string[] }]
+  faqs              Json // Guardará [{ question: string, answer: string }]
+  pdfUrl            String? // Link externo al PDF del programa
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }
 
 model CourseOption {
   id           String   @id @default(cuid())
-  type         String   // "CATEGORY", "LEVEL", "MODALITY"
+  type         String // "CATEGORY", "LEVEL", "MODALITY"
   name         String
-  abbreviation String?  // Principalmente para CATEGORY
+  abbreviation String? // Principalmente para CATEGORY
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -219,46 +283,46 @@ model CourseOption {
 }
 
 model Quotation {
-  id              String   @id @default(cuid())
-  quoteNumber     String   @unique
-  date            DateTime @default(now())
-  clientType      String   // "EMPRESA" | "PERSONA"
-  clientName      String
-  clientPhone     String
-  clientCompany   String?
-  clientEmail     String
-  
-  senderName      String   @default("Beatriz Venegas Rain")
-  senderEmail     String   @default("beatriz.rain@fydingenieria.cl")
-  senderCompany   String   @default("F&D Ingeniería en Mantenimiento")
-  senderRut       String   @default("78.243.503-5")
-  senderAddress   String   @default("Dr. Antonio Donghi Paladinos 2156, Rancagua")
-  
-  serviceName     String
-  requirements    String
-  validityDays    Int      @default(30)
-  paymentTerms    String   @default("50% para aceptar oferta, 50% inicio del servicio")
-  
-  items           Json     // [{ detail, unit, quantity, unitPrice, total }]
-  
-  discountPercent Int?     @default(0) // Descuento porcentual opcional
+  id            String   @id @default(cuid())
+  quoteNumber   String   @unique
+  date          DateTime @default(now())
+  clientType    String // "EMPRESA" | "PERSONA"
+  clientName    String
+  clientPhone   String
+  clientCompany String?
+  clientEmail   String
+
+  senderName    String @default("Beatriz Venegas Rain")
+  senderEmail   String @default("beatriz.rain@fydingenieria.cl")
+  senderCompany String @default("F&D Ingeniería en Mantenimiento")
+  senderRut     String @default("78.243.503-5")
+  senderAddress String @default("Dr. Antonio Donghi Paladinos 2156, Rancagua")
+
+  serviceName  String
+  requirements String
+  validityDays Int    @default(30)
+  paymentTerms String @default("50% para aceptar oferta, 50% inicio del servicio")
+
+  items Json // [{ detail, unit, quantity, unitPrice, total }]
+
+  discountPercent Int?  @default(0) // Descuento porcentual opcional
   subtotal        Float
   iva             Float
   total           Float
-  
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model User {
-  id            String   @id @default(cuid())
-  email         String   @unique
-  passwordHash  String
-  name          String
-  role          Role     @default(SELLER)
-  permissions   String[] // ej: ["comercial", "cursos", "configuracion"]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(SELLER)
+  permissions  String[] // ej: ["comercial", "cursos", "configuracion"]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 enum Role {

@@ -2,10 +2,11 @@
 
 import React, { useState } from 'react';
 import { CourseSession, Course, SessionStatus } from '@prisma/client';
-import { createCourseSession, closeCourseSession, finishCourseSession } from '@/actions/capacitaciones';
+import { createCourseSession, closeCourseSession, finishCourseSession, deleteCourseSession, deleteCourse } from '@/actions/capacitaciones';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Link from 'next/link';
+import { Trash2, Copy, Users as UsersIcon, Check } from 'lucide-react';
 
 interface Props {
   initialCourses: Course[];
@@ -15,10 +16,11 @@ interface Props {
 export default function CapacitacionesManager({ initialCourses, initialSessions }: Props) {
   const [tab, setTab] = useState<'CURSOS' | 'SESIONES'>('CURSOS');
   const [sessions, setSessions] = useState<CourseSession[]>(initialSessions);
-  const [courses] = useState<Course[]>(initialCourses);
+  const [courses, setCourses] = useState<Course[]>(initialCourses);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const handleCreateSession = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,15 +41,45 @@ export default function CapacitacionesManager({ initialCourses, initialSessions 
 
   const handleActionSession = async (id: string, action: 'close' | 'finish') => {
     if (!confirm(`¿Estás seguro de que deseas ${action === 'close' ? 'cerrar' : 'finalizar'} esta sesión?`)) return;
-    
+
     const res = action === 'close' ? await closeCourseSession(id) : await finishCourseSession(id);
     if (res.success) {
-      setSessions(sessions.map(s => 
+      setSessions(sessions.map(s =>
         s.id === id ? { ...s, status: action === 'close' ? 'CERRADA' : 'FINALIZADA' } : s
       ));
     } else {
       alert(res.error);
     }
+  };
+
+  const handleDeleteSession = async (id: string) => {
+    if (!confirm('¿Estás seguro de que deseas eliminar esta sesión? Esta acción no se puede deshacer.')) return;
+
+    const res = await deleteCourseSession(id);
+    if (res.success) {
+      setSessions(sessions.filter(s => s.id !== id));
+    } else {
+      alert(res.error);
+    }
+  };
+
+  const handleDeleteCourse = async (id: string) => {
+    if (!confirm('¿Estás seguro de que deseas eliminar este curso? Esta acción no se puede deshacer.')) return;
+
+    const res = await deleteCourse(id);
+    if (res.success) {
+      setCourses(courses.filter(c => c.id !== id));
+    } else {
+      alert(res.error);
+    }
+  };
+
+  const handleCopyLink = (sessionId: string) => {
+    const url = `${window.location.origin}/capacitaciones/inscripcion/${sessionId}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopiedId(sessionId);
+      setTimeout(() => setCopiedId(null), 2000);
+    });
   };
 
   const getStatusBadge = (status: SessionStatus) => {
@@ -106,9 +138,12 @@ export default function CapacitacionesManager({ initialCourses, initialSessions 
                     <td className="px-6 py-4 font-bold text-brand-dark">{course.title}</td>
                     <td className="px-6 py-4">{course.category}</td>
                     <td className="px-6 py-4">{course.durationHours} hrs</td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-6 py-4 text-right whitespace-nowrap">
                       <Link href={`/admin-panel/capacitaciones/editar/${course.slug}`} className="text-xs font-bold text-brand-teal hover:underline mr-3">Editar</Link>
-                      <button onClick={() => { setIsModalOpen(true); setTab('SESIONES'); }} className="text-xs font-bold bg-brand-teal/10 text-brand-teal px-2 py-1 rounded">Agendar</button>
+                      <button onClick={() => { setIsModalOpen(true); setTab('SESIONES'); }} className="text-xs font-bold bg-brand-teal/10 text-brand-teal px-2 py-1 rounded mr-3">Agendar</button>
+                      <button onClick={() => handleDeleteCourse(course.id)} className="text-xs font-bold text-red-500 hover:text-red-700 align-middle" title="Eliminar curso">
+                        <Trash2 size={16} className="inline" />
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -148,13 +183,22 @@ export default function CapacitacionesManager({ initialCourses, initialSessions 
                       {session.seatsTaken >= session.seatsTotal && <span className="ml-2 text-xs text-red-500 font-bold">(Agotado)</span>}
                     </td>
                     <td className="px-6 py-4">{getStatusBadge(session.status)}</td>
-                    <td className="px-6 py-4 flex flex-wrap gap-2">
+                    <td className="px-6 py-4 flex flex-wrap gap-2 items-center">
+                      <Link href={`/admin-panel/capacitaciones/sesiones/${session.id}/inscritos`} className="text-xs bg-brand-dark/5 text-brand-dark px-2 py-1 rounded hover:bg-brand-dark/10 flex items-center gap-1" title="Ver inscritos">
+                        <UsersIcon size={12} /> Inscritos
+                      </Link>
+                      <button onClick={() => handleCopyLink(session.id)} className="text-xs bg-brand-teal/10 text-brand-teal px-2 py-1 rounded hover:bg-brand-teal/20 flex items-center gap-1" title="Copiar link de inscripción">
+                        {copiedId === session.id ? <><Check size={12} /> Copiado</> : <><Copy size={12} /> Link</>}
+                      </button>
                       {session.status === 'ABIERTA' && (
                         <button onClick={() => handleActionSession(session.id, 'close')} className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded hover:bg-red-200">Cerrar</button>
                       )}
                       {session.status !== 'FINALIZADA' && (
                         <button onClick={() => handleActionSession(session.id, 'finish')} className="text-xs bg-brand-teal/10 text-brand-teal px-2 py-1 rounded hover:bg-brand-teal/20">Finalizar</button>
                       )}
+                      <button onClick={() => handleDeleteSession(session.id)} className="text-xs text-red-500 hover:text-red-700 p-1" title="Eliminar sesión">
+                        <Trash2 size={14} />
+                      </button>
                     </td>
                   </tr>
                 ))}
