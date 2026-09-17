@@ -5,6 +5,7 @@ import { Modality, SessionStatus } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { put } from '@vercel/blob';
+import QRCode from 'qrcode';
 
 export async function uploadCoursePdf(formData: FormData) {
   try {
@@ -72,6 +73,52 @@ export async function createCourseSession(formData: FormData) {
       return { success: false, error: (error as any).errors[0].message };
     }
     return { success: false, error: 'Error al crear la sesión' };
+  }
+}
+
+export async function updateCourseSession(id: string, formData: FormData) {
+  try {
+    const data = createSessionSchema.parse({
+      courseSlug: formData.get('courseSlug'),
+      startDate: formData.get('startDate'),
+      endDate: formData.get('endDate') || undefined,
+      modality: formData.get('modality'),
+      location: formData.get('location') || undefined,
+      seatsTotal: formData.get('seatsTotal'),
+    });
+
+    const existing = await db.courseSession.findUnique({ where: { id } });
+    if (!existing) {
+      return { success: false, error: 'Sesión no encontrada' };
+    }
+    if (data.seatsTotal < existing.seatsTaken) {
+      return { success: false, error: `No puedes fijar cupos totales por debajo de los ${existing.seatsTaken} ya ocupados.` };
+    }
+
+    const session = await db.courseSession.update({
+      where: { id },
+      data: {
+        courseSlug: data.courseSlug,
+        startDate: new Date(data.startDate),
+        endDate: data.endDate ? new Date(data.endDate) : null,
+        modality: data.modality,
+        location: data.location,
+        seatsTotal: data.seatsTotal,
+      },
+    });
+
+    revalidatePath('/admin-panel/capacitaciones');
+    revalidatePath('/capacitaciones');
+    revalidatePath(`/capacitaciones/${existing.courseSlug}`);
+    if (existing.courseSlug !== session.courseSlug) {
+      revalidatePath(`/capacitaciones/${session.courseSlug}`);
+    }
+    return { success: true, session };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return { success: false, error: (error as any).errors[0].message };
+    }
+    return { success: false, error: 'Error al actualizar la sesión' };
   }
 }
 
@@ -221,5 +268,21 @@ export async function deleteCourse(id: string) {
   } catch (error) {
     console.error('Error deleting course:', error);
     return { success: false, error: 'Error al eliminar el curso' };
+  }
+}
+
+export async function getEnrollmentLinkQr(sessionId: string) {
+  try {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.fydingenieria.cl';
+    const url = `${siteUrl}/capacitaciones/inscripcion/${sessionId}`;
+    const qrDataUrl = await QRCode.toDataURL(url, {
+      color: { dark: '#0B3B3F', light: '#FFFFFF' },
+      margin: 2,
+      width: 320,
+    });
+    return { success: true, qrDataUrl, url };
+  } catch (error) {
+    console.error('Error generating enrollment QR:', error);
+    return { success: false, error: 'Error al generar el código QR' };
   }
 }

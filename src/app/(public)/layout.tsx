@@ -4,6 +4,7 @@ import { TrustBanner } from "@/components/ui/TrustBanner";
 import Footer from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { prisma } from '@/lib/db';
+import { toDateOnly } from '@/lib/date';
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const settings = await prisma.settings.findFirst();
@@ -32,7 +33,7 @@ export default async function PublicLayout({ children }: { children: React.React
       const sessionStrings = upcomingSessions.map(session => {
         const course = courses.find(c => c.slug === session.courseSlug);
         const title = course ? course.title : session.courseSlug;
-        const date = session.startDate.toLocaleDateString('es-CL', { day: 'numeric', month: 'short' });
+        const date = toDateOnly(session.startDate).toLocaleDateString('es-CL', { day: 'numeric', month: 'short' });
         return `${title} (${date})`;
       });
 

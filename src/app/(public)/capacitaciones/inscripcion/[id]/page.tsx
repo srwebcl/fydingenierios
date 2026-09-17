@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { toDateOnly } from '@/lib/date';
 import { EnrollmentForm } from '@/components/capacitaciones/EnrollmentForm';
 
 export const dynamic = 'force-dynamic';
@@ -47,7 +48,7 @@ export default async function InscripcionPage({ params }: { params: Promise<{ id
         <h1 className="font-heading text-3xl md:text-4xl font-bold text-brand-dark mb-3">Ficha de Inscripción</h1>
         <p className="text-lg text-brand-grey">{course.title}</p>
         <p className="text-sm text-brand-grey mt-1">
-          {format(new Date(session.startDate), "dd 'de' MMMM yyyy", { locale: es })} · {session.modality.replace('_', ' ')}
+          {format(toDateOnly(session.startDate), "dd 'de' MMMM yyyy", { locale: es })} · {session.modality.replace('_', ' ')}
           {session.location ? ` · ${session.location}` : ''}
         </p>
         {isFull && (

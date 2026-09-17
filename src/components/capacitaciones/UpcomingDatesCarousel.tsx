@@ -2,6 +2,7 @@
 
 import React, { useRef } from 'react';
 import { MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
+import { toDateOnly } from '@/lib/date';
 
 interface Session {
   id: string;
@@ -69,7 +70,7 @@ export function UpcomingDatesCarousel({ sessions }: Props) {
               {!agotado && cupos <= 3 && <div className="absolute top-0 right-0 bg-brand-lime text-brand-dark text-[9px] font-bold px-2 py-0.5 uppercase tracking-wider">Últimos {cupos}</div>}
               
               <p className="font-bold text-sm text-white mb-1">
-                {new Date(s.startDate).toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'long' })}
+                {toDateOnly(s.startDate).toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'long' })}
               </p>
               <div className="flex items-center text-xs text-brand-light/90">
                 <MapPin size={12} className="mr-1 shrink-0" /> <span className="truncate">{s.modality.replace('_', ' ')}</span>

@@ -4,6 +4,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { toDateOnly } from '@/lib/date';
 
 export const metadata: Metadata = {
   title: 'Dashboard | F&D Admin',
@@ -104,7 +105,7 @@ export default async function AdminDashboard() {
                   <tr key={session.id} className="hover:bg-brand-light/10 transition">
                     <td className="px-6 py-3">
                       <div className="font-bold text-brand-dark">{courseTitle(session.courseSlug)}</div>
-                      <div className="text-xs text-brand-grey">{format(new Date(session.startDate), 'dd MMM yyyy', { locale: es })}</div>
+                      <div className="text-xs text-brand-grey">{format(toDateOnly(session.startDate), 'dd MMM yyyy', { locale: es })}</div>
                     </td>
                     <td className="px-6 py-3 whitespace-nowrap text-brand-grey text-xs">
                       {session.seatsTaken} / {session.seatsTotal} cupos
