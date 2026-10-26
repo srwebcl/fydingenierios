@@ -1,5 +1,6 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import { formatCLP } from '@/lib/format';
 
 const styles = StyleSheet.create({
   page: {
@@ -264,8 +265,8 @@ export const QuotationPDF = ({ data, logoBase64 }: QuotationPDFProps) => {
               <Text style={[styles.tableCell, styles.col2]}>{item.detail}</Text>
               <Text style={[styles.tableCell, styles.col3]}>{item.quantity}</Text>
               <Text style={[styles.tableCell, styles.col4]}>{item.unit}</Text>
-              <Text style={[styles.tableCell, styles.col5]}>${item.unitPrice.toLocaleString('es-CL')}</Text>
-              <Text style={[styles.tableCell, styles.col6, { borderRight: 'none' }]}>${(item.quantity * item.unitPrice).toLocaleString('es-CL')}</Text>
+              <Text style={[styles.tableCell, styles.col5]}>${formatCLP(item.unitPrice)}</Text>
+              <Text style={[styles.tableCell, styles.col6, { borderRight: 'none' }]}>${formatCLP(item.quantity * item.unitPrice)}</Text>
             </View>
           ))}
         </View>
@@ -288,18 +289,18 @@ export const QuotationPDF = ({ data, logoBase64 }: QuotationPDFProps) => {
             <View style={[styles.totalsContainer, { width: '100%' }]}>
               <View style={styles.totalRow}>
                 <Text style={styles.totalLabel}>MONTO NETO</Text>
-                <Text style={styles.totalValue}>$ {data.subtotal.toLocaleString('es-CL')}</Text>
+                <Text style={styles.totalValue}>$ {formatCLP(data.subtotal)}</Text>
               </View>
               {data.discountPercent > 0 && (
                 <View style={styles.totalRow}>
                   <Text style={styles.totalLabel}>DESCUENTO ({data.discountPercent}%)</Text>
-                  <Text style={[styles.totalValue, { color: '#E53E3E' }]}>-$ {(data.subtotal * (data.discountPercent / 100)).toLocaleString('es-CL')}</Text>
+                  <Text style={[styles.totalValue, { color: '#E53E3E' }]}>-$ {formatCLP(data.subtotal * (data.discountPercent / 100))}</Text>
                 </View>
               )}
               {data.iva > 0 ? (
                 <View style={styles.totalRow}>
                   <Text style={styles.totalLabel}>I.V.A. 19%</Text>
-                  <Text style={styles.totalValue}>$ {data.iva.toLocaleString('es-CL')}</Text>
+                  <Text style={styles.totalValue}>$ {formatCLP(data.iva)}</Text>
                 </View>
               ) : (
                 <View style={styles.totalRow}>
@@ -309,7 +310,7 @@ export const QuotationPDF = ({ data, logoBase64 }: QuotationPDFProps) => {
               )}
               <View style={[styles.totalRow, { borderBottom: 'none' }]}>
                 <Text style={styles.totalLabel}>TOTAL</Text>
-                <Text style={styles.totalValue}>$ {data.total.toLocaleString('es-CL')}</Text>
+                <Text style={styles.totalValue}>$ {formatCLP(data.total)}</Text>
               </View>
             </View>
           </View>

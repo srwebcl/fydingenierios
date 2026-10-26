@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight, Building2, User, Plus, Trash2, CheckCircle2 } from 'lucide-react';
 import { createQuotation } from '@/actions/cotizaciones';
+import { formatCLP } from '@/lib/format';
 
 type ClientType = 'SERVICIO' | 'CAPACITACION';
 type Item = { detail: string; unit: string; quantity: number; unitPrice: number; total: number };
@@ -31,9 +32,9 @@ export function QuotationWizard({ catalogItems = [] }: { catalogItems?: CatalogI
 
   // Calculations
   const subtotal = items.reduce((acc, item) => acc + item.total, 0);
-  const discountAmount = subtotal * (discountPercent / 100);
+  const discountAmount = Math.round(subtotal * (discountPercent / 100));
   const subtotalAfterDiscount = subtotal - discountAmount;
-  const iva = clientType === 'SERVICIO' ? subtotalAfterDiscount * 0.19 : 0;
+  const iva = clientType === 'SERVICIO' ? Math.round(subtotalAfterDiscount * 0.19) : 0;
   const total = subtotalAfterDiscount + iva;
 
   const handleItemChange = (index: number, field: keyof Item, value: any) => {
@@ -42,7 +43,7 @@ export function QuotationWizard({ catalogItems = [] }: { catalogItems?: CatalogI
     
     // Auto calculate total for row
     if (field === 'quantity' || field === 'unitPrice') {
-      item.total = Number(item.quantity) * Number(item.unitPrice);
+      item.total = Math.round(Number(item.quantity) * Number(item.unitPrice));
     }
     
     newItems[index] = item;
@@ -252,7 +253,7 @@ export function QuotationWizard({ catalogItems = [] }: { catalogItems?: CatalogI
                       <input type="number" min="0" value={item.unitPrice} onChange={e => handleItemChange(i, 'unitPrice', Number(e.target.value))} className="w-full border border-brand-light rounded px-2 py-1 text-sm focus:outline-none focus:border-brand-teal" />
                     </td>
                     <td className="p-2 text-right font-semibold text-brand-dark">
-                      ${item.total.toLocaleString('es-CL')}
+                      ${formatCLP(item.total)}
                     </td>
                     <td className="p-2 text-center">
                       <button onClick={() => removeItem(i)} disabled={items.length === 1} className="text-brand-grey hover:text-red-500 disabled:opacity-30"><Trash2 size={16}/></button>
@@ -271,7 +272,7 @@ export function QuotationWizard({ catalogItems = [] }: { catalogItems?: CatalogI
             <div className="w-64 border-t-2 border-brand-dark pt-4">
               <div className="flex justify-between mb-2">
                 <span className="font-semibold text-brand-dark">Subtotal</span>
-                <span>${subtotal.toLocaleString('es-CL')}</span>
+                <span>${formatCLP(subtotal)}</span>
               </div>
               <div className="flex justify-between mb-2 items-center">
                 <span className="font-semibold text-brand-dark flex items-center gap-2">
@@ -281,15 +282,15 @@ export function QuotationWizard({ catalogItems = [] }: { catalogItems?: CatalogI
                     <span className="text-sm font-bold text-gray-500">%</span>
                   </div>
                 </span>
-                <span className="text-red-500">-${discountAmount.toLocaleString('es-CL')}</span>
+                <span className="text-red-500">-${formatCLP(discountAmount)}</span>
               </div>
               <div className="flex justify-between mb-2">
                 <span className="font-semibold text-brand-dark">IVA {clientType === 'CAPACITACION' ? '(0%)' : ''}</span>
-                <span>${iva.toLocaleString('es-CL')}</span>
+                <span>${formatCLP(iva)}</span>
               </div>
               <div className="flex justify-between text-lg font-bold text-brand-teal pt-2 border-t border-brand-light">
                 <span>Total</span>
-                <span>${total.toLocaleString('es-CL')}</span>
+                <span>${formatCLP(total)}</span>
               </div>
             </div>
           </div>

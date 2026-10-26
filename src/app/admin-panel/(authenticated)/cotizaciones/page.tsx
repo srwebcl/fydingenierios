@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db';
 import { Plus, FileText, ExternalLink, Calendar, User, Briefcase, Mail, Building } from 'lucide-react';
 import { DeleteQuotationButton } from './DeleteQuotationButton';
 import { SendQuotationEmailButton } from '@/components/admin/SendQuotationEmailButton';
+import { formatCLP } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -81,7 +82,7 @@ export default async function CotizacionesPage() {
                     </td>
                     <td className="p-4 text-right whitespace-nowrap">
                       <div className="font-bold text-brand-dark">
-                        ${cotizacion.total.toLocaleString('es-CL')}
+                        ${formatCLP(cotizacion.total)}
                       </div>
                     </td>
                     <td className="p-4">

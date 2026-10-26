@@ -5,6 +5,7 @@ import { CredentialRecoveryPayment } from '@prisma/client';
 import { issueServiceReportCredential, ServiceReportCredentialData } from '@/actions/credentials';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { formatCLP } from '@/lib/format';
 
 interface Props {
   initialCredentials: any[];
@@ -151,7 +152,7 @@ export default function InformesManager({ initialCredentials, initialPayments }:
                   <td className="px-6 py-4">{format(new Date(p.createdAt), 'dd MMM yyyy HH:mm', { locale: es })}</td>
                   <td className="px-6 py-4">-</td>
                   <td className="px-6 py-4 font-mono">{p.credentialId}</td>
-                  <td className="px-6 py-4 text-green-600 font-bold">${p.amount.toLocaleString('es-CL')}</td>
+                  <td className="px-6 py-4 text-green-600 font-bold">${formatCLP(p.amount)}</td>
                   <td className="px-6 py-4">
                     <span className="px-2 py-1 rounded text-xs font-bold bg-green-100 text-green-700">Completado</span>
                   </td>
